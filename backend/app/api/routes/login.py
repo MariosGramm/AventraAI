@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Annotated, Any
 from app import crud
+from app.utils import generate_password_reset_token
 from app.models import Token, UserPublicDTO
 from app.api.deps import CurrentUserDep, SessionDep
 from fastapi import APIRouter, Depends, HTTPException
@@ -32,5 +33,15 @@ def test_token(current_user: CurrentUserDep) -> Any:
     """
     return current_user
 
- 
+@router.post("/password-recovery/{email}")
+def recover_password(email:str, session:SessionDep):
+    """
+    Method for password recovery
+    """
+    user = crud.get_user_by_email(session=session, email=email)
+
+    if user:
+        password_reset_token = generate_password_reset_token(email=email)
+    #TODO
+         
 

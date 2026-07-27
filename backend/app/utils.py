@@ -45,16 +45,19 @@ def generate_password_reset_email(email_to:str, email:str, token:str) -> EmailDa
     """
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Password recovery for user {email}"
-    body = f"""
-    This is a password recovery email from {project_name}.
-    
-    Here is your recovery link:
-    {settings.FRONTEND_HOST}/reset-password?token={token}
+    link = f"{settings.FRONTEND_HOST}/reset-password?token={token}"
+    html_content = render_email_template(
+        email_template_name="reset_password.html",
+        context= {
+            "project_name": settings.PROJECT_NAME,
+            "username": email,
+            "email": email_to,
+            "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
+            "link": link,
+        },
+    )
 
-    Kind Regards,
-    The {project_name} team
-    """
-    #TODO
+    return EmailData(html_content=html_content, subject=subject)
 
     
 
