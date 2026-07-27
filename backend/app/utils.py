@@ -5,8 +5,13 @@ from typing import Any
 
 from app.core import security
 from app.core.security import settings
+import emails
 from jinja2 import Template
 import jwt
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -78,6 +83,30 @@ def generate_new_account_email(email_to:str, username:str, password:str) -> Emai
 
     return EmailData(html_content= html_content, subject= subject)
 
-    
+def send_email(*, email_to:str, subject:str = "", html_content:str = ""):
+    """
+    Method for sending emails.
+    """
+    assert settings.emails_enabled, "No provided configuration for email variables"
+
+    message = emails.Message(
+        subject=subject,
+        html=html_content,
+        mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL)
+    )
+
+    smtp_options = {
+        "host": settings.SMTP_HOST,
+        "port": settings.SMTP_PORT,
+        "tls": settings.SMTP_TLS
+    }
+
+    if settings.SMTP_USER:
+        smtp_options["user"] = settings.SMTP_USER
+    if settings.SMTP_PASSWORD:
+        smtp_options["password"] = settings.SMTP_PASSWORD
+
+    response = message.send(to=email_to, smtp=smtp_options)
+    logger.info(f"Send email result: {response}")
 
     
