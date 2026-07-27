@@ -109,4 +109,7 @@ def send_email(*, email_to:str, subject:str = "", html_content:str = ""):
     response = message.send(to=email_to, smtp=smtp_options)
     logger.info(f"Send email result: {response}")
 
+
+
+
     
