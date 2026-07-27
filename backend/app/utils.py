@@ -59,6 +59,25 @@ def generate_password_reset_email(email_to:str, email:str, token:str) -> EmailDa
 
     return EmailData(html_content=html_content, subject=subject)
 
+def generate_new_account_email(email_to:str, username:str, password:str, token:str) -> EmailData:
+    """
+    Method for new account email generation.
+    """
+    project_name = settings.PROJECT_NAME
+    subject = f"{project_name} - New account for user {username}"
+    html_content = render_email_template(
+        email_template_name="new_account.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "username": username,
+            "password": password,
+            "email": email_to,
+            "link":settings.FRONTEND_HOST
+        }
+    )
+
+    return EmailData(html_content= html_content, subject= subject)
+
     
 
     
