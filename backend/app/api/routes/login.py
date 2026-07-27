@@ -1,8 +1,8 @@
 from datetime import timedelta
 from typing import Annotated, Any
 from app import crud
-from app.utils import generate_password_reset_token
-from app.models import Token, UserPublicDTO
+from app.utils import generate_password_reset_token, generate_password_reset_email, send_email
+from app.models import Message, Token, UserPublicDTO
 from app.api.deps import CurrentUserDep, SessionDep
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
@@ -42,6 +42,18 @@ def recover_password(email:str, session:SessionDep):
 
     if user:
         password_reset_token = generate_password_reset_token(email=email)
-    #TODO
+        email_data = generate_password_reset_email(
+            email_to = user.email, email= email, token = password_reset_token
+        )
+
+        send_email(
+            email_to = user.email,
+            subject = email_data.subject,
+            html_content = email_data.html_content
+        )
+
+        return Message(
+            message="If that email is registered, we sent a password recovery link"
+        )
          
 
