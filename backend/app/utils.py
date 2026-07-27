@@ -59,7 +59,7 @@ def generate_password_reset_email(email_to:str, email:str, token:str) -> EmailDa
 
     return EmailData(html_content=html_content, subject=subject)
 
-def generate_new_account_email(email_to:str, username:str, password:str, token:str) -> EmailData:
+def generate_new_account_email(email_to:str, username:str, password:str) -> EmailData:
     """
     Method for new account email generation.
     """
