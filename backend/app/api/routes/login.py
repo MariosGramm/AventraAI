@@ -5,6 +5,7 @@ from app.utils import generate_password_reset_token, generate_password_reset_ema
 from app.models import Message, NewPassword, Token, UserPublicDTO, UserUpdateDTO
 from app.api.deps import CurrentUserDep, SessionDep
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from app.core.config import settings
 
@@ -81,5 +82,32 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     )
 
     return Message(message="Password updated successfully")
-        
+
+@router.post("/password-recovery-html-content/{email}")
+def recover_password_html_content(email:str, session:SessionDep, user:CurrentUserDep):
+    """
+    HTML Content for Password Recovery Email
+    """
+    user = crud.get_user_by_email(session=session, email=email)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User with this username does not exist in the system")
+
+    if not user.is_superuser:
+        raise HTTPException(403, "User does not have sufficient rights for this action")
+
+    password_reset_token = generate_password_reset_token(email=email)
+
+    email_data = generate_password_reset_email(
+        email_to=user.email, email=email, token = password_reset_token
+    )
+
+    return HTMLResponse(
+        content=email_data.html_content, headers={"subject:": email_data.subject}
+    )
+
+    
+    
+
+           
 
