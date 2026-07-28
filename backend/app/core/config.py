@@ -14,6 +14,8 @@ def parse_cors_origins(origins: str) -> list[str] | str:
     Returns:
         list: A list of CORS origins.
     """
+    if isinstance(origins, list):
+        return origins
     if origins.startswith("[") and origins.endswith("]"):
         return [origin.strip() for origin in origins[1:-1].split(",")]
     return [origin.strip() for origin in origins.split(",")]
