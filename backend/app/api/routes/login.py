@@ -1,8 +1,8 @@
 from datetime import timedelta
 from typing import Annotated, Any
 from app import crud
-from app.utils import generate_password_reset_token, generate_password_reset_email, send_email
-from app.models import Message, Token, UserPublicDTO
+from app.utils import generate_password_reset_token, generate_password_reset_email, send_email, verify_password_reset_token
+from app.models import Message, NewPassword, Token, UserPublicDTO, UserUpdateDTO
 from app.api.deps import CurrentUserDep, SessionDep
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
@@ -36,7 +36,7 @@ def test_token(current_user: CurrentUserDep) -> Any:
 @router.post("/password-recovery/{email}")
 def recover_password(email:str, session:SessionDep):
     """
-    Method for password recovery
+    Method for password recovery.
     """
     user = crud.get_user_by_email(session=session, email=email)
 
@@ -56,6 +56,30 @@ def recover_password(email:str, session:SessionDep):
             message="If that email is registered, we sent a password recovery link"
         )
 
+@router.post("/reset-password/")
+def reset_password(session: SessionDep, body: NewPassword) -> Message:
+    """
+    Method for password reseting and updating with a new password.
+    """
+    email = verify_password_reset_token(token=body.token)
 
-         
+    if not email:
+        raise HTTPException(400, "Invalid token")
+    user = crud.get_user_by_email(session=session, email=email)
+
+    if not user:
+        raise HTTPException(400, "Invalid token")
+    elif not user.is_active:
+        raise HTTPException(400, "User is not active")
+
+    user_to_update = UserUpdateDTO(password= body.new_password)
+
+    crud.update_user(
+        session=session, 
+        db_user = user, 
+        user_update_data=user_to_update
+    )
+
+    return Message(message="Password updated successfully")
+        
 
