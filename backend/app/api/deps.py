@@ -13,7 +13,7 @@ from sqlmodel import Session
 
 # Get token endpoint
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.AP1_V1_STR}/login/access-token"
+    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
 
 def get_db() -> Generator[Session]:

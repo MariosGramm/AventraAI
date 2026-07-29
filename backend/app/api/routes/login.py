@@ -11,7 +11,7 @@ from app.core.config import settings
 
 router = APIRouter(tags=["login"])
 
-@router.post("/login/access-token")
+@router.post("/access-token")
 def login_access_token(session:SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
     """
     OAuth2 compatible token login, get an access token for future requests
@@ -27,7 +27,7 @@ def login_access_token(session:SessionDep, form_data: Annotated[OAuth2PasswordRe
 
     return Token(user.id, expires_delta = access_token_expires)
     
-@router.post("/login/test-token", response_model= UserPublicDTO)
+@router.post("/test-token", response_model= UserPublicDTO)
 def test_token(current_user: CurrentUserDep) -> Any:
     """
     Test access token

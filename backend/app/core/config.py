@@ -1,8 +1,14 @@
+from pathlib import Path
 import secrets
 from typing import Annotated, Literal, Self
 import warnings
+from dotenv import load_dotenv
 from pydantic import AnyUrl, BeforeValidator, EmailStr, HttpUrl, PostgresDsn, computed_field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+ENV_FILE = BASE_DIR / ".env"
+load_dotenv(ENV_FILE, override=False)
 
 def parse_cors_origins(origins: str) -> list[str] | str:
     """
@@ -50,9 +56,10 @@ class Settings(BaseSettings):
         EMAIL_RESET_TOKEN_EXPIRE_HOURS (int): The expiration time for email reset tokens in hours.
     """
     model_config = SettingsConfigDict(
-        env_file="../.env",     #one level up from the current file
-        env_ignore_empty = True,
-        extra = "ignore"
+        env_file=str(ENV_FILE),
+        env_file_encoding="utf-8",
+        env_ignore_empty=True,
+        extra="ignore",
     )
 
     API_V1_STR: str = "/api/v1"
@@ -86,14 +93,14 @@ class Settings(BaseSettings):
         """
         Constuct the SQLAlchemy database URI for connecting to the PostgreSQL database.
         """
-        return PostgresDsn.build(
+        return str(PostgresDsn.build(
             scheme = "postgresql+psycopg",
             username = self.POSTGRES_USER,
             password = self.POSTGRES_PASSWORD,
             host = self.POSTGRES_SERVER,
             port = self.POSTGRES_PORT,
             path = self.POSTGRES_DB
-        )
+        ))
     
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
