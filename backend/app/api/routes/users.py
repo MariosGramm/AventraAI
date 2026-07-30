@@ -1,9 +1,10 @@
 
 from app import crud
+from app.core.security import get_password_hash, verify_password
 from app.utils import generate_new_account_email, send_email
 from sqlmodel import col, func, select
-from app.api.deps import SessionDep, get_current_active_superuser
-from app.models import User, UserCreateDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
+from app.api.deps import CurrentUserDep, SessionDep, get_current_active_superuser
+from app.models import Message, UpdatePassword, User, UserCreateDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.config import settings
 
@@ -58,7 +59,7 @@ def create_user(session: SessionDep, user_create_data: UserCreateDTO):
 
 
 @router.post("/update/me", response_model=UserPublicDTO)
-def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: User):
+def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: CurrentUserDep):
     """
     Method for a user updating his own profile.
     """
@@ -74,7 +75,39 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
     session.commit()
     session.refresh(current_user)
 
-    return current_user                  
+    return current_user
+
+@router.post("me/password", response_model= Message)
+def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:CurrentUserDep):
+    """
+    Method for a user updating his own password.
+    """
+    #Check if current password is valid
+    validated , _ = verify_password( data.current_password, current_user.hashed_password)
+
+    if not validated:
+        raise HTTPException(400, "Incorrect password")
+
+    if data.current_password == data.new_password:
+        raise HTTPException(400, "New password cannot be the same as the current one")
+
+    new_hashed_password = get_password_hash(data.new_password)
+    current_user.hashed_password = new_hashed_password
+    session.add(current_user)
+    session.commit()
+
+    return Message("Password updated successfully!")
+
+
+
+
+@router.get("/me", response_model=UserPublicDTO)
+def read_user_me(current_user:CurrentUserDep):
+    """
+    Method for a user viewing his own profile.
+    """
+    return current_user
+         
 
 
 
@@ -83,7 +116,6 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
 
 # TODO
 # update_password_me
-# read_user_me
 # delete_user_me
 # register_user
 # read_user_by_id
