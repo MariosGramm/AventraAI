@@ -3,7 +3,7 @@ from app import crud
 from app.utils import generate_new_account_email, send_email
 from sqlmodel import col, func, select
 from app.api.deps import SessionDep, get_current_active_superuser
-from app.models import User, UserCreateDTO, UserPublicDTO, UsersPublicDTO
+from app.models import User, UserCreateDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.config import settings
 
@@ -28,28 +28,28 @@ def read_users(session:SessionDep, pagination_skip:int = 0 , pagination_limit:in
     return UsersPublicDTO(data= usersPublicDTO, count= users_count)
 
 @router.post("/create", response_model= UserPublicDTO, dependencies= [Depends(get_current_active_superuser)])
-def create_user(session: SessionDep, user_to_create: UserCreateDTO):
+def create_user(session: SessionDep, user_create_data: UserCreateDTO):
     """
     Method for user creation. Only available to superusers.
     """
     #Check if user already exists
-    user = crud.get_user_by_email(session, user_to_create.email)
+    user = crud.get_user_by_email(session, user_create_data.email)
 
     if user:
         raise HTTPException(400, "User with this email already exists")
 
-    user_created = crud.create_user(session=session, user_creation_data=user_to_create)
+    user_created = crud.create_user(session=session, user_creation_data=user_create_data)
 
     #Send welcome email
     if settings.emails_enabled:
         email_data = generate_new_account_email(
             email_to= user_created.email,
             username= user_created.email,
-            password= user_to_create.password
+            password= user_create_data.password
         )
 
         send_email(
-            email_to= user_to_create.email,
+            email_to= user_create_data.email,
             subject= email_data.subject,
             html_content= email_data.html_content
         )
@@ -57,8 +57,25 @@ def create_user(session: SessionDep, user_to_create: UserCreateDTO):
     return user_created
 
 
-    
+@router.post("/update/me", response_model=UserPublicDTO)
+def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: User):
+    if user_update_data.email:
+        pass         
 
+
+
+
+
+
+# TODO
+# update_user_me
+# update_password_me
+# read_user_me
+# delete_user_me
+# register_user
+# read_user_by_id
+# update_user
+# delete_user
 
 
 
