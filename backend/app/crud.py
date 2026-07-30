@@ -2,7 +2,7 @@ import uuid
 
 from app.core.security import get_password_hash, verify_password
 from app.enums import AgentStep, ChatRole, SearchSessionStatus
-from app.models import ChatMessage, ChatMessageCreateDTO, ChatSession, ChatSessionCreateDTO, SearchHistory, SearchSession, SearchSessionCreateDTO, User, UserCreateDTO, UserUpdateDTO, UserUpdateSelfDTO
+from app.models import ChatMessage, ChatMessageCreateDTO, ChatSession, ChatSessionCreateDTO, SearchHistory, SearchSession, SearchSessionCreateDTO, User, UserCreateDTO, UserCreateSignupDTO, UserUpdateDTO, UserUpdateSelfDTO
 from sqlmodel import Session, select
 
 # Dummy hash to use for timing attack prevention when user is not found
@@ -12,9 +12,11 @@ DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$MjQyZWE1MzBjYjJlZTI0Yw$YTU4NGM5ZTZm
 # USER METHODS
 #=======================================================================================================
 
-def create_user(*, session:Session, user_creation_data:UserCreateDTO) -> User:
+def create_user(*, session:Session, user_creation_data:UserCreateDTO | UserCreateSignupDTO) -> User:
     """
     CRUD method for user creation.
+    Called by superusers using UserCreateDTO as a parameter.
+    Called by regular users using UserCreateSignupDTO as a parameter. 
     """
     db_obj = User.model_validate(
         user_creation_data, update = {"hashed_password": get_password_hash(user_creation_data.password)}

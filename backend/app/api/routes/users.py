@@ -1,12 +1,13 @@
 
 from typing import Any
+import uuid
 
 from app import crud
 from app.core.security import get_password_hash, verify_password
 from app.utils import generate_new_account_email, send_email
 from sqlmodel import col, func, select
 from app.api.deps import CurrentUserDep, SessionDep, get_current_active_superuser
-from app.models import Message, UpdatePassword, User, UserCreateDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
+from app.models import Message, UpdatePassword, User, UserCreateDTO, UserCreateSignupDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.config import settings
 
@@ -110,7 +111,8 @@ def read_user_me(current_user:CurrentUserDep) -> Any:
 @router.post("/me", response_model=Message)
 def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
     """
-    Method for a user deleting their own profile. 
+    Method for a user deleting their own profile.
+    Available only for regular users. 
     """
     if current_user.is_superuser:
         raise HTTPException(403, "Superusers are not allowed to delete themselves")
@@ -120,14 +122,45 @@ def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
 
     return Message("User deleted successfully!")     
 
+@router.post("/signup", response_model=UserPublicDTO)
+def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) -> Any :
+    """
+    Method for user signup.
+    """
+    user = crud.get_user_by_email(user_register_data.email)
 
+    if user:
+        raise HTTPException(400, "User with this email already exists")
 
+    userCreateSignupDTO = UserCreateSignupDTO.model_validate(user_register_data)
+    user_registed = crud.create_user(session, userCreateSignupDTO)
 
+    return user_registed
+
+@router.get("/{user_id}", response_model= UserPublicDTO)
+def read_user_by_id(session:SessionDep, user_id:uuid.UUID, current_user:User) -> Any :
+    """
+    Method for getting a specific user with an id.
+    Available only for superusers.
+    """ 
+    user = session.get(User, user_id)
+
+    if user == current_user:
+        return user
+
+    if not user.is_superuser:
+        raise HTTPException(403, "User does not have enough priviledges")
+
+    if not user:
+        raise HTTPException(404, "User not found")
+
+    return user
+
+@router.get
+    
 
 
 # TODO
-# delete_user_me
-# register_user
 # read_user_by_id
 # update_user
 # delete_user
