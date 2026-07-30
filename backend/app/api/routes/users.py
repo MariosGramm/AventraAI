@@ -1,4 +1,6 @@
 
+from typing import Any
+
 from app import crud
 from app.core.security import get_password_hash, verify_password
 from app.utils import generate_new_account_email, send_email
@@ -12,7 +14,7 @@ from app.core.config import settings
 router = APIRouter(tags=["users"])
 
 @router.get("/", response_model= UsersPublicDTO, dependencies=[Depends(get_current_active_superuser)])
-def read_users(session:SessionDep, pagination_skip:int = 0 , pagination_limit:int = 100 ):
+def read_users(session:SessionDep, pagination_skip:int = 0 , pagination_limit:int = 100 ) -> Any:
     """
     Method for user retrieval. Only available to superusers.
     """
@@ -29,7 +31,7 @@ def read_users(session:SessionDep, pagination_skip:int = 0 , pagination_limit:in
     return UsersPublicDTO(data= usersPublicDTO, count= users_count)
 
 @router.post("/create", response_model= UserPublicDTO, dependencies= [Depends(get_current_active_superuser)])
-def create_user(session: SessionDep, user_create_data: UserCreateDTO):
+def create_user(session: SessionDep, user_create_data: UserCreateDTO) -> Any:
     """
     Method for user creation. Only available to superusers.
     """
@@ -59,9 +61,9 @@ def create_user(session: SessionDep, user_create_data: UserCreateDTO):
 
 
 @router.post("/update/me", response_model=UserPublicDTO)
-def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: CurrentUserDep):
+def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: CurrentUserDep) -> Any:
     """
-    Method for a user updating his own profile.
+    Method for a user updating their own profile.
     """
     if user_update_data.email:
         existing_user = crud.get_user_by_email(session, user_update_data.email)
@@ -77,10 +79,10 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
 
     return current_user
 
-@router.post("me/password", response_model= Message)
-def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:CurrentUserDep):
+@router.patch("me/password", response_model= Message)
+def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:CurrentUserDep) -> Any:
     """
-    Method for a user updating his own password.
+    Method for a user updating their own password.
     """
     #Check if current password is valid
     validated , _ = verify_password( data.current_password, current_user.hashed_password)
@@ -98,16 +100,25 @@ def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:
 
     return Message("Password updated successfully!")
 
-
-
-
 @router.get("/me", response_model=UserPublicDTO)
-def read_user_me(current_user:CurrentUserDep):
+def read_user_me(current_user:CurrentUserDep) -> Any:
     """
-    Method for a user viewing his own profile.
+    Method for a user viewing their own profile.
     """
     return current_user
-         
+
+@router.post("/me", response_model=Message)
+def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
+    """
+    Method for a user deleting their own profile. 
+    """
+    if current_user.is_superuser:
+        raise HTTPException(403, "Superusers are not allowed to delete themselves")
+
+    session.delete(current_user)
+    session.commit()
+
+    return Message("User deleted successfully!")     
 
 
 
@@ -115,7 +126,6 @@ def read_user_me(current_user:CurrentUserDep):
 
 
 # TODO
-# update_password_me
 # delete_user_me
 # register_user
 # read_user_by_id
