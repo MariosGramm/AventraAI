@@ -7,7 +7,7 @@ from app.core.security import get_password_hash, verify_password
 from app.utils import generate_new_account_email, send_email
 from sqlmodel import col, func, select
 from app.api.deps import CurrentUserDep, SessionDep, get_current_active_superuser
-from app.models import Message, UpdatePassword, User, UserCreateDTO, UserCreateSignupDTO, UserPublicDTO, UserUpdateSelfDTO, UsersPublicDTO
+from app.models import Message, UpdatePassword, User, UserCreateDTO, UserCreateSignupDTO, UserPublicDTO, UserUpdateDTO, UserUpdateSelfDTO, UsersPublicDTO
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.config import settings
 
@@ -112,7 +112,7 @@ def read_user_me(current_user:CurrentUserDep) -> Any:
 def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
     """
     Method for a user deleting their own profile.
-    Available only for regular users. 
+    Available only to regular users. 
     """
     if current_user.is_superuser:
         raise HTTPException(403, "Superusers are not allowed to delete themselves")
@@ -137,33 +137,68 @@ def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) ->
 
     return user_registed
 
-@router.get("/{user_id}", response_model= UserPublicDTO)
-def read_user_by_id(session:SessionDep, user_id:uuid.UUID, current_user:User) -> Any :
+@router.get("/{user_id}", response_model=UserPublicDTO)
+def read_user_by_id(
+    session: SessionDep,
+    user_id: uuid.UUID,
+    current_user: CurrentUserDep
+) -> Any:
     """
-    Method for getting a specific user with an id.
-    Available only for superusers.
-    """ 
+    Get a specific user by ID.
+    Regular users can only view themselves.
+    Superusers can view any user.
+    """
     user = session.get(User, user_id)
-
-    if user == current_user:
-        return user
-
-    if not user.is_superuser:
-        raise HTTPException(403, "User does not have enough priviledges")
-
     if not user:
         raise HTTPException(404, "User not found")
 
+    #Regular users can only view themselves.
+    if user == current_user:
+        return user
+
+    if not current_user.is_superuser:
+        raise HTTPException(403, "User does not have enough privileges")
+
+    #Superusers can view any user.
     return user
 
-@router.get
-    
+@router.patch("/{user_id}", response_model=UserPublicDTO, dependencies=[Depends(get_current_active_superuser)])
+def update_user(session: SessionDep, user_update_data:UserUpdateDTO, user_id:uuid.UUID) -> Any :
+    """
+    Method for updating users.
+    Available only to superusers.
+    """
+    user = session.get(User, user_id)
+
+    if not user:
+        raise HTTPException(404, "User with this email does not exist")
+
+    if user_update_data.email:
+        existing_user = crud.get_user_by_email(session=session, email=user_update_data.email)
+        if existing_user and existing_user.id != user_id:
+            raise HTTPException(
+                status_code=409, detail="User with this email already exists"
+            )
+
+    user = crud.update_user(session=session, db_user=user, user_in=user_update_data)
+    return user
+
+@router.delete("/{user_id}", response_model= Message, dependencies=[Depends(get_current_active_superuser)])
+def delete_user(session:SessionDep, user_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
+
+    user = session.get(User, user_id)
+
+    if not user:
+        raise HTTPException(404, "User not found.")
+
+    if user == current_user:
+        raise HTTPException(403, "Superusers are not allowed to delete themselves.")
+
+    session.delete(user)
+    session.commit()
+    return Message(message="User deleted successfully!")
 
 
-# TODO
-# read_user_by_id
-# update_user
-# delete_user
 
 
 
