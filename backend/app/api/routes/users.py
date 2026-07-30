@@ -59,8 +59,22 @@ def create_user(session: SessionDep, user_create_data: UserCreateDTO):
 
 @router.post("/update/me", response_model=UserPublicDTO)
 def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, current_user: User):
+    """
+    Method for a user updating his own profile.
+    """
     if user_update_data.email:
-        pass         
+        existing_user = crud.get_user_by_email(session, user_update_data.email)
+        if existing_user and existing_user.id != current_user.id:
+            raise HTTPException(400, "User with this email already exists")
+
+    user_update_data_clean = user_update_data.model_dump(exclude_unset=True)
+    current_user.sqlmodel_update(user_update_data_clean)
+
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+
+    return current_user                  
 
 
 
@@ -68,7 +82,6 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
 
 
 # TODO
-# update_user_me
 # update_password_me
 # read_user_me
 # delete_user_me
