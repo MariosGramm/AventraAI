@@ -1,9 +1,10 @@
 
 from typing import Any
+import uuid
 
 from app import crud
 from app.api.deps import CurrentUserDep
-from app.models import ChatSession, ChatSessionCreateDTO, ChatSessionPublicDTO, ChatSessionsPublicDTO
+from app.models import ChatMessage, ChatMessagesPublicDTO, ChatSession, ChatSessionCreateDTO, ChatSessionPublicDTO, ChatSessionsPublicDTO
 from fastapi import APIRouter
 from sqlmodel import Session, col, select
 
@@ -22,10 +23,25 @@ def create_chat(session:Session, current_user:CurrentUserDep, chat_session_creat
 @router.get("/sessions", response_model=ChatSessionsPublicDTO)
 def get_chats(session:Session, current_user:CurrentUserDep) -> Any:
     """
-    Method for chat sessions retrieval.
+    Method for chat sessions retrieval in the form of a list.
     """
     chat_sessions_query = select(ChatSession).where(col(ChatSession.owner_id == current_user.id)).order_by(ChatSession.created_at.desc())
 
     chat_sessions = session.exec(chat_sessions_query).all()
 
     return chat_sessions
+
+@router.get("session/{chat_session_id}/messages", response_model=ChatMessagesPublicDTO)
+def get_chat_session_messages(session:Session, chat_session_id:uuid.UUID) -> Any:
+    """
+    Method for retrieving messages of a chat session.
+    """
+    chat_messages_query = (
+        select(ChatMessage)
+        .where(ChatMessage.chat_session_id == chat_session_id)
+        .order_by(ChatMessage.created_at.desc())
+    )
+
+    chat_messages = session.exec(chat_messages_query).all()
+
+    return chat_messages
