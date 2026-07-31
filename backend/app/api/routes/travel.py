@@ -36,7 +36,7 @@ def get_searches(session:SessionDep, current_user:CurrentUserDep) -> Any:
     return search_sessions
 
 @router.get("/searches/{search_session_id}", response_model=SearchSessionPublicDTO)
-def get_search(session:SessionDep, search_session_id:uuid.UUID, current_user: CurrentUserDep):
+def get_search(session:SessionDep, search_session_id:uuid.UUID, current_user: CurrentUserDep) -> Any:
     """
     Method for getting a specific session using a search session id with search session content.
     """
