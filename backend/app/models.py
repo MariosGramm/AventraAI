@@ -246,6 +246,14 @@ class SearchSessionPublicDTO(SQLModel):
     created_at: datetime | None
     packages: list["TravelPackagePublicDTO"]
 
+class SearchSessionsPublicDTO(SQLModel):
+    """
+    Model for a list of public search session representations.
+    Used for API responses when returning multiple search sessions.
+    """
+    data: list[SearchSessionPublicDTO]
+    count: int
+
 # Create DTO for SearchSession creation
 class SearchSessionCreateDTO(SQLModel):
     destination: str = Field(
