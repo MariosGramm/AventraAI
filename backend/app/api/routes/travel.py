@@ -3,7 +3,7 @@ from app import enums
 from typing import Any
 import uuid
 from app import crud
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.models import SearchSession, SearchSessionCreateDTO, SearchSessionPublicDTO, SearchSessionsPublicDTO
 from app.api.deps import CurrentUserDep, SessionDep
 from sqlmodel import col, select
@@ -25,15 +25,39 @@ def get_searches(session:SessionDep, current_user:CurrentUserDep) -> Any:
     """
     Method for getting a user's search sessions.
     """
-    search_session_query = (
+    search_sessions_query = (
     select(SearchSession)
     .where(SearchSession.owner_id == current_user.id)
     .order_by(col(SearchSession.created_at).desc())
     )
 
-    search_sessions = session.exec(search_session_query).all()
+    search_sessions = session.exec(search_sessions_query).all()
 
     return search_sessions
+
+@router.get("/searches/{search_session_id}", response_model=SearchSessionPublicDTO)
+def get_search(session:SessionDep, search_session_id:uuid.UUID, current_user: CurrentUserDep):
+    """
+    Method for getting a specific session using a search session id.
+    """
+    if search_session.owner_id != current_user.id:
+        raise HTTPException(403, "User does not have enough privileges")
+    
+    search_session_query = (
+        select(SearchSession)
+        .where(SearchSession.id == search_session_id)
+    )
+
+    search_session = session.exec(search_session_query).first()
+
+    if not search_session:
+        raise HTTPException(404, "Search session not found")
+
+    return search_session
+
+
+
+
 
 
 
