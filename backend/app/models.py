@@ -127,7 +127,7 @@ class ChatSession(AuditableBase, table=True):
     Represents a chat session between a user and the AI travel agent.
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, description="The unique identifier for the chat session.")
-    owner_id: uuid.UUID = Field(foreign_key="user.id", description="The unique identifier of the user associated with this chat session.", cascade_delete=True)
+    owner_id: uuid.UUID = Field(foreign_key="user.id", ondelete="CASCADE", description="The unique identifier of the user associated with this chat session.")
     title: str | None = Field(default=None, max_length=100, description="The title of the chat session")
     owner: "User" = Relationship(back_populates="chat_sessions")
     messages : list["ChatMessage"] = Relationship(back_populates="session", cascade_delete=True)
@@ -169,7 +169,7 @@ class ChatMessage(AuditableBase, table=True):
     Represents a single message in a chat session.
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, description="The unique identifier for the chat message.")
-    chat_session_id: uuid.UUID = Field(foreign_key="chat_session.id", description="The unique identifier of the chat session associated with this message.", cascade_delete=True)
+    chat_session_id: uuid.UUID = Field(foreign_key="chat_session.id", ondelete="CASCADE", description="The unique identifier of the chat session associated with this message.")
     role : ChatRole = Field(description="The role of the participant who sent the message (user or assistant).")    
     content: str = Field(description="The content of the chat message.")
     created_at: datetime | None = Field(
@@ -217,7 +217,7 @@ class SearchSession(AuditableBase, table=True):
     Represents a search session initiated by a user.
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, description="The unique identifier for the search session.")
-    owner_id: uuid.UUID = Field(foreign_key="user.id", description="The unique identifier of the user associated with this search session.", cascade_delete=True)
+    owner_id: uuid.UUID = Field(foreign_key="user.id", ondelete="CASCADE", description="The unique identifier of the user associated with this search session.")
     destination: str = Field(max_length=200, description="The travel destination for the search session.")
     date_from: datetime = Field(description="The start date for the travel search.")
     date_to: datetime = Field(description="The end date for the travel search.")
@@ -276,7 +276,7 @@ class SearchHistory(SQLModel, table=True):
     Represents a record of a completed search session.
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, description="The unique identifier for the search history record.")
-    search_session_id: uuid.UUID = Field(foreign_key="search_session.id", description="The unique identifier of the search session associated with this history record.", cascade_delete=True)
+    search_session_id: uuid.UUID = Field(foreign_key="search_session.id", ondelete="CASCADE", description="The unique identifier of the search session associated with this history record.")
     step: AgentStep = Field(description="The step of the AI travel agent's process that this history record corresponds to.")
     input: str = Field(description="The input data for the corresponding step of the AI travel agent's process.")          
     output: str = Field(description="The output data for the corresponding step of the AI travel agent's process.")        
