@@ -38,7 +38,7 @@ def get_searches(session:SessionDep, current_user:CurrentUserDep) -> Any:
 @router.get("/searches/{search_session_id}", response_model=SearchSessionPublicDTO)
 def get_search(session:SessionDep, search_session_id:uuid.UUID, current_user: CurrentUserDep):
     """
-    Method for getting a specific session using a search session id.
+    Method for getting a specific session using a search session id with search session content.
     """
     if search_session.owner_id != current_user.id:
         raise HTTPException(403, "User does not have enough privileges")
