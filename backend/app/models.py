@@ -204,6 +204,13 @@ class ChatMessageCreateDTO(SQLModel):
         description="The message content sent by the user."
     )
 
+#Response DTO for Chat response
+class ChatResponseDTO(SQLModel):
+    session_id: uuid.UUID    
+    role: ChatRole           
+    content: str             
+    created_at: datetime | None
+
 #=======================================================================================================
 # SEARCH MODELS
 #=======================================================================================================
