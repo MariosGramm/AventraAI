@@ -27,7 +27,10 @@ OUTPUT_DIR  = BACKEND_DIR / "app" / "rag" / "data"
 CITIES = [
     # Europe
     "Paris", "London", "Rome", "Barcelona", "Amsterdam",
-    "Venice", "Berlin", "Athens", "Prague", "Lisbon", "Vienna",
+    "Venice", "Berlin", "Athens", "Prague", "Lisbon", "Vienna", 
+    "Budapest", "Dublin", "Stockholm", "Copenhagen", "Warsaw", "Moscow",
+    "Edinburgh", "Florence", "Brussels", "Oslo", "Helsinki", "Reykjavik",
+    "Madrid", "Seville", "Valencia", "Porto", "Marseille", "Nice",
     # Asia
     "Tokyo", "Kyoto", "Seoul", "Bangkok", "Singapore",
     "Dubai", "Beijing", "Hong Kong", "Istanbul", "New Delhi",
