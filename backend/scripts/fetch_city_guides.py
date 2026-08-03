@@ -27,7 +27,7 @@ OUTPUT_DIR  = BACKEND_DIR / "app" / "rag" / "data"
 CITIES = [
     # Europe
     "Paris", "London", "Rome", "Barcelona", "Amsterdam",
-    "Venice", "Berlin", "Athens", "Prague", "Lisbon",
+    "Venice", "Berlin", "Athens", "Prague", "Lisbon", "Vienna",
     # Asia
     "Tokyo", "Kyoto", "Seoul", "Bangkok", "Singapore",
     "Dubai", "Beijing", "Hong Kong", "Istanbul", "New Delhi",
@@ -300,9 +300,17 @@ def main():
     print(f"📏 Max chars/file:   {MAX_CHARS:,}\n")
 
     success_count = 0
+    skip_count    = 0
     fail_count    = 0
 
     for i, city in enumerate(CITIES, 1):
+
+        # Skip cities that already have a file
+        if (OUTPUT_DIR / city_to_filename(city)).exists():
+            print(f"[{i}/{len(CITIES)}] Skipping (already exists): {city}")
+            skip_count += 1
+            continue
+
         print(f"[{i}/{len(CITIES)}] Fetching: {city}...")
 
         raw_text = fetch_plain_text(city)
@@ -327,6 +335,7 @@ def main():
 
     print("\n" + "=" * 60)
     print(f"✅ Success:  {success_count} cities")
+    print(f"⏭️  Skipped:  {skip_count} cities (already exist)")
     print(f"❌ Failed:   {fail_count} cities")
     print(f"📁 Files:    {OUTPUT_DIR}")
     print("=" * 60)
