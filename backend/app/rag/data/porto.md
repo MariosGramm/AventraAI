@@ -1,0 +1,98 @@
+# Porto — Travel Guide
+
+> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
+
+Porto is Portugal's second largest city and the capital of the Northern region, and a busy industrial and commercial centre. The city isn't very populous (about 238,000 inhabitants in 2024), but the Porto metropolitan area has some 1.8 million inhabitants in a 50-km radius, with cities like Vila Nova de Gaia, Vila do Conde, Póvoa de Varzim and Espinho.
+The city is built at the high ground overlooking the Douro River estuary's northern side, and its historical centre was declared a  UNESCO World Heritage Site in 1996. It has been continuously inhabited since at least the 4th century BC.
+
+## History
+
+Porto (POHR-too, /ˈpoɾ.tu/) was named by the Romans Portus Calle (the origin of the entire present country's name), the city is nowadays officially styled A muito nobre, sempre leal e invicta cidade do Porto (the very noble, always loyal, and undefeated city of The Harbor). This is usually shortened to "a Cidade Invicta" (the undefeated city) a title won because of Porto's unparalleled resistance against hostile troops during the 1820s. Residents of Porto are nicknamed the Tripeiros, or tripe eaters, since the Portuguese conquest of Ceuta in North Africa in 1415, when the city's inhabitants went without meat in order to provision the fleet (which left from Porto), and had to subsist on tripe soup, which developed into a gastronomical specialty of the city.
+The city is quite varied architecturally, with medieval and modern buildings side by side. Porto's geography is hard on the feet, but pleasant to the eye. The city's grounds are extremely uneven; the Romans strategically built their fortified settlement into a cliff face that overlooks the river, where the present cathedral stands today. Stairs cut into the stone run up and down the cliff face and offer a laborious but rewarding walking tour. Across the Douro from Porto proper, at Vila Nova de Gaia, are the warehouses of notable Porto wine companies: Cálem, Ferreira, Fonseca, Sandeman, Kopke and others.
+The Portuguese usually include the article "o" when referring to the city, "O Porto" (literally, the port). It used to be common in English to write the city as "Oporto", but this spelling has declined in popularity. Nowadays it is rendered in English simply as "Porto" without the article.
+While most don't think of it, the influence of Porto's football team had got the city's name in one of Australia's six big fast food stores: Oporto, which still uses the old spelling.
+
+## People
+
+Citizens of Porto, while definitely Portuguese, hold themselves apart culturally from the rest of the country, as is expressed in the often heard phrase "o Porto é uma nação" (Porto is a nation). Outsiders often consider Porto to be more crass and mercantile than the rest of the country, and the inhabitants to be somewhat lacking in social graces. This is likely because the city's working and middle classes have historically been dominated by Portuguese bourgeoisie and English trading factions rather than the nobility. By and large, Os Portuenses, to use the correct term for the inhabitants, of course disagree, regarding themselves with some justification as a no nonsense people at the economic heart of the nation. As the saying goes, "Porto works, Braga prays, Coimbra studies, and Lisbon gets the money."
+While the local attitude is friendly, to outsiders it is worth noting that locals can respond literally to questions, which may seem slightly off-putting to the uninitiated. An example of this would be to ask in a bar if they have a menu (for food) and to receive a straight 'no' as a response. It's after further questions that one can find out that the establishment doesn't sell food. Such a response is not considered rude, it is merely direct and literal.
+If you speak in Spanish to a local, you will be largely understood, and as a rule they will freely converse with you, but from time to time, more so with the older generation, you may be politely reminded that you are in Portugal and the native language is Portuguese.
+
+## Climate
+
+Porto has a semi-Mediterranean climate, although it's strongly affected by the Atlantic Ocean, which makes it cooler than other cities with this climate. Temperatures can rise as high as 40 °C in August during occasional heat waves. Winters are mild, rainy and humid, with occasional cold nights when temperatures can drop below 0 °C.
+
+## See
+
+Porto is a mysterious city that reveals its charm to the visitor through time. Take your time, wander through the mazes and alleys of the city. Take in the old, bohemian spirit of the city. Hike through the Ribeira and Foz do Douro regions (the latter, at sunset). Porto may not be in every tourist's Iberian Peninsula itinerary, but it's well worth a visit if you want to see a city that has changed economically, but that has kept its old traditions.
+If you want to visit several museums, consider the Porto Card which provides free access to several museums and further discounts, optionally also free public transport access.
+
+## Do
+
+Douro river cruise. Take a cruise upriver (the cost starts at €15 (although they can be slightly cheaper if paired with a different activity) and takes about 50 minutes. Cruises run from 10:00 to 18:30, with sailings every 30 minutes for most operators. There are multiple river cruise operators and you can purchase a ticket from every tourist service and office in the Sao Bento area, or potentially from the wharf itself. Many of the cruises are themed around seeing the various bridges and river-adjacent facilities. You may also choose a day-long cruise starting at €70 to or from Régua, with one way of the journey completed by bus (included in the price). This tour states at 08:00 and returns at 17:00 or 18:00. Go at least as far as Pinhão — the landscape is absolutely stunning. If you choose to do this in the summer, don't forget your factor 30 sunscreen! Look for cruises based on the Vila Nova de Gaia wharf (the same side as the port wine caves), as some of them may offer discounts for cave tours or port wine purchases. (updated Feb 2024)
+Fado Bars. Fado is a music genre originating in Lisbon and considered an integral part of Portuguese music. It is traditionally sung by a woman in a black dress, accompanied by guitar players. A handful of Fado bars stand in Porto, primarily in the Sao Bento area, offering one or two shows per day. The cost is generally €15 (as of June 2022) and tickets for different shows are sold by tourist offices throughout the Sao Bento area. Some shows may include a glass of Port Wine within the cost of the ticket. €10. (updated Jun 2022)
+1 Teatro Nacional São João (TNSJ), Praça da Batalha, 4000-102, ☏ +351 22 340 19 56 (tour enquiries and reservations), toll-free:  800 108 675. Porto's main theatre and opera production company and venue. There are also guided tours (€5/person) for access to the stage, rehearsal room, dressing rooms and the technical area (if they are not used during the time of the tour). (updated Sep 2015)
+Football: the city has two men's pro soccer teams:
+2 FC Porto. They play in Primeira Liga, Portugal's top tier. Their home ground Estádio do Dragão (capacity 50,000) is 1 km north of the centre with its own metro station. (updated Jun 2023)
+3 Boavista FC. They were relegated in 2025 and now play in Liga 2 the second tier. Their Estádio do Bessa (capacity 28,200) is 2 km northwest of the centre, metro Francos. (updated Jun 2025)
+Valadares Gaia is a women's team in their top tier, playing at Valadares sports complex 10 km south of the river.
+Porto Exit Games (West Baixa; City centre), ☏ +351 914 884 883, hello@portoexitgames.com. You're locked in a room with a mystery to solve and the clock ticking. Can you crack the puzzle and escape? 2-5 players €50 pp. (updated Sep 2018)
+
+## Buy
+
+Almost all the shops are open every day, but are usually overcrowded during the weekends and rainy days.
+
+## Shopping streets
+
+Take a stroll around the Mercado do Bolhão which has a food market and handicrafts stores, and Santa Catarina street (highly recommended, even if only to stroll), which is near Bolhão. Cedofeita street is also a busy shopping street, as well as Boavista.
+
+## Shopping centres
+
+For shopping, Porto and the suburbs have plenty of shopping centres, including Norte Shopping, Arrábida Shopping, Parque Nascente, Gaia Shopping and Mar Shopping (the biggest IKEA group shopping in Europe). Apart from these you also have less populated shops that are smaller but still great (Shopping Cidade do Porto, Via Catarina, etc.).
+
+3 ViaCatarina Shopping, Rua de Santa Catarina 312–350, ☏ +351 22 207 56 09, info@adm.viacatarina.pt. M–F 10:00–20:00, Sa Su & holidays 09:00–17:00. A medium-sized shopping centre nestled in a building block between Via Santa Catarina and Rua de Fernandes Tomas, utilising the difference in elevation between them for spectacular results. Inside you will find a slightly mundane selection of chain stores and food court filled with local fast-food options. (updated Feb 2021)
+4 Shopping Cidade do Porto, Rua Gonçalo Sampaio 350, ☏ +351 226 006 585, bemvindo@shoppingcidadedoporto.com. M–F 06:30–22:30, Sa Su & holidays 08:00–22:30. An elegant shopping centre with upscale pretences and spacious atrium, but limited selection of stores compared to larger ones. (updated Feb 2021)
+
+## Eat
+
+Porto has some of the finest restaurants in Portugal.
+It is said that if you like to eat, you should go to Porto because it's a place where you eat well in terms of quality and amount (even Lisbon citizens say that in Porto is where they eat the best food).
+The best restaurants of the city are mainly in Matosinhos near the beach, and the Porto de Leixões seaport but watch out for pricing, more than a few ok establishments deem themselves worthy of high pricing just because of the decor or the "in crowd" is seen going there or a combination of both, they charge ridiculous prices for food not much better prepared or presented than elsewhere and many times, the dose is very small, so don't be shy to look around to get a sense of what is what. You can take the blue metro line A to get there which takes about 30 min. In the Ribeirinha part of Porto, overlooking the Douro River and Vila Nova de Gaia, there's many well run very affordable small family run restaurants with a great vibe, friendly staff, great food and drink and sometimes, due to limited space, having to share tables with complete strangers, sometimes local people and sometimes not, making the whole experience very cosmopolitan and entertaining. Within the old city centre, inexpensive to reasonable priced eating houses catering mostly for residents are also easily found for both lunch and dinner, these places welcome foreigners and many take special pride in hosting you. At these places, to enjoy a hearty well prepared meal, it's best practice to just follow the waiter suggestions as the menus are three course set Pratos do dia (Today's menu), normally a choice of two or three soups, main dishes including bread, wine of the house, dessert and a bica (espresso) in the end, all this for €7-10 per person. If you are hungry, a good strategy is to say how much you enjoyed the soup and politely ask if you can have a little more. That's why local patrons tend to have the soup last. If you truly enjoyed the meal, show your appreciation to the chef and staff, it always makes the people proud for being of service.
+Expect hearty meals, and if you can, try "Tripas à moda do Porto", a tripe dish. Citizens of Porto are called tripeiros (tripe-eaters) on account of this dish. Traditional set menu restaurants, tend to serve the soup last but these days most waiters will ask what you want first and so on, but don't be surprised to see someone starting with desert and finish with the couvert! It's known to happen. Also try bacalhau - in any way it is cooked - there are hundreds of different dishes with salted codfish!
+Don't forget the traditional grilled cheese sandwich called "Francesinha", which literally translated means little French lady. This city is just about the only place in the world where you can find it. However, in many other northern Portuguese cities you can find a low quality version of it. Essentially it is a toast with layers of meat inside (beef, pork meat, ham....)  It is covered with cheese and a spicy sauce, with the option of including french fries on top. Most importantly, this dish must be accompanied by beer and not wine.
+In July, there is a fish festival in Matosinhos, accessible by bus or subway. Freshly caught fish is served the same day at barbecues lined up in the streets just a few blocks from the main beach. You choose a fish (only whole fish) and they prepare it on the streets for you - not a fancy restaurant, but together with the local people you are eating the best tasting fish you ever had! Try a dourada; it is delicious.
+Porto is dotted with thousands of different bakeries (Pão Quente) and pastry shops (Pastelarias). Apart from serving delicious (and quite inexpensive) goods, they are also equipped with a side-cafe that serves all sorts of coffees (Pingo, Meia de Leite, etc.) and sandwiches (Tosta Mista-ham and cheese toastie). Unlike the other river side cafes in the city, these establishments do not have picturesque views of Porto (that's expensive, and in the end, you'd be the one paying for that bill). Instead, they attract tourists by offering good food at very cheap prices.
+Most locals drink black coffee (espresso), but the usual variation of espresso drinks are available in almost all cafes.
+There is at least one fully vegetarian restaurant in Porto, Paladar da Alma (Rua de Santo Ildefonso 293/5), and some other restaurants which offer vegetarian dishes alongside non-vegetarian options, such as Capa Verde (Rua da Nossa Senhora de Fátima). Vegans may have to ask for dishes to be specially prepared for them, even in vegetarian restaurants.
+
+## Drink
+
+Porto is home to port wine of course, and there are many wineries around the city where port wine is brewed. Strictly speaking, port wine can only be called port wine if the grapes are grown in the Douro valley, and the wine is produced and bottled in Porto. Port wines come in many styles, with vintage port being the most expensive.
+The main areas for bars are Praça de Ceuta to the north, through the station surrounds to Ribeira further south.
+
+## Sleep
+
+There are residential homes all around the city. There are also lots of 3-star hotels with very affordable prices. In the city there's only one camping site (Prelada), but it's a bit far from the centre. There aren't many family houses to rent in Porto, so they'll be difficult to find.
+
+## Budget
+
+1 Alma Porto Hostel, Rua do Bonfim, 305B (by metro exit at Campo 24 de Agosto station to Rua do Bonfim; go up Rua do Bonfim and find us at 305B. By train exit at Campanhã station, go up Rua Pinto Bessa until the church; turn left onto Rua do Bonfim and find us at 305B), ☏ +351 914 049 326, +351 914 306 011, almaportohostel@gmail.com. Check-in: 14:00, check-out: 12:00. Small and chill hostel with smooth colours, lounge areas and relaxed atmosphere in a house built in the 19th century where you can also appreciate the hand made works in the high ceilings, the typical Portuguese tiles, and the beautiful camellias in the garden.
+2 The White Box House, Rua de Santa Catarina, 575, ☏ +351 911 008 585, house@the-white-box.pt. Check-in: 13:00, check-out: 12:00. A typical Porto house built in the early 20th century, completely renewed in order to combine the comfort of the present with the charm of the past, providing the atmosphere for a perfect stay.
+3 Wine Hostel, Campo dos Martires da Patria, 52, ☏ +351 222013167. Very centrally located. Clean rooms with ensuite showers. Very close to the train station, but may be difficult to find, so check a map before arriving. €19.
+4 Gallery Hostel Porto, Rua Miguel Bombarda 222, info@gallery-hostel.com. Free breakfast, free walking tour, free nightlife tour. Thematic dinners, Porto wine tastings, Gallery exhibitions. Carefully decorated rooms, multilingual and professional team. €20-22 dorm room with private bathrooms, €50 double rooms.
+5 Porto Spot Hostel, Rua Gonçalo Cristóvão nº 12 (5 minutes walk from Bolhao Metro stations). Comfortable, clean hostel with wi-fi, dvd and playstation room, reading room, a well equipped kitchen and a bar downstairs. Great light and showers. Could give Traveller's House in Lisboa a run for its money. €14-18 dorm room with shared bathroom, private rooms around €20 (Mar 2011).
+6 Oporto Sky Hostel, Rua da Lapa 33 (One minute walking from Lapa's subway station), ☏ +351 222 017 069, info@oportosky.com. Very comfortable hostel with a very welcoming and helpful manager, Luzia. Shared and private rooms. Free computers and wi-fi. A few minutes from the city centre and just off Boavista, which leads to the coast. Hosts speaks perfect English and Spanish. Prices starting at €14 pp with breakfast included.
+7 Pousada de Juventude do Porto (HI Porto), Rua de Paulo da Gama 551. Located outside of the city centre, with several buses passing just by, open 24 hours and a terrific view over the river.
+8 Hospedaria 31 de Janeiro, Rua 31 Janeiro 193.  Incredibly cheap (€15 for a double) but dirty and dodgy.
+9 Hotel Ibis Porto São João, Rua Dr. Plácido Costa (inside Galeria Comercial do Campus São João), ☏ +351 22 551 31 00. Direct at the IPO station above a shopping center. Free WiFi, nice breakfast (although it is the same every day).
+10 Residencia Pedra Antiga, Rua de Santa Catarina, 830, ☏ +351 222407467. Cheap, clean and friendly. Bathroom ensuite. Free WiFi. Hosts speak no English though French and Spanish work besides Portuguese. Starting at €13.75 pp.
+11 Hotel Miradouro, Rua de Alegria, 598, ☏ +351 22 537 0717. Unique and interesting. 1960s decor all over, amazing views of Porto and the Douro valley, famous panoramic restaurant on the 13th floor where you can enjoy your breakfast while seeing miles and miles of the Porto region below you. Free parking. Bathroom ensuite. Receptionists are very friendly and professional and speak English. The area it lies in is a bit run down, but definitely not as bad as many other areas of the city. From €26.
+12 Porto Lounge Hostel, Rua do Almada, nº 317 (next to Av. dos Aliados, in downtown), ☏ +351 222085196, info@portoloungehostel.com. Free Wifi, breakfast included, lockers, bar and common area. €14-20 dorm room with private bathrooms, €40-50 double rooms.
+
+## Stay safe
+
+There may be pickpockets in heavily crowded areas and on public buses and trains; however, pickpocketing is not common in Porto. Travelling by bus or metro is generally safe and one of the best ways to go from a place to another.
+Porto is generally a safe place to be if you take normal precautions like walking in well-illuminated streets at night.
+One part of Porto, near the Tourist Information Office between the cathedral and the steps to the small church, often has drunk people that could cause you trouble. There's no reason for alarm because many of them are inoffensive, but it is best to use some caution, as you would elsewhere.
+If you take the main road from the bus station to the cathedral and tourist information centre, walk back to the bus station after you're done and then walk from there to the other sites. Avoid the shortcut from the tourist information centre downstairs because near there have been many incidents there.
+Call 112 if you have an emergency.
