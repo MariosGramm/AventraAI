@@ -1,0 +1,99 @@
+# Dubai — Travel Guide
+
+> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
+
+Dubai (Arabic: دبي‎‎ Dubayy) is a cosmopolitan metropolis and global city on the Arabian Peninsula. The city is one of the ten most popular tourist destinations in the world. The city is also considered one of the most modern and progressive cities in the Middle East – certainly in the Arab world – and is also sometimes nicknamed as "City of Gold" due to historically being a hub for gold trade as well as the rapid transformation from a desert into a luxurious city.
+Dubai is characterized by a vast landscape of desert which transforms into a futuristic style of skyscrapers along the coastline. The city offers both insights into the old merchant and pearl diving history of the Arabs in Deira and Bur Dubai and the new modern skyscraper business and bustling life in Jumeirah and Jebel Ali.
+
+## History
+
+Dubai began as a small fishing village on the coast of the eastern Arabian Peninsula. At the beginning, the town made its income as a small pearl diving town. However, as expanding trade boomed across the gulf, it became a trading hub between Iran and India and gained a lot of notoriety for its imported goods from the East. In fact, the currency of Dubai used to be the Indian rupee historically.
+Dubai was also used as a smuggling town to smuggle gold from Africa and elsewhere and import it to India, this made Dubai a well-known point in the map for various traders. When oil companies looked for oil around the Trucial States, Dubai was shown to not have any significant oil reserves compared to Abu Dhabi. Sheikh Rashid Al Maktoum, then the leader and Sheikh of Dubai, continued on the booming expansion of trade in Dubai instead of relying on any oil income. He welcomed Indian traders, Iranian traders, and even Western officials and travelers to his hometown.
+The open policy of commerce and tolerance of foreigners made Dubai a willing destination for any non-Arab or non-Muslim, in stark contrast to other cities in the Arabian Peninsula, which viewed non-Muslims with suspicion. Sheikh Rashid's son, Sheikh Mohammed, had a vision of establishing Dubai as a Middle Eastern tourist destination. In his memoir, when he met with other GCC heads of state after the British withdrawal from the Gulf and proposed on making Dubai a tourist destination, the rest of the Sheikhs laughed at him. They told him nobody would like to come and visit a barren desert. Nevertheless, Sheikh Mohammed made the effort to hire experts and change the entire infrastructure of the city to welcome tourists, established free-zones with no taxes, invested in major tourism projects and opened the city for everyone regardless of race or religion. Multiple Western companies and institutions, wanting to expand their influence in the Middle East, welcomed Dubai's tax-free open-arm invitation. Dubai was seen as the only city in the Arabian Peninsula that would allow non-Muslims to live, drink, and enjoy their lives by their own laws and Western or non-Islamic standards, though it is now rivalled by nearby Doha and Abu Dhabi in this regard.
+
+## Climate
+
+The city of Dubai is situated on a coastal strip bordered by desert and gets very hot in the summer. It is dry on the hottest days and humid during the cooler days in the summer. Cooler, more pleasant weather lasts from the end of September to the beginning of May (although pleasant is relative, with daily temperatures from October to January and March to May still being 20–25 °C (68–77 °F), but be prepared for cold night temperatures. In winter the temperature at night is usually from 10 to 16 °C (50 to 61 °F). From May to September, the sun is intense and in August temperatures can touch 54 °C (129 °F) in the city and even higher in the desert. The heat, coupled with a humidity of 60%–70% near the coast, effectively precludes most activity outdoors for the daylight hours during summer. Summer and winter are effectively the only two noticeable seasons the city experiences.
+
+December to April generally produces the highest precipitation, though little of it, at 100 mm (3.9 in) total per year. Some years yield no more than a few minutes of shower. Rain is celebrated in the UAE and most people take days off and some schools give rain days off to enjoy the little amount of precipitation the city experiences.
+
+## Get in
+
+See the Get in section for the United Arab Emirates for visa and customs regulations.
+
+## See
+
+Individual listings can be found in Dubai's district articles
+
+Dubai is a mixture of old and new, traditional and modern. From old traditional souks and historical buildings (now being preserved for cultural reasons or already part of the national heritage) to modern Dubai's overwhelming shopping malls, incredible artificial islands and giant modern skyscrapers that include the world's tallest building, Dubai is a world in itself and offers plenty of wonderful attractions.
+The city has numerous museums and historical buildings, but Dubai Museum is a must see for a first-time traveller to the Emirates. It provides a glimpse of the old life of Dubai, its people and their culture and heritage. A number of other museums are located in nearby Sharjah.
+Dubai has a justified reputation as a concrete jungle, but there are nice pockets of greenery within the city, such as Safa Park. The city parks are modern and very well-maintained, with the most popular located in Jumeirah.
+
+## Do
+
+Individual listings can be found in Dubai's district articles
+
+Abra ride. A boat ride is best done at night in the cool weather and to enjoy the city lights. Abras can be hired for a private tour (for a price negotiable with the driver, but usually very cheap). This is quite a popular activity at sunset on a clear day, particularly if the driver is able to enliven the tour with stories about the structures on either side of the Creek. Just make sure that the purpose of one's abra hire is made clear at the outset, otherwise, you will be in for a very expensive cross-river trip or a crowded private tour.
+Beaches and sea. There are endless water sports opportunities as Dubai has some of the whitest and sandiest beaches in the world. Ocean temperatures range from 22 °C (72 °F) in winter up to 35 °C (95 °F) in summer, there are few wave breaks and the strong winds can make swimming difficult. The water is also very salty so many prefer to use their hotel swimming pool. Diving activities have been severely affected by offshore construction work for the Palms and The World; consequently, long boat trips are necessary to reach wreck sites. Alternatively, one can make the 90-minute road journey to the East coast Emirate of Fujairah or the Sharjah enclave, Khor Fakkan, for top-class diving on coral reefs supporting extensive marine life.
+Camel race track. One of the more unusual attractions, with races being held on Thursday and Friday in the winter. You can watch the races, and you'll have the opportunity to visit the paddocks. Vendors sell everything from beads to rugs and blankets, so you can purchase souvenirs.
+Horse racing has a long tradition in the Arab world, and Dubai's Meydan Racecourse is one of the most famous horse racing venues in the world, holding races for both Thoroughbred and purebred Arabian horses. Gambling is illegal, so there are no on-site betting facilities, but the grandstand is a marvel of modern architecture, and particularly spectacular when lit up at night.
+Desert safari or dune bashing. Head out to the desert in an SUV with specialist desert drivers. The drivers will take you for a thrilling roller-coaster ride over sand dunes, show you the sunset from a strategic vantage point and then take you to a traditional Arabic Bedouin campsite where you'll be offered lavish barbecue buffet dinner with music and belly dance to complete the atmosphere. The duration of the tour is usually around five hours. You may want to stay clear of the dune bashing if you get carsick easily. A desert safari is one of the best things to do while in Dubai. Another option would be renting/buying a 4x4 and joining the many growing 4x4 clubs in the UAE, but only if you're an extremely experienced driver and hold an international driving license. Neighboring cities including Abu Dhabi also have their own, such as AD4x4. For all of the Dubai-based clubs, membership is free of charge and they conduct trips for beginners into the desert on a regular basis.
+Natural outdoors. Although at first glance the outdoors may seem dull and uninteresting, and even dangerous due to the desert conditions, there are actually amazing natural destinations in the Emirate of Dubai, which extends into Hatta. There are pristine waterfalls, cliffs lined with fossils, and even freshwater lakes.
+Yacht charter is an easy way to explore the man-made Palm Islands and coastal skyscrapers. Fleets are available for hire from Dubai Marina from many of the yacht charter agencies.
+Dubai Creek cruise. Dubai Creek is the foundation from which Dubai grew. It was built as a port for trading vessels plying to and from India, Africa and the Middle East. A bit of the old shipping culture remains. In and around the Creek one can see some of the original buildings that have served as customs houses and defence structures. You can book a ride (usually four hours) on the Dubai Marina cruise or rent a private boat to take you on an hour-long ride up and down the Creek.
+Burj Khalifa: Visit the tallest building in the world with the magnificent centrepiece of Dubai, Burj Khalifa is surrounded by hotels, must-visit shopping destinations and a world of entertainment options.
+Golf. It may be a desert, but a lot of money and water is spent on irrigating opulent golf courses. Alternatively, for a more local flavour, try sand golf.
+The Dubai International Film Festival is the city's not-for-profit cultural event. As a major festival for Arab cinema, it showcases a selection of films from the Middle East, Africa and Asia.
+
+## Buy
+
+Individual listings can be found in Dubai's district articles
+
+Dubai is practically synonymous with shopping and could be called "Do buy". Low tariffs and a huge amount of cargo passing through its port ensure that practically anything is available at fairly competitive rates, although the appreciation of the Dirham and the plentiful supply of shoppers means that Dubai is no longer a bargain basement shopping city. You'll also find products in Western chain stores, still with the original tags quoting euro or sterling prices, being sold with a 20–30% mark-up once converted to dirhams. The best things to buy are textiles, electronics and gold; electronics are believed to be much cheaper, while there is a wide selection of textiles and gold.
+Dubai shops suffer from the standard developing world shopping phenomenon of having no storeroom and no stocks in reserve, even in the mega-malls – and for clothes shopping this may mean that you struggle to find the style you want in the size you want.  Shops open as early as 09:00 and stay open until 22:00, and on weekends to midnight or 01:00.
+Remember to haggle in the souks, as discounts are almost always available and even in situations where the item will not become much cheaper, the customer is always expected to "play the game" of haggling. A simple question of "What's your best price?" will often result in a shopkeeper going to extraordinary lengths to sell his stock. Prices in the malls and other Western shops tend not to be negotiable. Far from being a bad thing, this allows the canny visitor to work out comparative prices for common souvenirs – an invaluable aid when a shopkeeper in a souk is asking for a higher price.
+Dubai Shopping Festival has been the biggest shopping event in the Middle East since 1996. Almost every shop has a sale, starting in January and ending in February. The DSF is not limited to Shopping but also produces some mind-blowing stages shows and performances performed by international celebrities. There's also a very similar Dubai Summer Surprises trying to pull in punters during the summer low season.
+
+## Eat
+
+Individual listings can be found in Dubai's district articles
+
+Shawarma is the most available food item on almost all streets (and cheap) in Dubai. It is the Arabic equivalent of the burger. It is meat that has been cooked on a skewer and then cut into thin strips and placed into a kuhbus (pita) bread with vegetables and dressing. There is the plain-jane variety and the more exotic Lebanese and Iranian varieties. The shawarma sold by Indian restaurants are arguably the cheapest.
+Another local snack is fala-fil (felafel, falafel), which is as cheap as shawarma.
+
+Traditional Emirati food normally involves rice and meat/chicken cooked with different spices. As such, mandi is a very popular meal and generally affordable, except when served in high end restaurants. Emirati restaurants can be mostly found in areas with local residents, such as Deira, Bur Dubai and Jumeirah. Traditional desserts are also worth trying. Search for luqaimat, deep fried dough balls tossed with date syrup on top. You'll find it at any Emirati restaurant as well as some small cafeterias or street markets.
+Most of the American fast food chains have set up shop, including KFC, Chillis, TGI Fridays, Starbucks, and McDonalds. The beauty of the food in Dubai is that you will probably find cuisine for every taste. All food is halal.
+Dubai has a big selection of budget Indian food. Dosa, vada, idlee, samosa, chapaati/roti, with generous servings of sabji (cooked vegetable stew) are available for cheap. Bur Dubai (particularly Meena Bazaar area) and Karama are the places that abound in these restaurants. Most of them are open from 07:00 to 22:00 or 23:00 throughout the week.
+Pork is eaten here mostly by non-Muslim Filipinos and Europeans. Pork sections exclusive for non-Muslims are found in Spinneys (numerous branches, including ones in Jumeirah and Dubai Marina), Al Maya Lal's (generally caters to Filipinos; there's a branch in Satwa) New Westzone Supermarket (has a branch in Satwa that's bigger than nearby rival Al Maya Lal's), Choithrams and Waitrose.
+
+During Ramadan, while it is not illegal for non-Muslims to eat and drink in public spaces during daylight hours, it's better to avoid doing so out of respect for those fasting. Most restaurants remain open as normal. Once the sun sets though, many locals will gather for iftar, or the breaking of the fast, and many hotels will serve elaborate iftar meals catering to this market. As a tourist, you are welcome to partake too, but be sure to reserve in advance as these are very popular.
+Dubai hosts several food festivals in the spring (March - May). The largest is the Dubai Food Festival which lasts for two weeks. Across the city, there are discounts at restaurants and home / kitchen stores (such as Crate & Barrel, Williams Sonoma, etc.) World-class chefs offer master classes, special collaborations, and tasting menus.
+
+## Budget
+
+Most malls have food courts, which offer good value menus and are a fast and reliable option for visitors and locals. There are also several food chains of many different types (Pakistani, Indian, Western) scattered all over the city. See the district articles for individual recommendations.
+Inexpensive non-chain restaurants serve food from India, Pakistan, Bangladesh and some other Asian countries. These simple restaurants are mostly northwest of the metro station Sharaf DG, south of the metro station Gold Souq and north and east of the Union metro station.
+The Nesto, Lulu and Carrefour hypermarkets have canteens for customers, but most of them are takeaway only.
+
+## Drink
+
+Individual listings can be found in Dubai's district articles
+Dubai has supercharged the nightlife in the last decade and most international known brands have a sister location in town. Most 3-5 star hotels have bars and nightclubs for those interested in the nightlife. World-class DJs frequent Dubai's nightclubs, and many A-list musical celebrities are adding Dubai to their list of tour dates. There is nothing missing and during the high tides of the party time, the impression of being in Ibiza is not misleading. Most of the night life is geared at the beaches of Jumeirah or the Dubai Marina. Bur Dubai is more family-oriented (e.g. Dubai Fountain), while Deira was able in parts to maintain its more Arabic focussed style. Dubai is very popular with Arabic travellers, so an Arabic blend is added quite often.
+Dubai has several laws regarding alcohol which travelers should be aware of:
+
+Alcohol is available only at licensed premises, usually attached to hotels (most nightclubs and bars are in or attached to hotels, though they may have separate entrances).  As of 2023 there is one public cinema that serves alcohol (Cinema City's Azul Lounge & Theatre), as well as a few private cinemas that can be booked for groups.
+Alcohol is not sold on religious holidays. From 2016, it can be sold during Ramadan.
+It is illegal to drink alcohol in public places, and there is a zero-tolerance policy on drunk driving.  Anyone involved in a collision found with alcohol in their blood will usually get a month's jail sentence and fine.
+Alcohol can be bought only for home consumption at certain outlets in Dubai, and an alcohol license is required.  Supermarkets only stock non-alcoholic beers.  Even food items containing alcohol are not sold in supermarkets.
+Remember to carry some sort of identification when visiting a bar if you are young, as you will not be let in otherwise. The law prohibits anyone below 21 to enter.
+The authorities take disruptive behavior while intoxicated very seriously, which will lead to jail time or deportation.
+Prostitution is illegal but can be seen in bars. Both parties act illegally, but in rather (in-)famous clubs it can be rather obvious. Keep in mind that most hotels have a strict guest policy.
+
+## Sleep
+
+Individual listings can be found in Dubai's district articles
+Take care, on booking.com all dorms in Dubai are named as private rooms like "entire holiday home", "entire apartment" or "room with shared bathroom". This seems to be the case due to local laws. So check twice, if you want a private room to not end up with a dorm.
+Due to substantial increase in hotel rooms, only during Islamic holidays do prices rise substantially. The cheapest places, mainly catering to small-scale businessmen, can be found in near the souks of Deira. In Dubai you find a youth hostel and several backpacker hostels.
+See the individual listings in the districts for hotel recommendations. In general tourists tend to stay at the beach hotels in Jumeirah or Jebel Ali, while city dwellers have ample choice in Deira or Bur Dubai. Dubai is a stretch along the coastline and taxis are cheap and the metro reliable, so there are always alternative options. The only hassles are ever-new construction sites and the rush hour. During the summer heat a hotel with access to a mall or shopping complex is beneficial to have a greater area for air conditioned walking.
+There are luxury glamping resorts in the desert far from the city. The most well known is Terra Solis. Reservations need to be made more than a month in advance, even in summer. As of 2023, the cheapest type of accommodation (tents) cost 950 dirham per night on weeknights and 1400 dirham per night on weekends.
+For long trips (a month or more), the Rove hotel collection offers summer rates from 4000 dirham per month with significant discounts on F&B, laundry, and Lets work membership (co-working space). This is cheaper than the monthly rent for an unfurnished 1-bedroom apartment in a popular neighborhood, and Dubai residents will take advantage of this if they happen to be between leases or to help a friend who has newly moved to the city.

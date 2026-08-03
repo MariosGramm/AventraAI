@@ -1,0 +1,98 @@
+# Hong Kong — Travel Guide
+
+> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
+
+Hong Kong (香港 Hēunggóng in Cantonese) is a city with multiple personalities. The population is mainly Chinese, but British influence is still quite visible. It has absorbed people and cultural influences from places as diverse as Vietnam and Vancouver and proudly proclaims itself to be Asia's World City.
+Hong Kong is a global financial hub, and has been a major destination for tourists and business people from around the world for at least a century. Today it is also a major tourism destination for mainland China's increasingly affluent population.
+Hong Kong is much more than a harbour city with crowded streets: this territory with its cloudy mountains and rocky islands also offers rural landscapes with breathtaking views.
+
+## Understand
+
+"Hong Kong" means "fragrant harbour" in Cantonese.
+Although part of China, Hong Kong operates as a Special Administrative Region under the slogan "One Country, Two Systems" with a high degree of autonomy, retaining most laws and government structures from colonial times. Visa requirements, laws, currency, culture and language have a heritage from the time of British rule, so for most tourists Hong Kong feels like a different country. Hong Kong enjoyed many Western-style freedoms and many locals were proud of it. The ideals of a free and open society were firmly rooted here, but a significant degree of freedom was curtailed when the National Security Law was imposed in 2020 and Article 23 was implemented locally in 2024.
+
+## History
+
+The area of Hong Kong was incorporated into China during the Qin Dynasty in 214 BC. In 1841, Great Britain defeated China's then-ruling Qing Dynasty in the First Opium War, gaining possession of Hong Kong Island. After the defeat of China in the Second Opium War, the Kowloon Peninsula was ceded to Great Britain in 1860. The Opium War Museum is located across the border in Dongguan. The New Territories were leased to Great Britain in 1898 for a term of 99 years. Hong Kong was only a sparsely-populated backwater prior to the arrival of the British, but grew rapidly into one of the world's most densely populated areas following the establishment of a free port under British colonial rule.
+When World War II broke out, British Prime Minister Winston Churchill declared that Hong Kong was an "impregnable fortress". However owing to Britain's main war effort in Europe, Hong Kong was not given sufficient resources for its defence. After two weeks of fighting, Hong Kong was surrendered to the Japanese on 25 December 1941, and subject to a brutal occupation that lasted until the end of the war. Upon the resumption of British control, Hong Kong experienced an astonishingly swift post-war recovery.
+After the communists took control of mainland China in 1949, many Chinese people, especially businessmen, fled to Hong Kong to escape persecution by the government. The British government took a hands-off approach in Hong Kong, and allowed a high degree of economic freedom. Social problems persisted during the 1950s and 1960s, including the continuation of Communist-Nationalist conflict among residents, labour disputes, and widespread corruption. These problems, when combined with effects of the Cultural Revolution, culminated in the 1967 riots by communists, with an aim to overthrow the British administration. The riots were eventually suppressed by the authorities, but they forced the colonial government to take measures of reform, such as cracking down on corruption.
+Under reforms, businesses flourished in Hong Kong and its economy grew rapidly, earning it a place as one of the East Asian Tigers. Today, Hong Kong is an industrialised and developed economy, and is one of the world's most important financial centres.
+
+In 1984 the Chinese and British Governments signed the Sino-British Joint Declaration, Britain agreeing to return Hong Kong to Chinese sovereignty. On 1 July 1997 Hong Kong became a special administrative region (SAR) of the People's Republic of China. As Hong Kong was the last remaining British colony with a significant population and economic importance, the handover was deemed by many to be the "end of empire". In theory, Hong Kong enjoys autonomy in most matters except foreign affairs and defence.
+In 2014, the Umbrella Protest was held to demand free elections for Hong Kong's chief executive. The Chinese government had proposed elections for the position, but would only allow candidates they had vetted to stand for election. The proposed amendments to the Basic Law (Hong Kong's equivalent of a constitution) were voted down by the pro-democracy legislators, meaning that the chief executive is still elected by an election committee with limited representation. The protests eventually died down without concessions from China, though there remain demands for more political autonomy, and even for independence from China.
+Simmering tensions eventually led to the breakout of massive and violent protests in June 2019. The protests began in opposition to a bill that would have allowed people to be extradited to mainland China to face criminal charges, but expanded into a wider anti-government movement, and continued even after the extradition bill was withdrawn. In response, the Chinese government imposed a sweeping national security law on Hong Kong in July 2020, outlawing many forms of speech and advocacy against the government. This crackdown has led to a massive brain drain, with many well-educated young professionals fleeing to Western countries, in particular the United Kingdom and Canada.
+Hong Kong participates in some international organisations such as the WTO and APEC, and in international sports competitions under the name "Hong Kong, China" (中國香港).
+
+## People
+
+The majority of Hong Kong's population are Han Chinese (92%), mostly of Cantonese ancestry, though there are also sizeable numbers of other Chinese groups such as Chiuchao (Teochews), Shanghainese and Hakkas. A significant number of Indians, Pakistanis and Nepalis live here too; some are immigrants, though many have families that have lived in Hong Kong for several generations. White people, some of them expatriates, and some descended from British colonists, make up just under 1% of the population. Other smaller communities whose presence in Hong Kong dates back to colonial times include the Parsis and the Baghdadi Jews.
+Hong Kong has a significant minority of Permanent Residents who are not PRC citizens, and are not ethnically Chinese, but are recognised as Hong Kong residents by the Basic Law. This includes descendants of British, Jewish and South Asian populations from the colonial era. They are eligible to apply for Chinese citizenship, but few have taken up this option.
+The largest groups of non-Chinese immigrants are Filipinos, Indonesians and Thais, most of whom are employed as domestic helpers. On Sundays, being their day off, they congregate in their thousands — mostly Filipinas — in Central and Admiralty and spend the day there together, sitting talking, eating and drinking wherever there is free room. The territory is also home to a significant number of people hailing from Australia, Europe, Japan and North America, making it a truly international metropolis.
+Due to its history as part of that region, the local culture in Hong Kong is similar to that of Guangdong province. With over a century of British rule, the British have also left their mark, as have the other non-Chinese minorities who came here during the colonial period. As the city escaped the upheaval of the Cultural Revolution, Hong Kongers have maintained some aspects of traditional Chinese culture which have largely disappeared in the mainland.
+Hong Kong has significant cultural differences from mainland China due to its heritage. The bulk of the population are descendants of ethnic Chinese who fled China and found safety in Hong Kong during the colonial era. Locals in Hong Kong have maintained many aspects of traditional Chinese culture that have been abandoned in the mainland, including religion, holidays, music, traditional writing and the official use of a regional language (Cantonese). British influences have also been incorporated into the local culture.
+Contemporary Hong Kong is, for the most part, rather secular in daily life. The Chinese majority generally practises a mix of traditional Chinese folk religions and Buddhism. There are Hindus and Muslims, most of whom are South Asians. Christianity is followed by 10% of the population. Protestants in Hong Kong tend to be strongly conservative.
+Since 1997, some policy changes have allowed a very large number of mainland citizens to visit or to move to Hong Kong (in addition to imported workers) – many fewer were allowed before the handover.
+
+## Climate
+
+Hong Kong has a humid subtropical climate. Summers are usually hot and humid, lasting from June to September, with average highs of 32 °C (90 °F) and lows of 27 °C (81 °F). Some particularly hot days can see summer temperatures climb upwards to 34 °C (93 °F) and 29 °C (84 °F) at night. The humidity can make the summer temperatures feel much hotter, the apparent feels like temperature is typically around 38 °C (100 °F) during the day and 31 °C (88 °F) at night, but cases of extreme humidity and heat can make it feel like 46 °C (115 °F) and 38 °C (100 °F) at night. Such high feels like temperatures only need an air temperature of 36 °C (97 °F) with a dew point of 27 °C (81 °F).
+The area, like most of southern China, is affected by typhoons, which usually occur between June and September, sometimes as late as October. They seldom halt local business for more than a day.
+Winters in Hong Kong are generally very mild, with temperatures usually in the range 10–20 °C (50–68 °F). Christmas in Hong Kong is warm compared to European countries. Chinese New Year is notorious for cold wet weather, because winter in Hong Kong tends to start out mild and dry and then turn cooler and wetter later.
+Spring in Hong Kong is from March to May and autumn is from September to November with an average temperature of around 20–25 °C (68–77 °F). Autumn is considered a more comfortable season as spring tends to be more humid and rainy.
+Although most buildings in Hong Kong have air conditioning to cope with the summer weather, winter heating is less common. During the coldest days, most locals wear more layers, even indoors. Some larger Chinese restaurants keep the air conditioning on during winter, though the temperature in air conditioned shopping malls stays the same regardless of season or weather outside.
+
+## See
+
+Hong Kong doesn't have street benches to sit down. Whilst "sitting out areas" are around, these are generally infrequent. Additionally, restaurants (especially cheap and quick ones) will prefer quick table turnover. All this adds up to spending a considerable amount of time on your feet in any given day. Make sure you have a pair of comfortable shoes, as even a good pair of shoes will still leave your feet sore after a full day on your feet.
+
+## Seeing Hong Kong by public transport
+
+Travelling on a bus or a tram is ideal for looking at different sides of Hong Kong. Not only is it cheap, it allows you to see completely different lifestyles in different districts in a short time. See Touring Hong Kong by public transport for details.
+
+## Buy
+
+The official currency is Hong Kong Dollar (HKD).
+Credit or debit cards are widely accepted in Hong Kong, but street vendors and most taxis still expect cash, so it's wise to have some on hand. Octopus payments are common for smaller purchases like transport, convenience stores and chain restaurants. Mobile/QR code payments are gaining traction but remain far less common than in mainland China.
+
+## Eat
+
+Individual listings can be found in Hong Kong's district articles
+
+Cuisine plays an important part in many peoples' lives in Hong Kong. Not only is it a showcase of various regional Chinese cuisines, but there are also excellent Asian and Western options, and creative fusion between the various cuisines. Although Western food is often adapted to local tastes, Hong Kong is a good place for homesick travellers who have had enough of Chinese food.
+Due to its history as part of that region, unsurprisingly, much of the local cuisine in Hong Kong is very similar to that of neighbouring Guangdong. That being said, over a century of British rule means that the British have also left their mark on the local cuisine, with cakes and pastries being fairly popular among locals. Hong Kongers are also somewhat less adventurous than their fellow Cantonese speakers in mainland China, with several exotic ingredients such as dog and cat meat being banned in Hong Kong. Indian immigrants brought over by the British have also left their mark on Hong Kong cuisine, and curry (咖喱) is a popular condiment. While authentic Indian curries can certainly be found, Hong Kong curries are generally adapted for the Cantonese palate, with the spice level dialed down drastically.
+It is also possible to find cuisine from practically every part of China, as many famous chefs fled from the mainland to Hong Kong to escape persecution by the communists in the aftermath of the Chinese Civil War. In particular, the Hakkas and Teochews have left a significant impact on Hong Kong's culinary culture, and there is no shortage of good Hakka and Teochew restaurants for those who have grown weary of Cantonese food.
+You may meet some local people who haven't cooked at home for a decade. Locals love to go out to eat since it is much more practical than socializing in crowded spaces at home. A long queue can be a local sport outside many good restaurants during peak hours. Normally, you need to register first, get a ticket and wait for empty seats. Reservations are usually only an option in upmarket restaurants.
+
+## Eating etiquette
+
+Chinese food is generally eaten with chopsticks. However, restaurants serving Western food usually provide a knife, fork and spoon. Do not stick your chopsticks vertically into a bowl of rice, as this is reminiscent of incense sticks burning at the temple and has connotations of wishing death on those around you. In addition, chopsticks should not be used to move bowls and plates or make any noise. Dishes in smaller eateries might not come with a serving spoon, although staff will usually provide one if you request.
+A few Hong Kong customs to be aware of:
+
+To thank the person who pours your tea Cantonese style, tap two or three fingers on the table three times. The legend suggests a story involving a Chinese emperor travelling incognito and his loyal subjects wanting to kowtow (bow) to him without blowing their cover — hence the "finger kowtow".
+If you want more tea in the pot, leave the lid open, and it will be refilled.
+It is not unusual for customers to rinse their plates and utensils with hot tea before starting their meal, and a bowl is often provided for this very purpose. This is due to the fact that cheaper restaurants may often have washing residues on dishes or utensils.
+Except for very expensive places, there is no real dress code in Hong Kong. You will often see people in suits and others in t-shirts in the same restaurant.
+See also Chinese table manners for more details. While there are some minor differences, much of traditional Chinese dining etiquette applies to Hong Kong too.
+
+## Sleep
+
+Individual listings can be found in Hong Kong's district articles
+With more than 50,000 rooms available, Hong Kong offers a huge choice of accommodation from shockingly cheap digs to super luxury. However, budget travellers who are spoiled by cheap prices elsewhere in Asia are often shocked that the accommodation cost in Hong Kong is closer to that of London and New York.
+A 3% hotel accommodation tax is levied on hotel rooms, excluding service charges. You will pay the tax when you pay for hotel rooms.
+For long-term accommodation, be prepared to splurge as real estate prices in Hong Kong are among the highest in the world, and many locals are forced to live in cramped "shoebox" apartments due to the astronomical rents in the city.
+
+## Budget
+
+While it is possible to get a dorm bed for $120–150, a single room for $270–400, and a double room for $400–500, you should not expect anything in these rooms except a bed, with barely enough space in the room to open the door. Accommodation with reasonable space, decoration, and cleanness is usually priced from $150–200 for a dorm bed, $450–600 for a single room, $700 for a double room, and $800 for a triple room.
+Most cheap guesthouses are found along Nathan Road between Tsim Sha Tsui and Mong Kok. Expect a tiny, undecorated room with just enough room for a bed. Bathrooms are often shared and noise could be a problem for light sleepers (not all customers are interested in sleeping). Be sure to read the online reviews before booking as bed bugs, dirty beds, and unclean bathrooms have been reported. Keep your expectations as realistically low as possible.
+Popular guesthouse clusters are inside the 17-floor 1 Chungking Mansions (Nathan Road 36-44) (重慶大廈 in Chinese, nicknamed Chungking Jungles by some local people), Mirador Mansions (美麗都大廈) in Tsim Sha Tsui, and New Lucky House (華豐大廈) (15 Jordan Road). These towers are all in the city center and close to the buses to/from the airport. While these towers are regarded as slums by the locals, if you ignore the fake watch sellers and disturbing pimps, they are well-patrolled and safe.
+Another cluster of hostels and guesthouses can be found on Paterson Street near Causeway Bay. While not as central as the mansions, the internet connections are more reliable and the rooms are generally clean. However, they are still small and cramped. Do not expect a great atmosphere or spacious rooms.
+Notice that some drab "guesthouses", especially those in Kowloon Tong, Mong Kok, and Causeway Bay, may actually be love hotels.
+The Hong Kong Youth Hostel Association operates 7 youth hostels. All of them are outside of the city and cost $100–$300 to reach via taxi when public transport service is not operating. All but the one on Hong Kong Island also have strict curfew rules and require guests to leave the site from 10AM to 4PM (1PM-3PM on public holidays). Free shuttle bus service is provided by several hostels but the service stops at 10:30PM.
+The government advises travellers to stay in hostels with licences, this website may help you a lot: The Office of Licensing Authority maintains an online list of licensed accommodation establishments.
+There are
+41 camping sites in Hong Kong. The facilities are on a "first-come-first-served" basis and places are booked quickly during weekends and public holidays. You are not allowed to camp other than in a designated camp site (identified by the sign board erected by the Country and Marine Parks Authority) and this rule is strictly enforced.
+
+## Stay safe
+
+Hong Kong is one of the safest cities in the world, with a large high-density population with diverse socio-economic backgrounds managed very effectively. The city experienced significant large-scale protests against new legislation with increasingly violent clashes with police between 2014 and 2019. The arbitrariness and broad applicability of the National Security Law imposed by China in 2020 has ended most public protest.

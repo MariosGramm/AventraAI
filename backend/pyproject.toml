@@ -21,6 +21,7 @@ dependencies = [
   "sentry-sdk[fastapi]>=2.0.0,<3.0.0",
   "gradio>=6.15.1",
   "python-dotenv>=1.0.0",
+  "requests>=2.34.2",
 ]
 
 [dependency-groups]
