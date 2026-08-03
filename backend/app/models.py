@@ -1,5 +1,5 @@
 import uuid
-from app.enums import AccommodationType, ActivityType, AgentStep, ChatRole, Currency, PartOfDay, SearchSessionStatus, TravelPackageTier
+from app.enums import AccommodationType, ActivityType, AgentStep, AuthProvider, ChatRole, Currency, PartOfDay, SearchSessionStatus, SubscriptionTier, TravelPackageTier
 from sqlmodel import ARRAY, Column, DateTime, Relationship, SQLModel, Field, String
 from pydantic import EmailStr
 from datetime import datetime, UTC
@@ -93,6 +93,15 @@ class User(UserBase, AuditableBase, table=True):
     """
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, description="The unique identifier for the user.")
     hashed_password: str = Field(max_length=255, description="The hashed password for the user account.")
+
+    #Freemium model: Users can have a free or paid subscription. Paid users have more searches per month.
+    subscription_tier: SubscriptionTier = Field(default=SubscriptionTier.FREE, description="The subscription tier for the user.")
+    monthly_searches_used: int = Field(default=0, description="The number of searches used by the user in the current month.")
+    searches_reset_date: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="The date when the user's monthly searches will reset.")
+
+    #Google sign in fields
+    google_id: str | None = Field(default=None, max_length=255, description="The unique identifier for the user from Google sign-in.")
+    auth_provider: AuthProvider = Field(default=AuthProvider.EMAIL, description="The authentication provider for the user (Google or Email).")
 
     chat_sessions: list["ChatSession"] = Relationship(back_populates="owner", cascade_delete=True)
     search_sessions: list["SearchSession"] = Relationship(back_populates="owner", cascade_delete=True)

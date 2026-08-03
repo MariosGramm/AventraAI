@@ -67,4 +67,17 @@ class AccommodationType(StrEnum):
     HOSTEL = "hostel"
     AIRBNB = "airbnb"
 
+class SubscriptionTier(StrEnum):
+    """
+    Enum representing the subscription tiers for users.
+    """
+    FREE = "free"
+    PAID = "paid"
+
+class AuthProvider(StrEnum):
+    """
+    Enum representing the authentication providers for users.
+    """
+    GOOGLE = "google"
+    EMAIL = "email"
 
