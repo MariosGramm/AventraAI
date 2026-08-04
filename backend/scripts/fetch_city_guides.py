@@ -50,7 +50,7 @@ CITIES = [
 WIKIVOYAGE_API = "https://en.wikivoyage.org/w/api.php"
 
 HEADERS = {
-    "User-Agent": "NomadoAI/1.0 (travel guide fetcher; educational project) python-requests/2.x"
+    "User-Agent": "AventraAI/1.0 (travel guide fetcher; educational project) python-requests/2.x"
 }
 
 REQUEST_DELAY = 3.0
