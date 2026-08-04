@@ -1,5 +1,6 @@
 
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -28,7 +29,18 @@ class Config:
     max_tokens: int = 4000
     temperature: float = 0.3
 
+    def __post_init__(self):
+        if self.chroma_db_path is None:
+            self.chroma_db_path = self.base_path / "chroma_db"
+
+    # Create directory if it doesn't exist
+        self.chroma_db_path.mkdir(exist_ok=True)
+
+@lru_cache()
+def get_config() -> Config:
+    """Get the configuration for the RAG system - Singleton pattern."""
+    return Config()
     
 
 
-    
+#TODO : Implement sample docs path and sample docs for testing purposes.
