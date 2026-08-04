@@ -23,12 +23,6 @@ class Config:
     # Embedding
     embedding_model: str = "text-embedding-3-small"
 
-    #Generation
-    llm_model_free: str = "gpt-4o-mini"
-    llm_model_paid: str = "gpt-4o"
-    max_tokens: int = 4000
-    temperature: float = 0.3
-
     def __post_init__(self):
         if self.chroma_db_path is None:
             self.chroma_db_path = self.base_path / "chroma_db"
@@ -42,5 +36,4 @@ def get_config() -> Config:
     return Config()
     
 
-
-#TODO : Implement sample docs path and sample docs for testing purposes.
+#TODO : Implement sample docs path and sample docs for testing purposes if needed.
