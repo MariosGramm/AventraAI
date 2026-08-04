@@ -47,32 +47,32 @@ def get_chat_session_messages(session:SessionDep, chat_session_id:uuid.UUID) -> 
 
     return chat_messages
 
-@router.post("session/{chat_session_id}/send_message", response_model= ChatResponseDTO)
-def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCreateDTO, chat_session_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
-    """
-    Method for sending a message to the agent during a chat session.
-    """
-    chat_session = session.get(ChatSession, chat_session_id)
+# @router.post("session/{chat_session_id}/send_message", response_model= ChatResponseDTO)
+# def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCreateDTO, chat_session_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
+#     """
+#     Method for sending a message to the agent during a chat session.
+#     """
+#     chat_session = session.get(ChatSession, chat_session_id)
 
-    if not chat_session:
-        raise HTTPException(status_code=404, detail="Chat session not found")
+#     if not chat_session:
+#         raise HTTPException(status_code=404, detail="Chat session not found")
 
-    if chat_session.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="User is does not have enough enough privileges to send a message in this chat session")
+#     if chat_session.owner_id != current_user.id:
+#         raise HTTPException(status_code=403, detail="User is does not have enough enough privileges to send a message in this chat session")
 
-    chat_message = crud.create_chat_message(session, chat_message_create_data, role=ChatRole.USER, chat_session_id=chat_session_id)
+#     chat_message = crud.create_chat_message(session, chat_message_create_data, role=ChatRole.USER, chat_session_id=chat_session_id)
 
-    #Get all the messages in the chat session to send to the agent for context.
-    chat_messages = crud.get_chat_messages_by_session(session, chat_session_id)
+#     #Get all the messages in the chat session to send to the agent for context.
+#     chat_messages = crud.get_chat_messages_by_session(session, chat_session_id)
 
-    agent_response = run_chat_agent(chat_messages, chat_message.content)   #TODO: Implement the logic for running the chat agent and getting a response.
+#     agent_response = run_chat_agent(chat_messages, chat_message.content)   #TODO: Implement the logic for running the chat agent and getting a response.
 
-    agent_message = crud.create_chat_message(session, ChatMessageCreateDTO(content=agent_response), role=ChatRole.ASSISTANT, chat_session_id=chat_session_id)
+#     agent_message = crud.create_chat_message(session, ChatMessageCreateDTO(content=agent_response), role=ChatRole.ASSISTANT, chat_session_id=chat_session_id)
 
-    return ChatResponseDTO(
-        session_id=chat_session_id,
-        role=ChatRole.ASSISTANT,
-        content=agent_response,
-        created_at=agent_message.created_at
-    )
+#     return ChatResponseDTO(
+#         session_id=chat_session_id,
+#         role=ChatRole.ASSISTANT,
+#         content=agent_response,
+#         created_at=agent_message.created_at
+#     )
 
