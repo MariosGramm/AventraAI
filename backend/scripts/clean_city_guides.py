@@ -1,4 +1,10 @@
-# scripts/clean_city_guides.py
+"""
+Remove the "Source" line from all city guide markdown files in the data directory.
+This is a one-time cleanup script to ensure that the "Source" line is not included in the indexed chunks.
+
+Usage (from backend/):
+    uv run python scripts/clean_city_guides.py
+"""
 
 from pathlib import Path
 
