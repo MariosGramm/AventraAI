@@ -46,13 +46,22 @@ Use this exact structure:
                     "morning": "string",
                     "afternoon": "string",
                     "evening": "string",
-                    "estimated_daily_cost": float
+                    "estimated_daily_cost": float,
+                    "activities": [
+                        {
+                            "title": "string",
+                            "type": "sightseeing" | "food" | "adventure" | "culture" | "nature" | "shopping",
+                            "estimated_cost": float,
+                            "average_duration_hours": int,
+                            "part_of_day": "morning" | "afternoon" | "evening"
+                        }
+                    ]
                 }
             ],
             "accommodations": [
                 {
                     "name": "string",
-                    "type": "hotel" | "airbnb" | "hostel",
+                    "type": "hotel" | "hostel" | "apartment" | "resort" | "guesthouse",
                     "area": "string",
                     "cost_per_night": float,
                     "rating": float
@@ -110,10 +119,11 @@ Keep responses concise (2-4 paragraphs maximum).
 """
 
 #=======================================================================================================
-# CONTEXTUALIZE_PROMPT - For query contextualization. Using few-shot prompting.
+# CONTEXTUALIZE_PROMPT - For user query contextualization. Using few-shot prompting.
 #=======================================================================================================
 
 CONTEXTUALIZE_PROMPT = """
+
 Given a chat history and the user's latest message,
 reformulate the message as a standalone question that
 can be understood without the chat history.
@@ -130,4 +140,5 @@ Examples:
 
 - "I want to go to Paris" (already standalone)
   → "I want to go to Paris"
+
 """
