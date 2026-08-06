@@ -1,6 +1,5 @@
 # London — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Vibrant and truly multicultural, London is a megalopolis of people, ideas and frenetic energy. The capital and largest city of the United Kingdom sits on the River Thames in South-East England. Greater London has a population of a little over 9 million. Considered one of the world's leading "global cities", London remains an international capital of culture, music, education, fashion, politics, finance and trade.
 For the visitor, there is a seemingly endless choice of historical sites, shopping, museums, food, art galleries, nightlife, and activities. Once a Celtic settlement, London is a bustling city, where visitors come to experience the urban heritage and see its specific royal-themed attractions.

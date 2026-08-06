@@ -1,6 +1,5 @@
 # Barcelona — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Barcelona is Spain's second largest city, with a population of nearly two million people, and the capital of Catalonia. A major port on the northeastern Mediterranean coast of Spain, Barcelona has a wide variety of attractions that bring in tourists from around the globe. The many faces of Barcelona include the medieval Old Town, and the unique street grid resulting from 19th-century urban planning. The city has long sandy beaches and green parks on the hills, pretty much side-by-side. It is also famous for a number of prominent buildings, of which the most-known are by the architect Antoni Gaudí, including his Sagrada Família, which became Barcelona's symbol to many.
 

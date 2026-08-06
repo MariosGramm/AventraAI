@@ -1,6 +1,5 @@
 # Vancouver — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Vancouver occupies an enviable spot in the world.  Blessed with miles of coastline, lush vegetation and crowned by the North Shore Mountains, it's hard to be there and not stop at some point and be amazed by what you see.
 But scratch beneath that setting and you find a cosmopolitan city of many faces. It is a mix of old and new, a stopping place for immigrants that have infused the city's neighbourhoods, festivals and food. On one hand, Greater Vancouver is the third largest metropolitan area in Canada, the second biggest destination for visitors to the country and the economic hub of British Columbia. A modern city of glass towers with a variety of festivals, cultures and attractions, it has also been host to world events like the 1986 World Exposition and the 2010 Winter Olympics.

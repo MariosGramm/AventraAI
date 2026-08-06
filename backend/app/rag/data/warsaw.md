@@ -1,6 +1,5 @@
 # Warsaw — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Warsaw (Polish: Warszawa) is Poland's capital and largest city. Warsaw is a bustling metropolis and one of the European Union's fastest-developing capitals and the Union's ninth most populous urban centre. It has a mixture of new and old in its eclectic architectural mix, and is constantly changing.  There is a large variety of museums, galleries and other tourist attractions, and there is always something happening throughout the year.
 While sprawling, it is quite easy to navigate for tourists thanks to a good public transit system, and most important sights are quite close to each other. There is no shortage of accommodation options and a wide choice of restaurants and bars. Warsaw's nightlife is also on the rebound, and a reborn cafe culture has taken over the city.

@@ -1,6 +1,5 @@
 # Porto — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Porto is Portugal's second largest city and the capital of the Northern region, and a busy industrial and commercial centre. The city isn't very populous (about 238,000 inhabitants in 2024), but the Porto metropolitan area has some 1.8 million inhabitants in a 50-km radius, with cities like Vila Nova de Gaia, Vila do Conde, Póvoa de Varzim and Espinho.
 The city is built at the high ground overlooking the Douro River estuary's northern side, and its historical centre was declared a  UNESCO World Heritage Site in 1996. It has been continuously inhabited since at least the 4th century BC.

@@ -1,6 +1,5 @@
 # Singapore — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Singapore (Chinese: 新加坡 Xīnjiāpō; Malay: Singapura; Tamil: சிங்கப்பூர் Chingappur) is a city-state in Southeast Asia. Modern Singapore was founded as a British trading colony in 1819, and since independence, it has become one of the world's most prosperous countries and boasts one of the world's busiest ports. Singaporean food is legendary, with bustling hawker centres and 24-hour coffee shops offering affordable food from all parts of Asia. Combining the skyscrapers and shopping malls of an affluent modern city with a medley of different Asian cultures and a tropical climate, good shopping and a vibrant nightlife scene, this Garden City makes a great stopover or springboard into the region.
 The country has a partly deserved reputation for its sterile predictability.

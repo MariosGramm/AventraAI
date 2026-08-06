@@ -1,6 +1,5 @@
 # New Delhi — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 New Delhi (Hindi: नई दिल्ली Naī Dillī, Urdu: نئی دہلی Naī Dihlī), the capital of the Republic of India and the seat of its three branches of government, is characterised by its wide boulevards, roundabouts (traffic circles), colonial mansions and government buildings.
 A part of the larger National Capital Territory of Delhi (NCT), New Delhi is not just a political centre; it's a thriving melting pot where people from different parts of India work and live. Connaught Place and Khan Market are popular shopping centres and the nearby Paharganj area has many inexpensive hotels.

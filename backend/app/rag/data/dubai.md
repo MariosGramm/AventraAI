@@ -1,6 +1,5 @@
 # Dubai — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Dubai (Arabic: دبي‎‎ Dubayy) is a cosmopolitan metropolis and global city on the Arabian Peninsula. The city is one of the ten most popular tourist destinations in the world. The city is also considered one of the most modern and progressive cities in the Middle East – certainly in the Arab world – and is also sometimes nicknamed as "City of Gold" due to historically being a hub for gold trade as well as the rapid transformation from a desert into a luxurious city.
 Dubai is characterized by a vast landscape of desert which transforms into a futuristic style of skyscrapers along the coastline. The city offers both insights into the old merchant and pearl diving history of the Arabs in Deira and Bur Dubai and the new modern skyscraper business and bustling life in Jumeirah and Jebel Ali.

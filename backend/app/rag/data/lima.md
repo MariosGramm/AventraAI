@@ -1,6 +1,5 @@
 # Lima — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Lima is the capital of Peru and its largest city. Founded in 1535 by the Spanish conquistador Francisco Pizarro, the modern city is a curious mix of the modern mega city with some 'islands of modernity', large but orderly slum areas and colonial architecture in downtown. Lima was the seat of Spanish rule for 300 years, and as such it has wonderful churches, cloisters and monasteries.
 Lima is the best place to try Peruvian cuisine, which has a huge variety of ingredients from the coast, mountain and Amazon regions. The cold sea current that passes Peru's long coast makes the sea very rich in fish and seafood.

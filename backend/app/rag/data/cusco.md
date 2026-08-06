@@ -1,6 +1,5 @@
 # Cusco — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Cuzco or Cusco (Qosqo in Quechua, Cusco in Spanish), in the Southern Sierras, is a fascinating city that was the capital of the Inca Empire.  Cuzco is a  UNESCO World Heritage Site and is one of Peru's most visited cities as it is the largest and most comfortable city from which tourists can begin visits to Machu Picchu, the Sacred Valley of the Incas, and other Inca sites in the region.
 

@@ -1,6 +1,5 @@
 # Venice — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Venice (Italian: Venezia; Venetian: Venexia) is a sanctuary on a lagoon that is virtually the same as it was 600 years ago, which adds to the fascinating character. Venice has decayed since its heyday and suffers from overtourism, but the romantic charm remains. It is also known as the birthplace of composers Tomaso Albinoni and Antonio Vivaldi, and of the poets and opera librettists Apostolo Zeno and Carlo Goldoni. Venice and its lagoon are a UNESCO World Heritage site. It used to be an independent republic, and remains one of Italy's most important cities, with a quarter million inhabitants. Venice is also known as the home of the world's first international film festival, founded in 1932.
 

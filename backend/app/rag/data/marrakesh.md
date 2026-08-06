@@ -1,6 +1,5 @@
 # Marrakesh — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Marrakech (Arabic: مراكش, Berber: ⴰⵎⵓⵔⴰⴽⵓⵛ), also spelt Marrakesh, is one of the imperial cities of Morocco. Marrakech is the main tourist destination in Morocco. The city is divided into two parts: the Medina, the historical city, and the new European modern district called Gueliz or Ville Nouvelle. The Medina is full of intertwining narrow passageways and local shops full of character; it also contains the large square Djemaa El-Fna, where many hotels are located and tourists, locals and vendors congregate. In contrast, Gueliz plays host to modern restaurants, fast food chains and big brand stores.
 

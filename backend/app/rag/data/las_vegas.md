@@ -1,6 +1,5 @@
 # Las Vegas — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 In the midst of the southern Nevada desert, Las Vegas is the largest city in the state of Nevada. Nicknamed Sin City, Las Vegas and its surrounding communities are famed for their mega-casino resorts, often lavishly decorated with names and themes meant to evoke romance, mystery, and exotic destinations. Along the brightly-lit Strip through the center of the city, visitors will find all manner of amusements and entertainment: circuses, stage shows, thrill rides, erotica, exotic animals, fine dining restaurants, nightclubs, shopping, and elaborate fountain displays, to say nothing of the age-old allure of gambling and drinking.
 

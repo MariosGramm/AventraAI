@@ -1,6 +1,5 @@
 # Auckland — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Auckland (Maori: Tāmaki Makaurau) is the largest city in New Zealand at 1.7 million citizens, and the main arrival point for visitors to the country. It is a vibrant multicultural city, set around two big natural harbours, and ranked as one of the most liveable cities in the world.  It is in the warm northern part of the North Island, on a narrow isthmus that joins the Northland peninsula to the rest of the island.
 For information on the smaller towns, settlements and islands in the wider area around the city, see the Auckland Region article.

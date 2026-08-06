@@ -1,6 +1,5 @@
 # Santiago — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Santiago is the capital and economic center of Chile. With its many museums, events, theaters, restaurants, bars and other entertainment and cultural opportunities, it is also the cultural center of the country. For visitors it's both the gateway to the country and a destination in its own right with an eclectic architecture, a vibrant culinary and cultural scene, surrounded by the mighty Andes welcoming skiers, trekkers and friends of wine. Its central location in the country makes it a great base for visiting other areas, and it is possible to ski in the nearby Andes and later be on the beach in the same day.
 

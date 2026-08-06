@@ -1,6 +1,5 @@
 # Rio de Janeiro — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Rio de Janeiro is the second largest city in Brazil, on the South Atlantic coast. Rio is famous for its breathtaking landscape, its laid-back beach culture and its annual carnival. The "Carioca Landscapes between the Mountain and the Sea" has been inscribed on the UNESCO World Heritage list.
 The harbour of Rio de Janeiro is comprised of a unique entry from the ocean that makes it appear as the mouth of a river. Additionally, the harbor is surrounded by spectacular geographic features including Sugarloaf mountain at 395 meters (1,296 feet), Corcovado Peak at 704 meters (2,310 feet), and the hills of Tijuca at 1,021 meters (3,350 feet). These features work together to collectively make the harbor one of the Seven Natural Wonders of the World.

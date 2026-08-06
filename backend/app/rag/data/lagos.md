@@ -1,6 +1,5 @@
 # Lagos — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Lagos (Yoruba: Èkó) is the most populous city in Nigeria, spreading out across two main islands and onto the mainland. It is the country's financial capital, and is famous throughout Africa for its music scene. Lagos has a vibrant nightlife. It is the centre of the Nigerian movie industry, often referred to as 'Nollywood'.
 

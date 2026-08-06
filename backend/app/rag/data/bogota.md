@@ -1,6 +1,5 @@
 # Bogotá — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Bogotá, officially Bogotá D.C, is the capital of Colombia. One of the world's mega-cities, Bogotá is a global center for finance, politics, culture, shopping, media, and entertainment. The city is a vibrant metropolis with thousands of things to do, see, and discover, including world-class museums and restaurants, glittering skyscrapers and vast financial centers, 500-year-old mansions, palaces, and historic churches. There are over 75 performing arts venues spread throughout the city, including the renowned Teatro Colon. For those who love outdoor activities, Bogotá is home to the Parque Metropolitano Simon Bolivar, the largest urban park in the Americas, and has over 500 km of urban bike paths. The city is always awake, always alive, and most of all, always full of energy.
 

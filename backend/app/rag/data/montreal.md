@@ -1,6 +1,5 @@
 # Montreal — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Montreal (French: Montréal) is the largest city in the Canadian province of Quebec. While Quebec City is the political capital, Montreal is the cultural and economic centre, and the main entry point to the province. With 1.8 million residents in the city (2021), and 4 million in the urban area, Montreal is Canada's second largest city and the largest francophone city in the Americas. That said, the city has a proud tradition of bilingualism, with a large and long-established Anglophone minority, and most Francophones being conversant in English. Old Montreal has a heritage of colonial times. Though a large city, Montreal gives opportunities for outdoor life, and for watching the legendary Montréal Canadiens ice hockey team.
 

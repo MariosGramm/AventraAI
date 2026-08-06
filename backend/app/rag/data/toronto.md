@@ -1,6 +1,5 @@
 # Toronto — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Toronto is a diverse, energetic and liveable city, home to many tourist attractions, and seemingly endless dining, shopping and entertainment possibilities. It's the most populous city in Canada, the centre of the country's financial sector, and the provincial capital of Ontario.
 Toronto is one of the most culturally and ethnically diverse cities in the world: more than 80 ethnic communities are represented, and over half of the city's residents were born outside Canada.

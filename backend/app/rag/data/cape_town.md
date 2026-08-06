@@ -1,6 +1,5 @@
 # Cape Town — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Cape Town (Afrikaans: Kaapstad, Xhosa: iKapa) is the second most populous city in South Africa. The capital of Western Cape Province, it is also the legislative capital of the nation. Cape Town is on South Africa's southwestern coast close to the Cape of Good Hope, and is the southernmost city on the African continent. It is the gateway to the globally renowned Cape Winelands which includes the towns of Franschhoek, Stellenbosch and Paarl.
 

@@ -1,6 +1,5 @@
 # New York City — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 New York (known as "The Big Apple", "NYC," and often called "New York City") is a global center for media, entertainment, art, fashion, research, finance, and trade. The bustling, cosmopolitan heart of the 4th largest metropolis in the world and by far the most populous city in the United States, New York has long been a key entry point and a defining city for the nation.
 From the Statue of Liberty in the harbor to the Empire State Building towering over the Manhattan skyline, from the tunnels of the subway to the riches of Wall Street, from the bright signs of Times Square to the naturalistic beauty of Central Park, and from Yankee Stadium in the Bronx to Coney Island in Brooklyn, New York's landmarks are quintessential American landmarks.

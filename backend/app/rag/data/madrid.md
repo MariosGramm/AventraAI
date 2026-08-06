@@ -1,6 +1,5 @@
 # Madrid — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Madrid is Spain's capital and largest city. A city that has been marked by Spain's varied and tumultuous history, Madrid has some of Europe's most impressive cultural and architectural heritage, which includes grand avenues, plazas, buildings and monuments, world-class art galleries and museums, highly popular football teams, and cultural events of international fame for everyone. Madrid is also renowned for gastronomic delights and a nightlife lasting up until dawn.
 Madrid is more often than not disregarded by tourists who gravitate to other parts of the country.

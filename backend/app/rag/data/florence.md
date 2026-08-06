@@ -1,6 +1,5 @@
 # Florence — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 ²
 Florence (Italian: Firenze) is the capital of the region of Tuscany in Italy, with a population of about 367,000 (2022). The city is a cultural, artistic and architectural gem, and is inscribed on the UNESCO World Heritage list. The birthplace of the Italian Renaissance, Florence was the home to powerful families, creative geniuses and scientific masterminds who left their legacies in the city's many museums and art galleries. The city also has a very rich literary history, being the birthplace of the famous poet Dante, and standard Italian today is primarily based on the dialect of Tuscan spoken in Florence.

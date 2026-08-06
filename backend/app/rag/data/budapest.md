@@ -1,6 +1,5 @@
 # Budapest — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Budapest is the capital city of Hungary. With a unique, youthful atmosphere, world-class classical music scene, a pulsating nightlife increasingly appreciated among European youth, and last but not least, an exceptional offer of natural thermal baths, Budapest is one of Europe's most delightful and enjoyable cities. Due to the exceedingly scenic setting, and its architecture it is nicknamed "Paris of the East".
 The modern-day Budapest results from the amalgamation of two historic cities lying right opposite each other over the Danube river. Buda is the western (right) bank side, with the high hill atop which the Buda castle sits.

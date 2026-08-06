@@ -1,6 +1,5 @@
 # Valencia — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Valencia (València in Valencian, pronounced [vaˈlensia], vahl-EHN-see-ah; baˈlenθja [bahl-EHN-thyah] in Spanish) is a charming old city and the capital of the Valencian Community. With just over 830,000 inhabitants in 2023, it is Spain’s third-largest city and, after Barcelona, the most significant cultural centre along the Spanish Mediterranean coast. It is the capital of the autonomous Valencian Community, and is known for tourism and cuisine. In March visitors flock to the city for the annual UNESCO-listed Falles celebration, but the city is worth visiting at other times of year for its paella, ultramodern architecture, and good beaches.
 

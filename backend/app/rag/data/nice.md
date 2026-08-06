@@ -1,6 +1,5 @@
 # Nice — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Nice (pronounced like the English word "niece") is a large city in France on the French Riviera. It's a popular destination for vacationers young and old, with something to offer nearly everyone. It is well known for the beautiful view on the Promenade des Anglais, its famous waterfront, and is an ethnically diverse port city. In 2021 the waterfront and a considerable part of the city were listed on the UNESCO World Heritage List.
 

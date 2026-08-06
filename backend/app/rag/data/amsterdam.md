@@ -1,6 +1,5 @@
 # Amsterdam — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Amsterdam is the capital of the Netherlands. It is known for the canals that cross the city, its impressive architecture, museums and art galleries, its notorious red light district, and more than 1,500 bridges.
 The city has earned the title of Venice of the North for a good reason: few other cities have intricate web of canals, exquisite architecture, and a staggering collection of over 1500 bridges weave an undeniable charm. Whether you're here for the rich cultural heritage, the vibrant nightlife, or the serene alleyways, Amsterdam's magnetic pull is universal.

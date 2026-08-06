@@ -1,6 +1,5 @@
 # Hong Kong — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Hong Kong (香港 Hēunggóng in Cantonese) is a city with multiple personalities. The population is mainly Chinese, but British influence is still quite visible. It has absorbed people and cultural influences from places as diverse as Vietnam and Vancouver and proudly proclaims itself to be Asia's World City.
 Hong Kong is a global financial hub, and has been a major destination for tourists and business people from around the world for at least a century. Today it is also a major tourism destination for mainland China's increasingly affluent population.

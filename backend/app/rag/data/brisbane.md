@@ -1,6 +1,5 @@
 # Brisbane — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 This article only covers the City of Brisbane. See Greater Brisbane for the four other local government areas that make up Greater Brisbane.
 Brisbane is the state capital of Queensland. Large enough to be cosmopolitan yet small enough to be friendly and accessible, Brisbane is a 'garden metropolis', famous for its leafy, open spaces and the pleasant pace of life that unfolds between the zig-zags of its iconic river. Brisbane's year-round warm climate, spectacular scenery, pleasant locals and world-class facilities have been the drawcards for many domestic and international visitors, making Brisbane the fastest-growing city in Australia. Despite this rapid development, it maintains a youthful enthusiasm and is considered one of the more laid-back and forward-thinking cities in the country.

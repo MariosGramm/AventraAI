@@ -1,6 +1,5 @@
 # Copenhagen — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Copenhagen (Danish: København) is the capital city of Denmark and forms the moderate conurbation that one million Danes call home. It is big enough to form a small Danish metropolis, with shopping, culture and nightlife par excellence, yet small enough still to feel intimate and be safe. Although mixed in its urban scene, the city is easy to navigate. Overlooking the Øresund Strait, connected to Sweden by a 15-km bridge-tunnel. Copenhagen serves as a cultural and geographic link between the Nordic countries and central Europe. Copenhagen is where old fairy tales blend with flashy modern architecture and world-class design; where warm jazz mixes with crisp electronica from Copenhagen's basements.
 

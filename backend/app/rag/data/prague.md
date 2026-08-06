@@ -1,6 +1,5 @@
 # Prague — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Prague (Czech: Praha) is the capital and largest city of the Czech Republic. The city's historic buildings and narrow, winding streets are testament to its centuries-old role as capital of the historic region of Bohemia. Prague lies on the banks of the beautiful, meandering Vltava River that reflects the city's golden spires and 9th century castle that dominates the skyline.
 This historic atmosphere is combined with a certain quirkiness that embraces the entire city. From the Museum of Czech Cubism to the technicolour Jubilee Synagogue; the castle to the river, Prague is a Bohemian capital in every sense.

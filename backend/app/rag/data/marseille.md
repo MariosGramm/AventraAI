@@ -1,6 +1,5 @@
 # Marseille — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 With 1.6 million people in its urban area (2019), Marseille (Provençal: Marselha) is the second most populated city of France (and third urban area) the biggest Mediterranean port and the economic center of the Provence-Alpes-Côte d'Azur region. In 2013 the city (with its region) was the European Capital of Culture, a large series of cultural events took place, and several new infrastructures were inaugurated.
 

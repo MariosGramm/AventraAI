@@ -1,6 +1,5 @@
 # Berlin — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Berlin is Germany's capital and largest city. Within the city limits, Berlin in 2022 had a population of 3.7 million.
 Berlin is coming into its own again as a cosmopolitan capital of one of Europe's wealthiest nations. "Arm aber sexy" (poor but sexy), as a former mayor would have it, Berlin attracts young people, students, and a creative bohème like few other cities in the world. With architectural heritage from Prussian monarchism, Nazism, East German communism and Potsdamer Platz, filled with 1990s- and 2000s-style glass palaces after having been a "blank canvas" due to the wall, Berlin's architecture is as varied as its neighbourhoods and its people.

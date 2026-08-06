@@ -1,6 +1,5 @@
 # Lisbon — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Lisbon (Portuguese: Lisboa) is the capital of Portugal situated on seven hills at the wide mouth of the river Tagus (Tejo) where it meets the Atlantic Ocean. With 545,000 residents in the city and 3.0 million in the Lisbon Region (2024) and a thriving mix of Portugal's rich history and vivid contemporary culture, Lisbon enchants travellers with its white bleached limestone buildings, intimate alleyways, and an easy going charm that makes it a popular year round destination.
 Greater Lisbon comprises many other splendid tourist destinations such as the  UNESCO World Heritage Site of Sintra, the seaside resorts of Estoril, Cascais, the world class museums, or Almada famous for its hilltop Cristo Rei statue, all of which are connected with Lisbon by excellent public transportation links.

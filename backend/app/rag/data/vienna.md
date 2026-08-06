@@ -1,6 +1,5 @@
 # Vienna — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Vienna (German: Wien; Austro-Bavarian: Wean) is the capital of Austria and by far its most populous city, with an urban population of 2 million and a metropolitan population of 2.9 million (2023). It is the country's artistic, cultural, economic and political centre. It is known for its high living standards, relaxed yet elegant lifestyle and rich musical life.
 Vienna, renowned as the former seat of the Habsburg court and its diverse empires, stands not only as a grand metropolis but also as a historical center that has perpetually thrived with a substantial population. This city's distinction lies in its privileged stature, fostering an environment that has nurtured numerous eminent artists, notably Beethoven, Haydn, Liszt, Mozart, Schubert, and Johann Strauss II, among others.

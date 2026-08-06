@@ -1,6 +1,5 @@
 # Oslo — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Oslo is Norway's capital and largest city, with 700,000 citizens in the city proper and about 1.5 million inhabitants in greater Oslo. It is in the East of the country in the Oslofjorden fjord, extending over an inlet of the Skagerrak strait. It is spaciously laid out and surrounded by green hills and mountains and includes 40 islands and 343 lakes. Oslo offers ski slopes for alpine skiing and ski trails for cross-country skiing in the winter. In the summer, the temperature in Oslo may make it comfortable to swim. There are several well-visited beach resorts. Oslo is one of the world's northernmost capitals and so gets only 6 hours of sunlight in the winter.
 

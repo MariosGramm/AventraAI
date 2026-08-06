@@ -1,6 +1,5 @@
 # Helsinki — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Helsinki (Swedish: Helsingfors) is Finland's capital and largest city. Helsinki combines modern and historic architectural styles with beautiful open spaces. The city is surrounded by hundreds of tiny islands, and is a cultural bridge between the East and West. The "Pearl of the Baltic Sea" is easy to explore on foot or on bike, and it has a laid-back vibe.
 

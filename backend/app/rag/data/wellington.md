@@ -1,6 +1,5 @@
 # Wellington — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Wellington (Māori: Te Whanganui-a-Tara) is the capital and second largest urban area of New Zealand. It is also the world's southernmost capital city of a UN member state.
 The Windy City is on the foreshore of Wellington Harbour and ringed by hills, providing the scenic home of many of New Zealand's national arts and cultural attractions.

@@ -1,6 +1,5 @@
 # Abuja — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Abuja is the capital of Nigeria. Because most Nigerian government agencies are now headquartered in Abuja and most other countries' embassies have been relocated from Lagos to Abuja, it is a surprisingly expensive city.
 

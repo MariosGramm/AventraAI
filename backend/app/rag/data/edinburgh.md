@@ -1,6 +1,5 @@
 # Edinburgh — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Edinburgh (Gaelic: Dùn Èideann) is the capital of Scotland, located in the Central Belt of the country. With a population of 526,470 in the urban area in 2021, and 901,455 in the metropolitans, Edinburgh fizzes with a cosmopolitan yet uniquely Scottish atmosphere. Old volcanoes ensure a dramatic natural setting, with the imposing castle atop one. The city combines medieval relics, Georgian grandeur and a powerful layer of modern life with contemporary avant-garde. Medieval palaces, Gothic churches and fascinating historical buildings rub shoulders with the best of modern architecture, such as the Scottish Parliament and the National Museum of Scotland.
 

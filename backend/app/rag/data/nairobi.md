@@ -1,6 +1,5 @@
 # Nairobi — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Nairobi is the political, as well as financial and media capital of Kenya. A city of 4.8 million inhabitants (as of 2024), it's the largest and fastest growing city in the country and one of Africa's largest cities. Nairobi is at the Nairobi River, and at an altitude of 1,795 m (5,889 ft) above sea level, making it one of the highest national capitals in the world. While a transit point that most travellers to Kenya will pass through, it's certainly also worth taking a few days to experience this bustling metropolis.
 

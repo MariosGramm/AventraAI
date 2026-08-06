@@ -1,6 +1,5 @@
 # Buenos Aires — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Buenos Aires is the capital of Argentina and one of Latin America's most culturally significant cities. It is a city of beautiful parks and belle epoque architecture, a place of big historical events, and a city of intimate cafes and cosmopolitan nightlife.
 

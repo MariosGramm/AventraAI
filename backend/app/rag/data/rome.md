@@ -1,6 +1,5 @@
 # Rome — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Rome (Italian and Latin: Roma), the 'Eternal City', is the capital and largest city of Italy and of the Lazio region. It's the famed city of the Roman Empire, the Seven Hills, La Dolce Vita, the Vatican City and Three Coins in the Fountain. Rome, as a millennia-long centre of power, culture and religion, was the centre of one of the greatest civilisations ever, and has exerted a huge influence over the world in its circa 2500 years of existence.
 The historic centre of the city is a UNESCO World Heritage Site.

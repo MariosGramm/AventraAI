@@ -1,6 +1,5 @@
 # Athens — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Athens (Greek: Αθήνα, Athína) is the capital city of Greece with a metropolitan population of 3.6 million inhabitants (2025) based on ELSTAT Census but with undocumented population it reaches 5.2 million. It was a major cultural, political and religious centre of Classical Greece, a place that deeply influenced the course of Western civilization. Don't come expecting a philosopher's theme park; contemporary Athens is the graffiti-coated, fast-beating urban heart of the country, where modern Greek culture, business and social life flourish amidst ancient monuments.
 

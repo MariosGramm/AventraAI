@@ -1,6 +1,5 @@
 # Melbourne — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Melbourne (Naarm in the Woiworrung language) is Australia's cultural capital and second biggest city, with Victorian-era architecture, extensive shopping, museums, galleries, theatres, and large parks and gardens. Many of its 5.2 million residents are both multicultural and sports-mad. The capital of the south-eastern state of Victoria, and located at the head of Port Phillip Bay, Melbourne is a magnet for migrants from all over the world, and consistently ranks as one of the world's most livable cities.
 Visitors come to attend major sporting events, and to use it as a base for exploring nearby places such as Grampians National Park, the Great Ocean Road, and Phillip Island and its penguin parade. Many UK visitors come for tours of filming locations of the soap opera Neighbours.

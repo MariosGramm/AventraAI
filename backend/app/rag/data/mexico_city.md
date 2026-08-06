@@ -1,6 +1,5 @@
 # Mexico City — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Mexico City (Spanish: México, Ciudad de México or CDMX) is the capital of the Mexican Republic, the most populous city in the country, and one of the most important financial and cultural centers of the American continent. The city center is built on the ruins of the Aztec capital Tenochtitlan, and later came to be the capital of New Spain, which included much of North America. The city grew fast in the 20th century, and today is North America's largest city (and the world's largest Spanish-speaking city) with 9.2 million inhabitants in the city proper, and 22 million in the urban area (in 2020).
 Three of Mexico's many  UNESCO World Heritage Sites are here: the colonial-era Centro Histórico, sites related to architect Luis Barragán in Chapultepec and the university campus in Coyoacán.

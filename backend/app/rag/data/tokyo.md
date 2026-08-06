@@ -1,6 +1,5 @@
 # Tokyo — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Tokyo can be broadly divided into the "23 special wards", "Tama region" and "Islands". This article is about the 23 special wards of Tokyo, which corresponds to what many think of as the "city of Tokyo". For information on Tokyo as a prefecture, Tama region and Islands, see Tokyo Metropolis.
 Tokyo (東京 Tōkyō) is the enormous and wealthy capital of Japan, and its main city, overflowing with culture, commerce, and most of all, people. As one of the most populated urban areas in the world, Tokyo is a fascinating and dynamic metropolis that mixes foreign influences, consumer culture and global business along with remnants of the capital of old Japan.

@@ -1,6 +1,5 @@
 # Beijing — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Beijing (北京 Běijīng) is China's capital and its second-largest city after Shanghai, with a population of around 22 million. With a rich history as the capital of Imperial China for much of its past, Beijing became the political and cultural heart of the People's Republic of China following the Chinese revolutions.
 The city is renowned for its flat terrain and orderly layout. Within the city limits, you'll find just three hills, all in Jingshan Park, north of the famous Forbidden City. Beijing's urban structure is marked by its concentric "ring roads," which are actually rectangular in shape, mirroring the configuration of the Forbidden City.

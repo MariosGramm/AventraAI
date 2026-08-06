@@ -1,6 +1,5 @@
 # Asmara — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 The Eritrean capital of Asmara is a vibrant mix of Italian and African architecture and culture. It is by far the biggest and most important city of Eritrea and not just the administration center of the country but also the cultural center and the place where every tourist will arrive to the country.
 

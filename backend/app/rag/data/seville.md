@@ -1,6 +1,5 @@
 # Seville — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Seville (Spanish: Sevilla) is Andalusia's capital. With heritage from the Arabs and from the Age of Discovery, as well as the flamenco scene, Seville is a diverse destination. Tourist facilities are top-notch and the city is buzzing with festivals, color and a thriving nightlife scene.
 

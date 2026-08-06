@@ -1,6 +1,5 @@
 # Brussels — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Brussels (French: Bruxelles, Dutch: Brussel) is the capital of Belgium and one of the three administrative regions within the country, together with Flanders and Wallonia. Apart from its role within its country, it is also an internationally important city, hosting numerous international institutions, and in particular the headquarters of NATO and the core institutions of the European Union. Due to that, it is sometimes referred to informally as the capital of the EU, and even used as a metonym for the EU institutions.
 

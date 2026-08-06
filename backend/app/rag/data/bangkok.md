@@ -1,6 +1,5 @@
 # Bangkok — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Bangkok (Thai: กรุงเทพฯ Krung Thep) is the capital and largest city of Thailand. With a population of over eleven million inhabitants, Bangkok is by far Thailand's main city, with the urban sprawl comprising nearly half of Thailand's population, and the largest city on the Southeast Asian mainland. Its high-rise buildings, heavy traffic congestion, intense heat and naughty nightlife do not immediately give you a warm welcome — but don't let your first impression mislead you. It is one of Asia's most cosmopolitan cities with magnificent temples and palaces, authentic canals, busy markets, opulent shopping malls and a vibrant nightlife that has something for everyone.
 

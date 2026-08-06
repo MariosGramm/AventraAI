@@ -1,6 +1,5 @@
 # San Francisco — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 The centerpiece of the Bay Area, San Francisco is one of the most visited cities in the world, and with good reason. The cultural center of northern California, San Francisco is renowned for its mixture of scenic beauty and unique culture that makes it one of the most vibrant and desirable cities in the nation, if not the world.
 Sandwiched between the San Francisco Bay and the Pacific Ocean on a small square of land seven miles (11 km) on each side, San Francisco offers a wealth of treasures for the visitor, from the windswept and often foggy bay to the steep hills lined with Victorian homes that overlook the spectacular scenery of the city.

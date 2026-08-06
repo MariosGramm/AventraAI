@@ -1,6 +1,5 @@
 # Washington, D.C. — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Washington, D.C., the capital of the United States of America and the seat of its three branches of government, has an unparalleled collection of free, public museums, and the lion's share of the nation's most treasured monuments and memorials. The vistas on the National Mall between the Capitol, Washington Monument, White House, and Lincoln Memorial are iconic throughout the world.
 D.C. is not only a political center; it is exciting, cosmopolitan, and international and has shopping, dining, and nightlife on par with a world-class metropolis.

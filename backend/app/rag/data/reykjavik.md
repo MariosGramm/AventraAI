@@ -1,6 +1,5 @@
 # Reykjavik — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Reykjavík is the capital of and largest city in Iceland and with an urban area population of around 233,000 (2019), it is the home to two-thirds of Iceland's population. It is the centre of culture and life of the Icelandic people, and is one of the focal points of tourism in Iceland. The city is spread out, and has sprawling suburbs. The city centre, however, is a very small area characterised by eclectic and colourful houses, with good shopping, dining and drinking. Reykjavik has the distinction of being the world's northernmost capital city of a UN member state, though its winters are surprisingly mild for a city of its latitude.
 

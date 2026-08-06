@@ -1,6 +1,5 @@
 # Sydney — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Sydney is the Harbour City, and is the oldest and most cosmopolitan city in Australia with an enviable reputation as one of the world's most beautiful and livable cities. Brimming with history, nature, culture, art, fashion, cuisine and design, it is set next to miles of ocean coastline and sandy surf beaches. The city is also home to the Sydney Opera House and the Sydney Harbour Bridge, two of the most iconic structures on the planet. The gateway to Australia, it lies on the deepest natural harbour in the world and stretches for 140 kilometres.
 Sydney is a major global city and an important finance centre in the Asia-Pacific region. The city is surrounded by nature and national parks, which extend through the suburbs and right to the shores of the harbour.

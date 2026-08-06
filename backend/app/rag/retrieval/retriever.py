@@ -2,7 +2,7 @@ import logging
 
 from langchain_chroma import Chroma
 
-from backend.app.rag.config import get_config 
+from ..config import get_config 
 
 logger = logging.getLogger(__name__)
 

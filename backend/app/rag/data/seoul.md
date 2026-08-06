@@ -1,6 +1,5 @@
 # Seoul — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Seoul (서울) is the capital of South Korea. With a population of over 9 million (with over 20 million in the wider metropolitan area), Seoul is by far South Korea's largest city and one of East Asia's financial and cultural centers. A fascinating blend of ancient traditions and cutting-edge digital technology, home to endless street food vendors and vast nightlife districts, an extraordinarily high-pressure educational system and serene Buddhist temples, a dynamic trend-setting youth culture and often crushing conformism, extraordinary architecture and endless monotonous rows of grey apartment buildings, Seoul is a city filled with stark contrasts, contradictions, and paradoxes. People in Seoul can enjoy various artistic activities such as plays, musicals, and concerts.
 

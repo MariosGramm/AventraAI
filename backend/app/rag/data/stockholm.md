@@ -1,6 +1,5 @@
 # Stockholm — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Stockholm is Sweden's capital and largest city, with nearly a million inhabitants in the city, and 2.4 million within Stockholm County (as of 2021). The inner city is made up of 14 islands across Lake Mälaren and three streams into the brackish Baltic Sea, with the Stockholm archipelago with some 24,000 islands, islets and skerries. Over 30% of the city area is made up of waterways, and another 30% is made up of green areas. Air and water are said to be the freshest of any European capital. Stockholm hosts the Nobel Prize ceremony and has around 70 museums.
 Stockholm is the hub of most Swedish rail and bus traffic and has two of the country's busiest airports nearby, so it is a good starting point for visiting other parts of Sweden.

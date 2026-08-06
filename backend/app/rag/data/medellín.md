@@ -1,6 +1,5 @@
 # Medellín — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Medellín is the second largest city in Colombia. It has 2.62 million residents (2024) and is the capital of the department of Antioquia. It's set in a valley running south to north and just a one-hour flight from Bogotá. For international travelers, Medellín is perhaps most famous for the Antioquia Museum, with its extensive collection of Botero paintings inside and Botero sculptures outside on its main plaza. The city is also known for its perfect climate with its nickname "city of the eternal spring".
 

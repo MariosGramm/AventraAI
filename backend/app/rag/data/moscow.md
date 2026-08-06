@@ -1,6 +1,5 @@
 # Moscow — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Since its founding in 1147, Moscow (Russian: Москва, Moskva) has been at the crossroads of history as the capital of empires and a frequent target for invaders. As the capital of the Russian Empire, the Soviet Union, and, today, the Russian Federation, it has played a central role in the development of the largest country in the world. For many, the sight of the Kremlin complex in the centre of the city is still loaded with symbolism and history.
 Today, Moscow is a thriving, exuberant capital city that overflows with life, culture and sometimes traffic. A sprawling metropolis, the northernmost and coldest megacity on the planet, and the most populous city entirely within Europe, Moscow is also known for its many museums, Soviet-era monoliths as well as post-Soviet kitsch.

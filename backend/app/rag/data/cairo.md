@@ -1,6 +1,5 @@
 # Cairo — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Cairo (pronounced KY-roh; Arabic: القاهرة al-Qāhirah) is the capital of Egypt (until the New Administrative Capital is completed) and, with a total population of Greater Cairo metropolitan area in excess of 16 million people, one of the largest cities in both Africa and the Middle East (the regions which it conveniently straddles). It is also the 19th largest city in the world, and among the world's most densely populated cities.
 On the Nile river, Cairo is famous for its own history, preserved in the fabulous medieval Islamic city and Coptic sites in Old Cairo — with historic Cairo inscribed on the UNESCO World Heritage list. The Egyptian Museum in the city centre is a must see, with its countless Ancient Egyptian artefacts, as is shopping at the Khan al-Khalili bazaar.

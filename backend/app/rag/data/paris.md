@@ -1,6 +1,5 @@
 # Paris — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Paris, the cosmopolitan capital of France, has the reputation of being the most beautiful and romantic of all cities, brimming with historic associations and remaining vastly influential in the realms of culture, art, fashion, food and design.
 Dubbed the City of Light (la ville lumière) and the City of Love (la ville de l'amour), Paris is home to some of the world's finest and most luxurious fashion designers and cosmetics, such as Chanel, Christian Dior, Yves Saint-Laurent, Guerlain, Lancôme, L'Oréal, and Clarins. A large part of the city, including the banks of the River Seine, is a UNESCO World Heritage Site.

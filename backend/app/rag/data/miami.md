@@ -1,6 +1,5 @@
 # Miami — Travel Guide
 
-> Source: Wikivoyage (Creative Commons Attribution-ShareAlike 3.0)
 
 Miami is a major city in the southeastern United States and the second most populous city in Florida. The Greater Miami  metropolitan area is the largest in the state with an estimated population just under 6.1 million (2021), which makes it the 9th most populous metro area in the United States.
 Although tourists generally consider Miami Beach to be part of Miami, it is its own municipality. Miami Beach sits on a barrier island east of Miami and Biscayne Bay. It is home to lots of beach resorts, and is one of the most popular spring break party destinations in the world. This article only covers the city of Miami, not Miami Beach.
