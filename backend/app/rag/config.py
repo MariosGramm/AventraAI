@@ -11,6 +11,7 @@ class Config:
     # Paths
     base_path: Path = Path(__file__).parent
     chroma_db_path: Path = None
+    data_path: Path = base_path / "data"
 
     # Chunking
     chunk_size: int = 1000
