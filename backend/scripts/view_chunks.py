@@ -13,7 +13,7 @@ collection = client.get_collection('city_guides')
 print('Total chunks:', collection.count())
 
 
-results = collection.peek(3)
+results = collection.peek(15)  # Get the first 15 chunks
 for i, (doc, meta) in enumerate(zip(results['documents'], results['metadatas'])):
     print(f'--- Chunk {i+1} ---')
     print(f'City:    {meta.get("city")}')
