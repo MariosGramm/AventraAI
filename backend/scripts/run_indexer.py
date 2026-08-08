@@ -2,7 +2,6 @@
 run_indexer.py
 --------------
 One-time script to index all city guides into ChromaDB.
-Run this whenever you add or update city guide files.
 
 Usage (from backend/):
     uv run python scripts/run_indexer.py
