@@ -38,7 +38,6 @@ class Config:
     google_maps_api_key: str = os.getenv("GOOGLE_MAPS_API_KEY")
     stayingapi_api_key: str = os.getenv("STAYINGAPI_API_KEY")
     skyscanner_api_key: str = os.getenv("SKYSCANNER_API_KEY")
-    openweather_api_key: str = os.getenv("OPENWEATHER_API_KEY")
 
 
 @lru_cache()
