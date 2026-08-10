@@ -1,6 +1,8 @@
 import logging
 import requests
 from datetime import date, timedelta
+from langchain_core.tools import tool
+
 
 logger = logging.getLogger(__name__)
 
@@ -186,11 +188,6 @@ class WeatherService:
             "description":   description,
             "is_forecast":   self.is_within_forecast_range(daily.get("time", [""])[0]),
         }
-
-
-# ── LangChain tool wrapper — used by Chat mode ReAct agent ──────────────
-
-from langchain_core.tools import tool
 
 @tool
 def get_weather_tool(destination: str, date_from: str, date_to: str) -> dict:
