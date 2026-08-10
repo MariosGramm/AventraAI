@@ -36,10 +36,24 @@ WEATHER_CODE_DESCRIPTIONS = {
 
 class WeatherService:
     """
-    WeatherService provides methods to interact with weather, flight, places and hotels APIs.
-    Used by the Agent as a tool to fetch real-time data for travel planning.
+    WeatherService provides methods to interact with the weather API.
+    Used by the Agent as a tool to fetch real-time data for weather.
     Service involves deterministic workflows as well as ReAct workflows.
     """
+
+    def __init__(
+        self,
+        geocoding_url: str = GEOCODING_URL,
+        weather_forecast_url: str = WEATHER_FORECAST_URL,
+        weather_historical_url: str = WEATHER_HISTORICAL_URL,
+        daily_params: list[str] | None = None,
+        request_timeout: int = 10,
+    ) -> None:
+        self.geocoding_url = geocoding_url
+        self.weather_forecast_url = weather_forecast_url
+        self.weather_historical_url = weather_historical_url
+        self.daily_params = daily_params[:] if daily_params is not None else DAILY_PARAMS[:]
+        self.request_timeout = request_timeout
 
     def get_weather(self, destination: str, date_from: str, date_to: str) -> dict | None:
         """
@@ -67,9 +81,9 @@ class WeatherService:
         """
         try:
             response = requests.get(
-                GEOCODING_URL,
+                self.geocoding_url,
                 params={"name": destination, "count": 1},
-                timeout=10
+                timeout=self.request_timeout,
             )
             response.raise_for_status()
             data = response.json()
@@ -104,17 +118,17 @@ class WeatherService:
         """
         try:
             response = requests.get(
-                WEATHER_FORECAST_URL,
+                self.weather_forecast_url,
                 params={
                     "latitude":         coordinates["latitude"],
                     "longitude":        coordinates["longitude"],
-                    "daily":            ",".join(DAILY_PARAMS),
+                    "daily":            ",".join(self.daily_params),
                     "start_date":       date_from,
                     "end_date":         date_to,
                     "temperature_unit": "celsius",
                     "timezone":         "auto",
                 },
-                timeout=10
+                timeout=self.request_timeout,
             )
             response.raise_for_status()
             return response.json()
@@ -138,17 +152,17 @@ class WeatherService:
             )
 
             response = requests.get(
-                WEATHER_HISTORICAL_URL,
+                self.weather_historical_url,
                 params={
                     "latitude":         coordinates["latitude"],
                     "longitude":        coordinates["longitude"],
-                    "daily":            ",".join(DAILY_PARAMS),
+                    "daily":            ",".join(self.daily_params),
                     "start_date":       start.isoformat(),
                     "end_date":         end.isoformat(),
                     "temperature_unit": "celsius",
                     "timezone":         "auto",
                 },
-                timeout=10
+                timeout=self.request_timeout,
             )
             response.raise_for_status()
             return response.json()
