@@ -1,3 +1,16 @@
+"""
+agent/infrastructure/weather.py
+--------------------------------
+Provides weather summaries for destination and travel dates using Open-Meteo.
+Automatically chooses forecast data for near-term dates and historical analogs
+for long-range planning beyond forecast availability.
+
+Endpoints used:
+    GET /v1/search   → geocoding destination to latitude/longitude
+    GET /v1/forecast → daily forecast (up to 16 days ahead)
+    GET /v1/archive  → historical weather for long-range date analogs
+"""
+
 import logging
 import requests
 from datetime import date, timedelta
@@ -36,9 +49,12 @@ WEATHER_CODE_DESCRIPTIONS = {
 
 class WeatherService:
     """
-    WeatherService provides methods to interact with the weather API.
-    Used by the Agent as a tool to fetch real-time data for weather.
-    Service involves deterministic workflows as well as ReAct workflows.
+    Provides weather retrieval and summarization using Open-Meteo APIs.
+    Used by the Agent to inform itinerary quality and expectations.
+
+    Search mode  → get_weather()      deterministic weather summary
+    Chat mode    → get_weather_tool() ReAct tool wrapper for LLM calls
+    Internal     → geocoding + source selection + normalization helpers
     """
 
     def __init__(
@@ -57,8 +73,17 @@ class WeatherService:
 
     def get_weather(self, destination: str, date_from: str, date_to: str) -> dict | None:
         """
-        Main entry point — returns weather summary for destination and date range.
-        Uses forecast API if within 16 days, otherwise uses historical data from last year.
+        Retrieve weather summary for a destination and date range.
+        Selects forecast data for near-term dates, otherwise historical analog data.
+
+        Args:
+            destination: City or region name (e.g. 'Prague', 'Tokyo')
+            date_from: Start date in ISO format (YYYY-MM-DD)
+            date_to: End date in ISO format (YYYY-MM-DD)
+
+        Returns:
+            Weather summary dict with temperature, precipitation, and conditions,
+            or None when geocoding/API retrieval fails.
         """
         coordinates = self.get_coordinates(destination)
         if not coordinates:
@@ -77,7 +102,14 @@ class WeatherService:
 
     def get_coordinates(self, destination: str) -> dict | None:
         """
-        Fetch latitude and longitude for a destination using Open-Meteo Geocoding API.
+        Resolve destination coordinates with Open-Meteo geocoding.
+
+        Args:
+            destination: Destination string to geocode.
+
+        Returns:
+            Dict containing latitude, longitude, resolved place name, and country,
+            or None when no match is found.
         """
         try:
             response = requests.get(
@@ -104,8 +136,13 @@ class WeatherService:
 
     def is_within_forecast_range(self, date_from: str) -> bool:
         """
-        Returns True if date_from is within 16 days from today.
-        Open-Meteo forecast API supports up to 16 days ahead.
+        Check whether a date is within forecast API availability.
+
+        Args:
+            date_from: Start date in ISO format (YYYY-MM-DD).
+
+        Returns:
+            True if the date is within 16 days from today; otherwise False.
         """
         today      = date.today()
         start_date = date.fromisoformat(date_from)
@@ -113,8 +150,15 @@ class WeatherService:
 
     def _get_forecast(self, coordinates: dict, date_from: str, date_to: str) -> dict | None:
         """
-        Fetch weather forecast from Open-Meteo Forecast API.
-        Used when travel dates are within 16 days from today.
+        Fetch forecast weather data for a coordinate range.
+
+        Args:
+            coordinates: Dict containing latitude and longitude.
+            date_from: Forecast start date (YYYY-MM-DD).
+            date_to: Forecast end date (YYYY-MM-DD).
+
+        Returns:
+            Forecast API JSON payload as dict, or None on request failure.
         """
         try:
             response = requests.get(
@@ -139,8 +183,16 @@ class WeatherService:
 
     def _get_historical(self, coordinates: dict, date_from: str, date_to: str) -> dict | None:
         """
-        Fetch historical weather from Open-Meteo Archive API.
-        Used when travel dates are beyond 16 days — fetches same dates from last year.
+        Fetch historical weather data for long-range planning.
+        Dates are shifted one year back to provide a seasonal analog.
+
+        Args:
+            coordinates: Dict containing latitude and longitude.
+            date_from: Original travel start date (YYYY-MM-DD).
+            date_to: Original travel end date (YYYY-MM-DD).
+
+        Returns:
+            Historical API JSON payload as dict, or None on request failure.
         """
         try:
             # Shift dates back by 1 year for historical comparison
@@ -173,8 +225,17 @@ class WeatherService:
 
     def _build_summary(self, data: dict, destination: str, coordinates: dict) -> dict:
         """
-        Build a clean weather summary dict for the LLM agent.
-        Computes averages and picks the most common weather condition.
+        Build a normalized weather summary for agent consumption.
+        Computes averages and derives a primary weather description.
+
+        Args:
+            data: Raw forecast or archive API payload.
+            destination: Original user-provided destination name.
+            coordinates: Resolved geocoding dict.
+
+        Returns:
+            Dict with destination metadata, aggregate temperatures,
+            precipitation total, weather description, and forecast flag.
         """
         daily = data.get("daily", {})
 
@@ -208,10 +269,14 @@ def get_weather_tool(destination: str, date_from: str, date_to: str) -> dict:
     """
     Get weather forecast or historical data for a travel destination.
     Use this when the user asks about weather conditions for a specific destination and dates.
+
     Args:
         destination: City name (e.g. 'Prague', 'Tokyo')
         date_from: Start date in ISO format (YYYY-MM-DD)
         date_to: End date in ISO format (YYYY-MM-DD)
+
+    Returns:
+        Weather summary dict. Returns an empty dict when data is unavailable.
     """
     service = WeatherService()
     return service.get_weather(destination, date_from, date_to) or {}
