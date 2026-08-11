@@ -11,7 +11,7 @@ LangSmith traces automatically when LANGCHAIN_TRACING_V2=true in .env.
 
 import logging
 
-from app.rag.config import get_config
+from app.rag.config import get_rag_config
 from app.rag.ingestion.ingestor import DocumentIngestor
 from app.rag.retrieval.retriever import VectorRetriever
 from langchain_chroma import Chroma
@@ -29,7 +29,7 @@ class RAGPipeline:
     """
 
     def __init__(self):
-        config = get_config()
+        config = get_rag_config()
 
         self.embeddings = OpenAIEmbeddings(
             model=config.embedding_model

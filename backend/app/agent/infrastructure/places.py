@@ -13,7 +13,7 @@ Endpoints used:
 import requests
 import logging
 from langchain_core.tools import tool
-from ..config import get_config
+from ..config import get_agent_config
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class PlacesService:
     """
 
     def __init__(self):
-        config = get_config()
+        config = get_agent_config()
         self.api_key = config.google_maps_api_key
         self.headers = {
             "X-Goog-Api-Key": self.api_key,

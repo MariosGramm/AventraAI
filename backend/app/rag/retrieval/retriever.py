@@ -2,7 +2,7 @@ import logging
 
 from langchain_chroma import Chroma
 
-from ..config import get_config 
+from ..config import get_rag_config 
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class VectorRetriever:
         """
         Returns a retriever object than can be used in LCEL chains.
         """
-        config = get_config()
+        config = get_rag_config()
         k = k or config.top_k
         return self.vector_store.as_retriever(search_kwargs={"k": k})
 
@@ -49,7 +49,7 @@ class VectorRetriever:
         Deletes all documents from the vector store and resets the collection.
         """
 
-        config = get_config()
+        config = get_rag_config()
         self.vector_store._collection.delete_collection()
 
         # Reinitialize the vector store after deletion

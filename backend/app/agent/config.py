@@ -41,7 +41,7 @@ class Config:
 
 
 @lru_cache()
-def get_config() -> Config:
+def get_agent_config() -> Config:
     """Get the configuration for the Agent - Singleton pattern."""
     return Config()
     

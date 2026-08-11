@@ -3,7 +3,6 @@ from pathlib import Path
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 from langchain_core.documents import Document
-from ..config import get_config
 
 logger = logging.getLogger(__name__)
 

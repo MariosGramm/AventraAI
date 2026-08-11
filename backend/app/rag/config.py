@@ -32,7 +32,7 @@ class Config:
         self.chroma_db_path.mkdir(exist_ok=True)
 
 @lru_cache()
-def get_config() -> Config:
+def get_rag_config() -> Config:
     """Get the configuration for the RAG system - Singleton pattern."""
     return Config()
     
