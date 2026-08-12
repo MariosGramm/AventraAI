@@ -9,25 +9,17 @@ import os
 class Config:
     """Configuration for the Agent."""
 
-    #Search mode - Free tier
+    #Search mode
     search_llm_model_free: str = "gpt-4o-mini"
-    search_temperature_free: float = 0.2
-    search_max_tokens_free: int = 4000
-
-    #Search mode - Paid tier
     search_llm_model_paid: str = "gpt-4o"
-    search_temperature_paid: float = 0.2
-    search_max_tokens_paid: int = 4000
+    search_temperature: float = 0.2      
+    search_max_tokens: int = 4000
 
     # Chat mode - Free tier
     chat_llm_model_free: str = "gpt-4o-mini"
-    chat_temperature_free: float = 0.7
-    chat_max_tokens_free: int = 500
-
-    # Chat mode - Paid tier
     chat_llm_model_paid: str = "gpt-4o"
-    chat_temperature_paid: float = 0.7
-    chat_max_tokens_paid: int = 500
+    chat_temperature:    float = 0.7       
+    chat_max_tokens:     int   = 500 
 
     #Contextualization mode
     contextualize_model: str = "gpt-4o-mini"
