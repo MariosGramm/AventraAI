@@ -1,77 +1,439 @@
+"""
+agent/agent_pipeline.py — Travel Agent Orchestrator
+-----------------------------------------------------
+Top-level orchestrator for the AventraAI travel agent.
+Coordinates all components to produce travel packages (Search mode)
+and conversational travel advice (Chat mode).
 
+Search mode (deterministic):
+    RAG retrieval → Weather → Hotels → Places → LLM → 3 JSON packages (or 1 if budget given)
 
-from app.models import SearchSessionCreateDTO, User
+Chat mode (ReAct):
+    Contextualize → RAG retrieval → ReAct agent with tools → free text response
+
+LangSmith traces automatically when LANGCHAIN_TRACING_V2=true in .env.
+"""
+
+import json
+import logging
+import re
+
+from langchain.agents import AgentExecutor, create_react_agent
+from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 
+from ..models import ChatMessage, ChatRole, SubscriptionTier, User
+from ..models import SearchSessionCreateDTO
 from .config import get_agent_config
-from app.agent.infrastructure.hotels import HotelsService
-from app.agent.infrastructure.places import PlacesService
-from app.agent.infrastructure.weather import WeatherService
-from app.rag.rag_pipeline import RAGPipeline
+from .infrastructure.hotels import HotelsService, get_hotels_tool, get_price_compare_tool
+from .infrastructure.places import PlacesService, get_place_details_tool, get_places_tool
+from .infrastructure.weather import WeatherService, get_weather_tool
+from .prompts import (
+    CONTEXTUALIZE_PROMPT,
+    TRAVEL_CHAT_SYSTEM_PROMPT,
+    TRAVEL_SEARCH_SYSTEM_PROMPT,
+)
+from ..rag.rag_pipeline import RAGPipeline
+
+logger = logging.getLogger(__name__)
 
 
 class TravelAgentPipeline:
+    """
+    Top-level orchestrator for the AventraAI travel agent.
 
-    def __init__(self):
-        self.rag_pipeline = RAGPipeline(self.get_llm_model)
+    Supports two modes of operation:
+        - Search mode: deterministic pipeline that calls RAG, Weather, Hotels,
+          and Places APIs sequentially, then invokes an LLM to produce structured
+          JSON travel packages.
+        - Chat mode: ReAct agent that uses LangChain tools to answer travel
+          questions in a conversational manner, with optional history-aware
+          query reformulation.
+
+    The LLM model (free vs paid tier) is resolved dynamically per request
+    based on the authenticated user's subscription tier.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialise all infrastructure components and load agent configuration.
+        No LLM instances are created at init time — they are resolved per request
+        via _get_llm() based on the user's subscription tier.
+        """
+        self.config          = get_agent_config()
         self.weather_service = WeatherService()
-        self.places_service = PlacesService()
-        self.hotels_service = HotelsService()
-        self.config = get_agent_config()
+        self.hotels_service  = HotelsService()
+        self.places_service  = PlacesService()
+        self.rag_pipeline    = RAGPipeline()
 
-    def get_llm_model(self, user: User, mode: str) -> ChatOpenAI:
-        """
-        Get the LLM model based on the user's subscription and the mode.
-        """
-        is_paid_subscription = user.subscription_type == "paid"
+        self._chat_tools = [
+            get_weather_tool,
+            get_places_tool,
+            get_place_details_tool,
+            get_hotels_tool,
+            get_price_compare_tool,
+        ]
 
-        if mode == "search":
-            if is_paid_subscription:
-                return ChatOpenAI(
-                    model=self.config.search_llm_model_paid,
-                    temperature=self.config.search_temperature_paid,
-                    max_tokens=self.config.search_max_tokens_paid,
-                    streaming=True,
-                )
-            else:
-                return ChatOpenAI(
-                    model=self.config.search_llm_model_free,
-                    temperature=self.config.search_temperature_free,
-                    max_tokens=self.config.search_max_tokens_free,
-                    streaming=True,
-                )
-        else:  # mode == "chat"
-            if is_paid_subscription:
-                return ChatOpenAI(
-                    model=self.config.chat_llm_model_paid,
-                    temperature=self.config.chat_temperature_paid,
-                    max_tokens=self.config.chat_max_tokens_paid,
-                    streaming=True,
-                )
-            else:
-                return ChatOpenAI(
-                    model=self.config.chat_llm_model_free,
-                    temperature=self.config.chat_temperature_free,
-                    max_tokens=self.config.chat_max_tokens_free,
-                    streaming=True,
-                )
-
-    def run_search(self, search_data: SearchSessionCreateDTO, user: User) -> dict:
+    def run_search(
+        self,
+        search_data: SearchSessionCreateDTO,
+        user: User,
+    ) -> dict:
         """
-        Run the search pipeline.
-        """
+        Execute the deterministic search pipeline and return structured travel packages.
 
-        # if user has given a budget to the agent, he will recieve one package
-        # if user has not given a budget to the agent, he will recieve 3 packages for each budget tier (BUDGET, STANDARD, LUXURY)
-        # k value is set accordingly to the number of packages the user will recieve. If user has given a budget, k=5, else k=10
+        Fetches context from RAG, Weather API, Hotels API, and Places API,
+        then invokes the LLM with the aggregated context to produce either
+        one package (if budget is specified) or three packages (budget/mid/luxury).
+
+        Args:
+            search_data: DTO containing destination, dates, budget, adults,
+                         children, currency, and trip_type.
+            user:        The authenticated user — used to resolve the LLM model
+                         based on subscription tier.
+
+        Returns:
+            A dict matching the travel package JSON schema, e.g.:
+            {"packages": [{"tier": "budget", "itinerary": [...], ...}, ...]}
+            Returns an empty dict if the LLM response cannot be parsed.
+        """
         k = 5 if search_data.budget else 10
 
-        # Fetch all data from rag and external APIs
-        chunks = self.rag_pipeline.retrieve(
-            query = f"travel guide attractions food accommodation budget tips {search_data.destination}",
-            k = k
+        rag_chunks = self.rag_pipeline.retrieve(
+            query=f"travel guide attractions food accommodation tips {search_data.destination}",
+            k=k,
         )
 
+        check_in  = search_data.date_from.strftime("%Y-%m-%d")
+        check_out = search_data.date_to.strftime("%Y-%m-%d")
 
+        weather     = self.weather_service.get_weather(search_data.destination, check_in, check_out)
+        hotels      = self.hotels_service.get_hotels(
+            destination=search_data.destination,
+            check_in=check_in,
+            check_out=check_out,
+            adults=search_data.adults,
+            currency=search_data.currency.value,
+        )
+        attractions = self.places_service.get_places(search_data.destination, "attractions")
+        restaurants = self.places_service.get_places(search_data.destination, "restaurants")
 
+        context = self._build_search_context(
+            destination=search_data.destination,
+            rag_chunks=rag_chunks,
+            weather=weather,
+            hotels=hotels,
+            attractions=attractions,
+            restaurants=restaurants,
+        )
 
+        # Seperate instruction regarding the budget.
+        # If a budget is specified , return one package that fits the package
+        # If no budget is specified , return three packages that co-respond to each budget tier (BUDGET, STANDARD, LUXURY)
+        budget_instruction = (
+            f"The user has a budget of {search_data.budget} {search_data.currency.value}. "
+            f"Return ONLY ONE package that best fits this budget."
+            if search_data.budget
+            else "The user has no specific budget. Return EXACTLY 3 packages: budget, mid, and luxury tier."
+        )
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", TRAVEL_SEARCH_SYSTEM_PROMPT),
+            ("human", "{input}"),
+        ])
+
+        llm   = self._get_llm(user, mode="search")
+        chain = prompt | llm | StrOutputParser()
+
+        response = chain.invoke({
+            "input": (
+                f"Destination: {search_data.destination}\n"
+                f"Dates: {check_in} to {check_out}\n"
+                f"Adults: {search_data.adults}\n"
+                f"Children: {search_data.children}\n"
+                f"Budget: {search_data.budget or 'Not specified'} {search_data.currency.value}\n"
+                f"Trip type: {search_data.trip_type.value if search_data.trip_type else 'Not specified'}\n"
+                f"{budget_instruction}\n\n"
+                f"Context:\n{context}"
+            )
+        })
+
+        return self._parse_search_response(response)
+
+    def run_chat(
+        self,
+        message: str,
+        history: list[ChatMessage],
+        user: User,
+    ) -> str:
+        """
+        Execute the ReAct chat pipeline and return a free-text travel response.
+
+        If chat history is provided, the message is first reformulated into a
+        standalone question via the contextualize LLM. The reformulated (or
+        original) query is then used for RAG retrieval. A ReAct agent with
+        access to weather, places, and hotel tools produces the final response.
+
+        Args:
+            message: The latest user message.
+            history: List of previous ChatMessage objects for this session.
+            user:    The authenticated user — used to resolve the LLM model
+                     based on subscription tier.
+
+        Returns:
+            A plain-text string containing the agent's travel advice response.
+        """
+        standalone_query = (
+            self._contextualize(message, history) if history else message
+        )
+
+        rag_chunks = self.rag_pipeline.retrieve(query=standalone_query, k=5)
+
+        rag_context = "\n\n".join([
+            f"[{chunk.metadata.get('section', 'General')}]\n{chunk.page_content}"
+            for chunk in rag_chunks
+        ]) if rag_chunks else "No city guide data available."
+
+        llm = self._get_llm(user, mode="chat")
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", TRAVEL_CHAT_SYSTEM_PROMPT),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("human", "{input}"),
+        ])
+
+        agent          = create_react_agent(llm, self._chat_tools, prompt)
+        agent_executor = AgentExecutor(agent=agent, tools=self._chat_tools, verbose=False)
+
+        formatted_history = self._format_history_as_messages(history)
+
+        result = agent_executor.invoke({
+            "input": (
+                f"{standalone_query}\n\n"
+                f"Relevant city guide context:\n{rag_context}"
+            ),
+            "chat_history": formatted_history,
+        })
+
+        return result.get("output", "")
+
+    def _get_llm(self, user: User, mode: str) -> ChatOpenAI:
+        """
+        Resolve and return the appropriate ChatOpenAI instance based on
+        the user's subscription tier and the current execution mode.
+
+        Args:
+            user: The authenticated user whose subscription_tier determines
+                  whether the free or paid LLM model is used.
+            mode: Execution mode — one of "search", "chat", or "contextualize".
+
+        Returns:
+            A configured ChatOpenAI instance ready for invocation.
+        """
+        is_paid = user.subscription_tier == SubscriptionTier.PAID
+
+        if mode == "search":
+            model  = self.config.search_llm_model_paid if is_paid else self.config.search_llm_model_free
+            temp   = self.config.search_temperature
+            tokens = self.config.search_max_tokens
+        else:   #chat
+            model  = self.config.chat_llm_model_paid if is_paid else self.config.chat_llm_model_free
+            temp   = self.config.chat_temperature
+            tokens = self.config.chat_max_tokens
+
+        return ChatOpenAI(model=model, temperature=temp, max_tokens=tokens)
+
+    def _contextualize(self, message: str, history: list[ChatMessage]) -> str:
+        """
+        Reformulate a follow-up user message into a standalone question
+        using the chat history as context.
+
+        Uses a cheap, fast LLM (gpt-4o-mini, temperature=0) to rewrite
+        ambiguous follow-up questions so they can be understood without
+        the conversation history — improving RAG retrieval quality.
+
+        Args:
+            message: The latest user message, potentially a follow-up.
+            history: List of previous ChatMessage objects in this session.
+
+        Returns:
+            A standalone question string. If no reformulation is needed,
+            the original message is returned as-is.
+        """
+        llm = ChatOpenAI(
+            model=self.config.contextualize_model,
+            temperature=self.config.contextualize_temperature,
+            max_tokens=self.config.contextualize_max_tokens,
+        )
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", CONTEXTUALIZE_PROMPT),
+            ("human", "{input}"),
+        ])
+
+        chain = prompt | llm | StrOutputParser()
+
+        return chain.invoke({
+            "input": (
+                f"Chat history:\n{self._format_history_as_text(history)}\n\n"
+                f"Latest message: {message}"
+            )
+        })
+
+    def _build_search_context(
+        self,
+        destination: str,
+        rag_chunks:  list,
+        weather:     dict | None,
+        hotels:      list,
+        attractions: list,
+        restaurants: list,
+    ) -> str:
+        """
+        Aggregate data from all sources into a single formatted string
+        that will be injected into the LLM prompt as context.
+
+        Logs a warning for each source that returned no data, so gaps
+        in context are visible in application logs.
+
+        Args:
+            destination: City name used in warning log messages.
+            rag_chunks:  List of LangChain Document objects from RAG retrieval.
+            weather:     Weather summary dict from WeatherService, or None.
+            hotels:      List of hotel dicts from HotelsService.
+            attractions: List of attraction dicts from PlacesService.
+            restaurants: List of restaurant dicts from PlacesService.
+
+        Returns:
+            A multi-section plain-text string with headings for each data source,
+            ready to be embedded in the LLM prompt.
+        """
+        parts = []
+
+        if rag_chunks:
+            rag_text = "\n\n".join([
+                f"[{chunk.metadata.get('section', 'General')}]\n{chunk.page_content}"
+                for chunk in rag_chunks
+            ])
+            parts.append(f"=== CITY GUIDE ===\n{rag_text}")
+        else:
+            logger.warning(f"No context received from RAG for {destination}")
+
+        if weather:
+            parts.append(
+                f"=== WEATHER ===\n"
+                f"Temperature: {weather.get('avg_temp_min')}C - {weather.get('avg_temp_max')}C\n"
+                f"Conditions: {weather.get('description')}\n"
+                f"Precipitation: {weather.get('total_precip_mm')}mm\n"
+                f"Data type: {'Forecast' if weather.get('is_forecast') else 'Historical average'}"
+            )
+        else:
+            logger.warning(f"No context received from Weather API for {destination}")
+
+        if hotels:
+            hotel_lines = [
+                f"- {h.get('name')}: "
+                f"rating={h.get('rating')}, "
+                f"price={h.get('price', {}).get('per_night')} EUR/night, "
+                f"platform={h.get('platform')}, "
+                f"url={h.get('booking_url')}"
+                for h in hotels[:5]
+            ]
+            parts.append(f"=== HOTELS ===\n" + "\n".join(hotel_lines))
+        else:
+            logger.warning(f"No context received from Hotels API for {destination}")
+
+        if attractions:
+            attr_lines = [
+                f"- {a.get('name')}: rating={a.get('rating')}, address={a.get('address')}"
+                for a in attractions[:5]
+            ]
+            parts.append(f"=== ATTRACTIONS ===\n" + "\n".join(attr_lines))
+        else:
+            logger.warning(f"No context received from Places API (attractions) for {destination}")
+
+        if restaurants:
+            rest_lines = [
+                f"- {r.get('name')}: "
+                f"rating={r.get('rating')}, "
+                f"price_level={r.get('price_level')}, "
+                f"address={r.get('address')}"
+                for r in restaurants[:5]
+            ]
+            parts.append(f"=== RESTAURANTS ===\n" + "\n".join(rest_lines))
+        else:
+            logger.warning(f"No context received from Places API (restaurants) for {destination}")
+
+        return "\n\n".join(parts)
+
+    def _parse_search_response(self, response: str) -> dict:
+        """
+        Parse the raw LLM string response into a Python dict.
+
+        Strips markdown code fences (e.g. ```json ... ```) if present,
+        then attempts JSON parsing. Logs an error and returns an empty
+        dict if parsing fails.
+
+        Args:
+            response: Raw string output from the LLM, expected to be
+                      a valid JSON object matching the travel package schema.
+
+        Returns:
+            A parsed dict containing the travel packages, or an empty dict
+            if the response cannot be parsed as JSON.
+        """
+        try:
+            clean = response.strip()
+            if clean.startswith("```"):
+                clean = re.sub(r"```(?:json)?\n?", "", clean).strip()
+                clean = clean.rstrip("`").strip()
+            return json.loads(clean)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse LLM search response: {e}")
+            logger.error(f"Raw response: {response[:500]}")
+            return {}
+
+    def _format_history_as_text(self, history: list[ChatMessage]) -> str:
+        """
+        Format a list of ChatMessage objects into a plain-text conversation
+        log for use in the contextualize prompt.
+
+        Args:
+            history: List of ChatMessage objects ordered from oldest to newest.
+
+        Returns:
+            A newline-separated string with each message prefixed by its role,
+            e.g. "User: ...\nAssistant: ...". Returns "No previous conversation."
+            if history is empty.
+        """
+        if not history:
+            return "No previous conversation."
+
+        lines = []
+        for msg in history:
+            role = "User" if msg.role == ChatRole.USER else "Assistant"
+            lines.append(f"{role}: {msg.content}")
+
+        return "\n".join(lines)
+
+    def _format_history_as_messages(self, history: list[ChatMessage]) -> list:
+        """
+        Convert a list of ChatMessage objects into LangChain message objects
+        (HumanMessage / AIMessage) for use in the ReAct agent's chat history.
+
+        Args:
+            history: List of ChatMessage objects ordered from oldest to newest.
+
+        Returns:
+            A list of LangChain BaseMessage objects compatible with
+            MessagesPlaceholder in a ChatPromptTemplate.
+        """
+        messages = []
+        for msg in history:
+            if msg.role == ChatRole.USER:
+                messages.append(HumanMessage(content=msg.content))
+            else:
+                messages.append(AIMessage(content=msg.content))
+        return messages
