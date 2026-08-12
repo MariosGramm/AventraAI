@@ -35,7 +35,7 @@ from .prompts import (
     TRAVEL_CHAT_SYSTEM_PROMPT,
     TRAVEL_SEARCH_SYSTEM_PROMPT,
 )
-from ..rag.rag_pipeline import RAGPipeline
+from ..rag.rag_service import RAGService
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ class TravelAgentPipeline:
         self.weather_service = WeatherService()
         self.hotels_service  = HotelsService()
         self.places_service  = PlacesService()
-        self.rag_pipeline    = RAGPipeline()
+        self.rag_pipeline    = RAGService()
 
         self._chat_tools = [
             get_weather_tool,
