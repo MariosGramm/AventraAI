@@ -81,3 +81,9 @@ class AuthProvider(StrEnum):
     GOOGLE = "google"
     EMAIL = "email"
 
+class TripType(StrEnum):
+    SOLO     = "solo"
+    FAMILY   = "family"
+    ROMANTIC = "romantic"
+    FRIENDS  = "friends"
+

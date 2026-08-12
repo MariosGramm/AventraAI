@@ -1,5 +1,5 @@
 import uuid
-from app.enums import AccommodationType, ActivityType, AgentStep, AuthProvider, ChatRole, Currency, PartOfDay, SearchSessionStatus, SubscriptionTier, TravelPackageTier
+from app.enums import AccommodationType, ActivityType, AgentStep, AuthProvider, ChatRole, Currency, PartOfDay, SearchSessionStatus, SubscriptionTier, TravelPackageTier, TripType
 from sqlmodel import ARRAY, Column, DateTime, Relationship, SQLModel, Field, String
 from pydantic import EmailStr
 from datetime import datetime, UTC
@@ -238,6 +238,9 @@ class SearchSession(AuditableBase, table=True):
     date_from: datetime = Field(description="The start date for the travel search.")
     date_to: datetime = Field(description="The end date for the travel search.")
     budget: float | None = Field(default=None, description="The budget for the travel search.")
+    adults: int = Field(default=2)
+    children: int = Field(default=0)
+    trip_type: TripType | None = Field(default=None)
     currency: Currency = Field(default=Currency.EUR, description="The currency code for the budget (e.g., USD, EUR).")
     status: SearchSessionStatus = Field(default=SearchSessionStatus.PENDING, description="The status of the search session (pending, completed, or failed).")
     error_message: str | None = Field(default=None, description="An optional error message if the search session failed.")
@@ -252,15 +255,18 @@ class SearchSessionPublicDTO(SQLModel):
     Public representation of the SearchSession model.
     Used for API responses to avoid exposing sensitive information.
     """
-    id: uuid.UUID
-    status: SearchSessionStatus
+    id:          uuid.UUID
+    status:      SearchSessionStatus
     destination: str
-    date_from: datetime
-    date_to: datetime
-    budget: float | None
-    currency: Currency
-    created_at: datetime | None
-    packages: list["TravelPackagePublicDTO"]
+    date_from:   datetime
+    date_to:     datetime
+    budget:      float | None
+    currency:    Currency
+    adults:      int
+    children:    int
+    trip_type:   TripType | None
+    created_at:  datetime | None
+    packages:    list["TravelPackagePublicDTO"]
 
 class SearchSessionsPublicDTO(SQLModel):
     """
@@ -289,6 +295,15 @@ class SearchSessionCreateDTO(SQLModel):
     currency: Currency = Field(
         default=Currency.EUR,
         description="The currency of the budget."
+    )
+    adults: int = Field(
+        default=2, ge=1, le=20, description="Number of adults"
+    )
+    children: int = Field(
+        default=0, ge=0, le=10, description="Number of children"
+    )
+    trip_type: TripType | None = Field(
+        default=None, description="Type of trip"
     )
 
 # Search history entity model
