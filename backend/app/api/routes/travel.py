@@ -1,57 +1,109 @@
 
+from datetime import UTC, datetime
+
 from app import enums
 from typing import Any
 import uuid
 from app import crud
+from app.agent.agent_pipeline import TravelAgentPipeline
 from fastapi import APIRouter, HTTPException
-from app.models import SearchSession, SearchSessionCreateDTO, SearchSessionPublicDTO, SearchSessionsPublicDTO
+from app.models import SearchSession, SearchSessionCreateDTO, SearchSessionPublicDTO, SearchSessionsPublicDTO, TravelPackage
 from app.api.deps import CurrentUserDep, SessionDep
+from dateutil.relativedelta import relativedelta
 from sqlmodel import col, select
 
+FREE_TIER_LIMIT = 3
 
 router = APIRouter(tags=["travel"])
+
+def _check_and_update_freemium(session: SessionDep, current_user: CurrentUserDep) -> None:
+    """Check freemium quota and reset if needed. Raises 429 if limit reached."""
+
+    if current_user.subscription_tier != enums.SubscriptionTier.FREE:
+        return # user has paid subscription , do nothing
+
+    now = datetime.now(UTC)
+
+    if (current_user.searches_reset_date is None or now >= current_user.searches_reset_date):
+        current_user.monthly_searches_used = 0
+        current_user.searches_reset_date = now + relativedelta(months=1)
+        session.add(current_user)
+        session.commit()
+        session.refresh(current_user)
+
+    if current_user.monthly_searches_used >= FREE_TIER_LIMIT:
+        raise HTTPException(429, f"Monthly search limit of {FREE_TIER_LIMIT} reached. Upgrade to paid tier for unlimited searches.")
+
+
+
 
 @router.post("/searches", response_model= SearchSessionPublicDTO)
 def create_search(session:SessionDep, current_user:CurrentUserDep, search_session_create_data: SearchSessionCreateDTO) -> Any:
     """
-    Method for search session creation.
+    Create a new search session and run the travel agent pipeline.
+    Enforces freemium quota for free tier users.
     """
+    _check_and_update_freemium(session, current_user)
+
     search_session = crud.create_search_session(session, current_user.id, search_session_create_data)
+
+    try:
+        # Run agent pipeline -> Search Mode (run_search mode)
+        agent_pipeline = TravelAgentPipeline()
+        result = agent_pipeline.run_search(search_session_create_data, current_user)
+
+        packages_data = result.get("packages", [result]) if "packages" in result else [result]
+        for pac_data in packages_data:
+            package = TravelPackage(session_id=search_session.id, **pac_data)
+            session.add(package)
+
+        search_session.status = enums.SearchSessionStatus.COMPLETED
+        session.add(search_session)
+
+        current_user.monthly_searches_used += 1
+        session.add(current_user)
+
+        session.commit()
+        session.refresh(search_session)
+    except Exception as e:
+        search_session.status = enums.SearchSessionStatus.FAILED
+        search_session.error_message = str(e)
+        session.add(search_session)
+        session.commit()
+        raise HTTPException(status_code=500, detail=f"Agent pipeline failed: {str(e)}")
 
     return search_session
 
 @router.get("/searches", response_model=SearchSessionsPublicDTO)
 def get_searches(session:SessionDep, current_user:CurrentUserDep) -> Any:
     """
-    Method for getting a user's search sessions.
+    Get all search sessions for the current user, ordered by most recent.
     """
-    search_sessions_query = (
-    select(SearchSession)
-    .where(SearchSession.owner_id == current_user.id)
-    .order_by(col(SearchSession.created_at).desc())
-    )
+    search_sessions = session.exec(
+        select(SearchSession)
+        .where(SearchSession.owner_id == current_user.id)
+        .order_by(col(SearchSession.created_at).desc())
+    ).all()
 
-    search_sessions = session.exec(search_sessions_query).all()
-
-    return search_sessions
+    return SearchSessionsPublicDTO(data=search_sessions, count=len(search_sessions))
 
 @router.get("/searches/{search_session_id}", response_model=SearchSessionPublicDTO)
-def get_search(session:SessionDep, search_session_id:uuid.UUID, current_user: CurrentUserDep) -> Any:
+def get_search(
+    session: SessionDep,
+    search_session_id: uuid.UUID,
+    current_user: CurrentUserDep
+) -> Any:
     """
-    Method for getting a specific session using a search session id with search session content.
+    Get a specific search session by ID including its travel packages.
+    Only accessible by the session owner.
     """
-    if search_session.owner_id != current_user.id:
-        raise HTTPException(403, "User does not have enough privileges")
-    
-    search_session_query = (
-        select(SearchSession)
-        .where(SearchSession.id == search_session_id)
-    )
-
-    search_session = session.exec(search_session_query).first()
+    search_session = session.get(SearchSession, search_session_id)
 
     if not search_session:
         raise HTTPException(404, "Search session not found")
+
+    if search_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
 
     return search_session
 
