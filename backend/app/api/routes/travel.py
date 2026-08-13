@@ -48,7 +48,7 @@ def create_search(session:SessionDep, current_user:CurrentUserDep, search_sessio
     search_session = crud.create_search_session(session, current_user.id, search_session_create_data)
 
     try:
-        # Run agent pipeline -> Search Mode (run_search mode)
+        # Run agent pipeline -> Search Mode (run_search method)
         agent_pipeline = TravelAgentPipeline()
         result = agent_pipeline.run_search(search_session_create_data, current_user)
 
@@ -92,7 +92,7 @@ def get_search(
     session: SessionDep,
     search_session_id: uuid.UUID,
     current_user: CurrentUserDep
-) -> Any:
+    ) -> Any:
     """
     Get a specific search session by ID including its travel packages.
     Only accessible by the session owner.
