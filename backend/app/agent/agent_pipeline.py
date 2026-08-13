@@ -99,11 +99,10 @@ class TravelAgentPipeline:
             {"packages": [{"tier": "budget", "itinerary": [...], ...}, ...]}
             Returns an empty dict if the LLM response cannot be parsed.
         """
-        k = 5 if search_data.budget else 10
 
         rag_chunks = self.rag_pipeline.retrieve(
             query=f"travel guide attractions food accommodation tips {search_data.destination}",
-            k=k,
+            k=5,
         )
 
         check_in  = search_data.date_from.strftime("%Y-%m-%d")
@@ -130,13 +129,19 @@ class TravelAgentPipeline:
         )
 
         # Seperate instruction regarding the budget.
-        # If a budget is specified , return one package that fits the package
-        # If no budget is specified , return three packages that co-respond to each budget tier (BUDGET, STANDARD, LUXURY)
+        # If a budget is specified , return one package that fits the budget.
+        # If no budget is specified , return one standard package budget package.
         budget_instruction = (
             f"The user has a budget of {search_data.budget} {search_data.currency.value}. "
-            f"Return ONLY ONE package that best fits this budget."
+            f"Create ONE package that fits this budget. "
+            f"Use these tier guidelines:\n"
+            f"- budget tier: total trip cost under 500 {search_data.currency.value}\n"
+            f"- mid tier: total trip cost between 500 and 2000 {search_data.currency.value}\n"
+            f"- luxury tier: total trip cost above 2000 {search_data.currency.value}\n"
+            f"Label the package with the appropriate tier."
             if search_data.budget
-            else "The user has no specific budget. Return EXACTLY 3 packages: budget, mid, and luxury tier."
+            else
+            "The user has no specific budget. Create ONE mid-range package (tier: mid)."
         )
 
         prompt = ChatPromptTemplate.from_messages([

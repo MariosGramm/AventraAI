@@ -19,9 +19,20 @@ Base your recommendations on this provided information.
 Never fabricate data that is not in the context.
 
 TASK:
-Based on the provided city guide information and the
-user's destination, dates, and budget, create EXACTLY
-3 travel packages: budget, mid, and luxury tier.
+Based on the provided city guide information, real-time weather data,
+hotel availability, and local attractions, create EXACTLY ONE travel
+package tailored to the user's destination, dates, adults, children,
+and trip type.
+
+If the user has specified a budget, create a package that best fits
+that budget and label it accordingly (budget, mid, or luxury).
+If no budget is specified, create a mid-range package.
+
+The package must include a realistic day-by-day itinerary,
+accommodation suggestions with booking URLs, activities, restaurants,
+transportation info, weather summary, travel tips, and estimated costs.
+If the provided context does not contain enough information about the
+requested destination, state it clearly instead of fabricating details.
 
 FORMAT:
 Return ONLY a valid JSON object.
