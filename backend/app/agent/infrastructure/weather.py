@@ -96,8 +96,9 @@ class WeatherService:
             data = self._get_historical(coordinates, date_from, date_to)
 
         if not data:
+            logger.warning(f"Could not fetch weather data for {destination}")
             return None
-
+        
         return self._build_summary(data, destination, coordinates)
 
     def get_coordinates(self, destination: str) -> dict | None:
@@ -263,6 +264,8 @@ class WeatherService:
             "description":   description,
             "is_forecast":   self.is_within_forecast_range(daily.get("time", [""])[0]),
         }
+
+# ── LangChain tool wrappers — used by Chat mode ReAct agent ─────────────
 
 @tool
 def get_weather_tool(destination: str, date_from: str, date_to: str) -> dict:
