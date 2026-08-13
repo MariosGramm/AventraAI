@@ -20,7 +20,7 @@ load_dotenv()
 import chromadb
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
-from app.rag.config import get_config
+from app.rag.config import get_rag_config
 from app.rag.ingestion.ingestor import DocumentIngestor
 
 
@@ -34,7 +34,7 @@ def main():
         print("❌ OPENAI_API_KEY not set in .env")
         sys.exit(1)
 
-    config = get_config()
+    config = get_rag_config()
 
     # Check data directory
     if not config.data_path.exists():

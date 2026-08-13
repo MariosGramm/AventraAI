@@ -106,6 +106,17 @@ def recover_password_html_content(email:str, session:SessionDep, user:CurrentUse
         content=email_data.html_content, headers={"subject:": email_data.subject}
     )
 
+@router.post("/test-email")
+def test_email(email_to: str) -> Message:
+    """
+    Test email sending. Superuser only.
+    """
+    send_email(
+        email_to=email_to,
+        subject="Test",
+        html_content="This is an email message for testing purposes",
+    )
+    return Message(message=f"Test email sent to {email_to}")
     
     
 

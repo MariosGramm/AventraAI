@@ -10,6 +10,8 @@ from jinja2 import Template
 import jwt
 import logging
 
+import resend
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -83,31 +85,23 @@ def generate_new_account_email(email_to:str, username:str, password:str) -> Emai
 
     return EmailData(html_content= html_content, subject= subject)
 
-def send_email(*, email_to:str, subject:str = "", html_content:str = ""):
+def send_email(*, email_to: str, subject: str = "", html_content: str = "") -> None:
     """
-    Method for sending emails.
+    Method for sending emails via Resend.
     """
-    assert settings.emails_enabled, "No provided configuration for email variables"
-
-    message = emails.Message(
-        subject=subject,
-        html=html_content,
-        mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL)
-    )
-
-    smtp_options = {
-        "host": settings.SMTP_HOST,
-        "port": settings.SMTP_PORT,
-        "tls": settings.SMTP_TLS
-    }
-
-    if settings.SMTP_USER:
-        smtp_options["user"] = settings.SMTP_USER
-    if settings.SMTP_PASSWORD:
-        smtp_options["password"] = settings.SMTP_PASSWORD
-
-    response = message.send(to=email_to, smtp=smtp_options)
-    logger.info(f"Send email result: {response}")
+    resend.api_key = settings.RESEND_API_KEY
+    
+    try:
+        response = resend.Emails.send({
+            "from": f"{settings.EMAILS_FROM_NAME} <{settings.EMAILS_FROM_EMAIL}>",
+            "to": email_to,
+            "subject": subject,
+            "html": html_content
+        })
+        logger.info(f"Email sent successfully to {email_to} — ID: {response.get('id')}")
+    except Exception as e:
+        logger.error(f"Failed to send email to {email_to}: {e}")
+        raise
 
 def verify_password_reset_token(token:str) -> str | None:
     try:
@@ -116,6 +110,8 @@ def verify_password_reset_token(token:str) -> str | None:
         return str(decoded_token["sub"])
     except jwt.InvalidTokenError:
         return None
+
+
 
 
     

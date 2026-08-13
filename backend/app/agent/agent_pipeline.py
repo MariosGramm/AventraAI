@@ -18,7 +18,7 @@ import json
 import logging
 import re
 
-from langchain.agents import AgentExecutor, create_react_agent
+from langchain.agents import create_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -209,12 +209,11 @@ class TravelAgentPipeline:
             ("human", "{input}"),
         ])
 
-        agent          = create_react_agent(llm, self._chat_tools, prompt)
-        agent_executor = AgentExecutor(agent=agent, tools=self._chat_tools, verbose=False)
+        agent = create_agent(llm, self._chat_tools, prompt)
 
         formatted_history = self._format_history_as_messages(history)
 
-        result = agent_executor.invoke({
+        result = agent.invoke({
             "input": (
                 f"{standalone_query}\n\n"
                 f"Relevant city guide context:\n{rag_context}"

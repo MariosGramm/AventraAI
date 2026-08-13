@@ -24,7 +24,7 @@ import logging
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
-from .config import get_config
+from .config import get_rag_config
 from .ingestion.ingestor import DocumentIngestor
 from .retrieval.retriever import VectorRetriever
 
@@ -48,9 +48,9 @@ class RAGService:
         """
         Initialise OpenAI embeddings, ChromaDB vector store, ingestor,
         and retriever. All configuration values are loaded from
-        rag/config.py via get_config().
+        rag/config.py via get_rag_config().
         """
-        config = get_config()
+        config = get_rag_config()
 
         self.embeddings = OpenAIEmbeddings(model=config.embedding_model)
         self.vector_store = Chroma(
