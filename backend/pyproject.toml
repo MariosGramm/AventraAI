@@ -32,6 +32,7 @@ dependencies = [
   "langgraph>=1.2.6",
   "langchain-classic>=1.0.8",
   "resend>=2.36.0",
+  "google-auth>=2.56.3",
 ]
 
 [dependency-groups]

@@ -54,6 +54,9 @@ class Settings(BaseSettings):
         EMAILS_FROM_EMAIL (EmailStr | None): The email address from which emails are sent.
         EMAILS_FROM_NAME (str | None): The name from which emails are sent.
         EMAIL_RESET_TOKEN_EXPIRE_HOURS (int): The expiration time for email reset tokens in hours.
+        RESEND_API_KEY (str): API key of email provider.
+        GOOGLE_CLIENT_ID (str): Identifies the application to Google.  
+        GOOGLE_CLIENT_SECRET (str): A secret associated with the application, used to authenticate the application to Google.
     """
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
@@ -101,7 +104,9 @@ class Settings(BaseSettings):
             port = self.POSTGRES_PORT,
             path = self.POSTGRES_DB
         ))
-    
+
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
     SMTP_PORT: int = 587

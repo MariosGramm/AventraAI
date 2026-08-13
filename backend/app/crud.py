@@ -1,7 +1,7 @@
 import uuid
 
 from app.core.security import get_password_hash, verify_password
-from app.enums import AgentStep, ChatRole, SearchSessionStatus
+from app.enums import AgentStep, AuthProvider, ChatRole, SearchSessionStatus
 from app.models import ChatMessage, ChatMessageCreateDTO, ChatSession, ChatSessionCreateDTO, SearchHistory, SearchSession, SearchSessionCreateDTO, User, UserCreateDTO, UserCreateSignupDTO, UserUpdateDTO, UserUpdateSelfDTO
 from sqlmodel import Session, select
 
@@ -11,6 +11,46 @@ DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$MjQyZWE1MzBjYjJlZTI0Yw$YTU4NGM5ZTZm
 #=======================================================================================================
 # USER METHODS
 #=======================================================================================================
+
+def get_or_create_google_user(
+    session: Session,
+    email: str,
+    google_id: str,
+    full_name: str | None
+) -> User:
+    """Get existing user or create new one from Google OAuth."""
+    
+    # Ψάξε με google_id πρώτα
+    user = session.exec(
+        select(User).where(User.google_id == google_id)
+    ).first()
+    
+    if user:
+        return user
+    
+    user = get_user_by_email(session=session, email=email)
+    if user:
+        
+        user.google_id     = google_id
+        user.auth_provider = AuthProvider.GOOGLE
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
+    
+    
+    user = User(
+        email=email,
+        full_name=full_name,
+        google_id=google_id,
+        auth_provider=AuthProvider.GOOGLE,
+        is_active=True,
+        hashed_password=""  # no password , user signs in using google account
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
 
 def create_user(*, session:Session, user_creation_data:UserCreateDTO | UserCreateSignupDTO) -> User:
     """
