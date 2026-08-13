@@ -185,6 +185,10 @@ def update_user(session: SessionDep, user_update_data:UserUpdateDTO, user_id:uui
 
 @router.delete("/{user_id}", response_model= Message, dependencies=[Depends(get_current_active_superuser)])
 def delete_user(session:SessionDep, user_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
+    """
+    Method for user deletion.
+    Available only for superusers.
+    """
 
     user = session.get(User, user_id)
 
