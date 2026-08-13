@@ -20,7 +20,6 @@ def get_or_create_google_user(
 ) -> User:
     """Get existing user or create new one from Google OAuth."""
     
-    # Ψάξε με google_id πρώτα
     user = session.exec(
         select(User).where(User.google_id == google_id)
     ).first()
