@@ -30,7 +30,7 @@ CITIES = [
     "Venice", "Berlin", "Athens", "Prague", "Lisbon", "Vienna", 
     "Budapest", "Dublin", "Stockholm", "Copenhagen", "Warsaw", "Moscow",
     "Edinburgh", "Florence", "Brussels", "Oslo", "Helsinki", "Reykjavik",
-    "Madrid", "Seville", "Valencia", "Porto", "Marseille", "Nice",
+    "Madrid", "Seville", "Valencia", "Porto", "Marseille", "Nice", "Tirana",
     # Asia
     "Tokyo", "Kyoto", "Seoul", "Bangkok", "Singapore",
     "Dubai", "Beijing", "Hong Kong", "Istanbul", "New Delhi",

@@ -5,7 +5,13 @@ Usage (from backend/):
     uv run python scripts/view_chunks.py
 """
 
+from pathlib import Path
+
 import chromadb
+
+SCRIPT_DIR  = Path(__file__).resolve().parent          # scripts/
+BACKEND_DIR = SCRIPT_DIR.parent                         # backend/
+CHROMA_PATH = BACKEND_DIR / "app" / "rag" / "chroma_db"
 
 client = chromadb.PersistentClient(path='app/rag/chroma_db')
 collection = client.get_collection('city_guides')
