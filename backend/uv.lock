@@ -259,6 +259,7 @@ dependencies = [
     { name = "resend" },
     { name = "sentry-sdk", extra = ["fastapi"] },
     { name = "sqlmodel" },
+    { name = "stripe" },
     { name = "tenacity" },
 ]
 
@@ -317,6 +318,7 @@ requires-dist = [
     { name = "resend", specifier = ">=2.36.0" },
     { name = "sentry-sdk", extras = ["fastapi"], specifier = ">=2.0.0,<3.0.0" },
     { name = "sqlmodel", specifier = ">=0.0.21,<1.0.0" },
+    { name = "stripe", specifier = ">=15.5.0" },
     { name = "tenacity", specifier = ">=8.2.3,<9.0.0" },
 ]
 
@@ -5526,6 +5528,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/eb/e3/7c1dc7381d9f8ab7d854328ebfa884e62cb3f3d8549ddfd37c7814f42afa/starlette-1.3.1.tar.gz", hash = "sha256:05d0213193f2fbaae60e2ecb593b4add4262ad4e46536b54abe36f11a71724e0", size = 2703240, upload-time = "2026-06-12T09:23:11.602Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/bb/2799cc2ede3ed41131f8975621e7213dfc7ef4acbbaadfa440f32500c370/starlette-1.3.1-py3-none-any.whl", hash = "sha256:c7372aae11c3c3f26a42df7bd626cec2f47d03483d261d369516a615a53714c6", size = 73632, upload-time = "2026-06-12T09:23:10.017Z" },
+]
+
+[[package]]
+name = "stripe"
+version = "15.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/98/af/17e87a0ee330f2ba3be32fa88d7621bda3a9bcd12646a07df0acb73313b7/stripe-15.5.0.tar.gz", hash = "sha256:6b71048b270a06c1399c9ff6179e6907c7825ec394f579a973340d5c2b8575ae", size = 1542610, upload-time = "2026-08-10T22:11:13.011Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/20/4c8377c570697ebe105ad5e073538e498d58e4985ca6e2944bdc917a5034/stripe-15.5.0-py3-none-any.whl", hash = "sha256:3994b075530e90e60d725f7553188e1ab30519f1c9d2dc98ea5fe420d0b29c50", size = 2199502, upload-time = "2026-08-10T22:11:11.08Z" },
 ]
 
 [[package]]

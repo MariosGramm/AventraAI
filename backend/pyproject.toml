@@ -33,6 +33,7 @@ dependencies = [
   "langchain-classic>=1.0.8",
   "resend>=2.36.0",
   "google-auth>=2.56.3",
+  "stripe>=15.5.0",
 ]
 
 [dependency-groups]
