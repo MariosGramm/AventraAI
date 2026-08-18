@@ -1,12 +1,17 @@
 
 from app.api.deps import CurrentUserDep, SessionDep
 from app.core.config import settings
-from fastapi import APIRouter, HTTPException
+from app.enums import SubscriptionTier
+from app.models import Message, User
+from fastapi import APIRouter, HTTPException, Request
+from sqlalchemy import Engine, select
+from sqlmodel import Session
 import stripe
 
 
 router = APIRouter(tags=["payments"])
 
+@router.post("/create-checkout-session")
 def create_checkout_session(current_user: CurrentUserDep, session: SessionDep) -> dict:
     """
     Create a Stripe checkout session for upgrading to paid tier.
@@ -29,3 +34,53 @@ def create_checkout_session(current_user: CurrentUserDep, session: SessionDep) -
         return {"checkout_url": checkout_session.url}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/webhook")
+async def stripe_webhook(request: Request, session: SessionDep) -> Message:
+    """
+    Handle Stripe webhook events.
+    Verifies webhook signature and updates user subscription tier.
+    """
+    payload = await request.body()
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload = payload,
+            sig_header = stripe_signature,
+            secret = settings.STRIPE_WEBHOOK_SECRET
+        )
+    except Exception as e :
+        raise HTTPException(status_code= 400, detail=f"Webhook signature verification failed: {str(e)}")
+
+    # Event handling logic
+    if event["type"] == "checkout.session.completed":
+        session_data = event["data"]["object"]
+        user_id      = session_data.get("metadata", {}).get("user_id")
+
+        if user_id:
+            from sqlmodel import Session
+            from app.core.db import engine
+            with Session(engine) as db:
+                user = db.get(User, user_id)
+                if user:
+                    user.subscription_tier = SubscriptionTier.PAID
+                    db.add(user)
+                    db.commit()
+
+    elif event["type"] == "customer.subscription.deleted":
+        subscription_data = event["data"]["object"]
+        customer_email    = subscription_data.get("customer_email")
+
+        if customer_email:
+            from sqlmodel import Session
+            from app.core.db import engine
+            with Session(engine) as db:
+                user = db.exec(select(User).where(User.email == customer_email)).first()
+                if user:
+                    user.subscription_tier = SubscriptionTier.FREE
+                    user.monthly_searches_used = 0
+                    db.add(user)
+                    db.commit()
+
+    return Message(message="Webhook received and processed successfully.")
+                
