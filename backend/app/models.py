@@ -286,6 +286,18 @@ class SearchSessionCreateDTO(SQLModel):
         default=None,
         description="Optional departure location for the trip."
     )
+    origin_iata: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=3,
+        description="Optional three-letter IATA departure code for the Skyscanner link, e.g. ATH."
+    )
+    destination_iata: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=3,
+        description="Optional three-letter IATA destination code for the Skyscanner link, e.g. PRG."
+    )
     date_from: datetime = Field(
         description="The start date of the trip."
     )
@@ -351,7 +363,8 @@ class TravelPackage(SQLModel, table=True):
     estimated_cost_max: float = Field(description="The maximum estimated cost of the travel package")
     currency: Currency = Field(default=Currency.EUR, description="The currency code for the budget (e.g., USD, EUR).")
 
-    transportation: str | None = Field(default= None, description= "The description of the tranportation")
+    transportation: str | None = Field(default=None, description="Local transportation within the destination.")
+    flight_info: str | None = Field(default=None, description="Available flight information for traveling to the destination.")
     travel_tips: list[str] | None = Field(default_factory=list, sa_column=Column(ARRAY(String)), description="Extra information for the visitors in the form of tips")
 
     # Weather summary might be unavailable if the travel date is outside the available forecast range.
@@ -374,6 +387,7 @@ class TravelPackagePublicDTO(SQLModel):
     estimated_cost_max: float
     currency: Currency
     transportation: str | None
+    flight_info: str | None
     travel_tips: list[str] | None
     weather_summary: str | None
     itinerary: list["ItineraryPublicDTO"]

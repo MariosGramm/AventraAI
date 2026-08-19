@@ -18,7 +18,6 @@ import json
 import logging
 import re
 
-from app.agent.infrastructure.flights import FlightsService, search_flight_prices_tool
 from langchain.agents import create_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
@@ -28,6 +27,7 @@ from langchain_openai import ChatOpenAI
 from ..models import ChatMessage, ChatRole, SubscriptionTier, User
 from ..models import SearchSessionCreateDTO
 from .config import get_agent_config
+from .infrastructure.airport_codes import resolve_city_iata
 from .infrastructure.hotels import HotelsService, get_hotels_tool, get_price_compare_tool
 from .infrastructure.places import PlacesService, get_place_details_tool, get_places_tool
 from .infrastructure.weather import WeatherService, get_weather_tool
@@ -67,7 +67,6 @@ class TravelAgentPipeline:
         self.weather_service = WeatherService()
         self.hotels_service  = HotelsService()
         self.places_service  = PlacesService()
-        self.flights_service = FlightsService()
         self.rag_pipeline    = RAGService()
 
         self._chat_tools = [
@@ -76,7 +75,6 @@ class TravelAgentPipeline:
             get_place_details_tool,
             get_hotels_tool,
             get_price_compare_tool,
-            search_flight_prices_tool,
         ]
 
     def run_search(
@@ -119,13 +117,19 @@ class TravelAgentPipeline:
             adults=search_data.adults,
             currency=search_data.currency.value,
         )
-        flights = None
-        if search_data.origin:
-            flights = self.flights_service.get_flights(
-                origin=search_data.origin,
-                destination=search_data.destination,
-                date_from=search_data.date_from.strftime("%Y-%m-%d"),
-                date_to=search_data.date_to.strftime("%Y-%m-%d"),
+        flight_info = None
+        origin_iata = search_data.origin_iata or resolve_city_iata(search_data.origin)
+        destination_iata = search_data.destination_iata or resolve_city_iata(search_data.destination)
+        if origin_iata and destination_iata:
+            origin_iata = origin_iata.lower()
+            destination_iata = destination_iata.lower()
+            flight_info = (
+                f"You can check the available flights here: "
+                f"https://www.skyscanner.net/transport/flights/"
+                f"{origin_iata}/{destination_iata}/"
+                f"{search_data.date_from.strftime('%y%m%d')}/"
+                f"{search_data.date_to.strftime('%y%m%d')}/"
+                f"?adultsv2={search_data.adults}&currency={search_data.currency.value}"
             )
 
         attractions = self.places_service.get_places(search_data.destination, "attractions")
@@ -177,7 +181,11 @@ class TravelAgentPipeline:
             )
         })
 
-        return self._parse_search_response(response)
+        result = self._parse_search_response(response)
+        for package in result.get("packages", []):
+            package["flight_info"] = flight_info
+
+        return result
 
     def run_chat(
         self,
@@ -305,7 +313,6 @@ class TravelAgentPipeline:
         hotels:      list,
         attractions: list,
         restaurants: list,
-        flights: str | None = None
     ) -> str:
         """
         Aggregate data from all sources into a single formatted string
@@ -363,11 +370,6 @@ class TravelAgentPipeline:
             parts.append(f"=== HOTELS ===\n" + "\n".join(hotel_lines))
         else:
             logger.warning(f"No context received from Hotels API for {destination}")
-
-        if flights:
-            parts.append(f"=== FLIGHTS ===\n{flights}")
-        else:
-            logger.warning(f"No flight data for {destination} — origin not provided")
 
         if attractions:
             attr_lines = [

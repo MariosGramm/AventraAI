@@ -28,9 +28,8 @@ If the user has specified a budget, create a package that best fits
 that budget and label it accordingly (budget, standard, or luxury).
 If no budget is specified, create a standard package.
 
-If flight information is provided in the context, include
-realistic flight cost estimates in the package.
-If no flight data is available, skip flight recommendations.
+The transportation value must describe only local transportation within the
+destination, such as public transit, walking, taxis, or car rental.
 
 The package must include a realistic day-by-day itinerary,
 accommodation suggestions with booking URLs, activities, restaurants,

@@ -29,7 +29,6 @@ class Config:
     #API Keys
     google_maps_api_key: str = os.getenv("GOOGLE_MAPS_API_KEY")
     stayingapi_api_key: str = os.getenv("STAYINGAPI_API_KEY")
-    tavily_api_key: str = os.getenv("TAVILY_API_KEY")
 
 
 @lru_cache()

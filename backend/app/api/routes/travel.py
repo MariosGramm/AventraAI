@@ -1,5 +1,6 @@
 
 from datetime import UTC, datetime
+import json
 
 from app import enums
 from typing import Any
@@ -21,6 +22,10 @@ router = APIRouter(tags=["travel"])
 def _check_and_update_freemium(session: SessionDep, current_user: CurrentUserDep) -> None:
     """Check freemium quota and reset if needed. Raises 429 if limit reached."""
 
+    # Superusers → unlimited searches
+    if current_user.is_superuser:
+        return
+    
     if current_user.subscription_tier != enums.SubscriptionTier.FREE:
         return # user has paid subscription , do nothing
 
@@ -67,6 +72,7 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
                 estimated_cost_max=pac_data.get("estimated_cost_max"),
                 currency=enums.Currency(pac_data.get("currency", "EUR").upper()),
                 transportation=pac_data.get("transportation"),
+                flight_info=pac_data.get("flight_info"),
                 weather_summary=pac_data.get("weather_summary"),
                 travel_tips=pac_data.get("travel_tips", []),
             )
