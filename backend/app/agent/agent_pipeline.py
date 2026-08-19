@@ -21,7 +21,7 @@ import re
 from langchain.agents import create_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 from ..models import ChatMessage, ChatRole, SubscriptionTier, User
@@ -203,25 +203,24 @@ class TravelAgentPipeline:
 
         llm = self._get_llm(user, mode="chat")
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", TRAVEL_CHAT_SYSTEM_PROMPT),
-            MessagesPlaceholder(variable_name="chat_history"),
-            ("human", "{input}"),
-        ])
-
-        agent = create_agent(llm, self._chat_tools, prompt)
+        agent = create_agent(llm, self._chat_tools, system_prompt=TRAVEL_CHAT_SYSTEM_PROMPT)
 
         formatted_history = self._format_history_as_messages(history)
 
         result = agent.invoke({
-            "input": (
-                f"{standalone_query}\n\n"
-                f"Relevant city guide context:\n{rag_context}"
-            ),
-            "chat_history": formatted_history,
+            "messages": [
+                *formatted_history,
+                HumanMessage(
+                    content=(
+                        f"{standalone_query}\n\n"
+                        f"Relevant city guide context:\n{rag_context}"
+                    )
+                ),
+            ]
         })
 
-        return result.get("output", "")
+        messages = result.get("messages", [])
+        return messages[-1].content if messages else ""
 
     def _get_llm(self, user: User, mode: str) -> ChatOpenAI:
         """
@@ -337,14 +336,17 @@ class TravelAgentPipeline:
             logger.warning(f"No context received from Weather API for {destination}")
 
         if hotels:
-            hotel_lines = [
-                f"- {h.get('name')}: "
-                f"rating={h.get('rating')}, "
-                f"price={h.get('price', {}).get('per_night')} EUR/night, "
-                f"platform={h.get('platform')}, "
-                f"url={h.get('booking_url')}"
-                for h in hotels[:5]
-            ]
+            hotel_lines = []
+            for h in hotels[:5]:
+                price_info = h.get("price") or {}
+                per_night = price_info.get("per_night")
+                hotel_lines.append(
+                    f"- {h.get('name')}: "
+                    f"rating={h.get('rating')}, "
+                    f"price={per_night} EUR/night, "
+                    f"platform={h.get('platform')}, "
+                    f"url={h.get('booking_url')}"
+                )
             parts.append(f"=== HOTELS ===\n" + "\n".join(hotel_lines))
         else:
             logger.warning(f"No context received from Hotels API for {destination}")

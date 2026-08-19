@@ -37,7 +37,7 @@ def create_user(session: SessionDep, user_create_data: UserCreateDTO) -> Any:
     Method for user creation. Only available to superusers.
     """
     #Check if user already exists
-    user = crud.get_user_by_email(session, user_create_data.email)
+    user = crud.get_user_by_email(session=session, email=user_create_data.email)
 
     if user:
         raise HTTPException(400, "User with this email already exists")
@@ -67,7 +67,7 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
     Method for a user updating their own profile.
     """
     if user_update_data.email:
-        existing_user = crud.get_user_by_email(session, user_update_data.email)
+        existing_user = crud.get_user_by_email(session=session, email=user_update_data.email)
         if existing_user and existing_user.id != current_user.id:
             raise HTTPException(400, "User with this email already exists")
 
@@ -127,13 +127,13 @@ def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) ->
     """
     Method for user signup.
     """
-    user = crud.get_user_by_email(user_register_data.email)
+    user = crud.get_user_by_email(session=session, email=user_register_data.email)
 
     if user:
         raise HTTPException(400, "User with this email already exists")
 
     userCreateSignupDTO = UserCreateSignupDTO.model_validate(user_register_data)
-    user_registed = crud.create_user(session, userCreateSignupDTO)
+    user_registed = crud.create_user(session=session, userCreateSignupDTO=userCreateSignupDTO)
 
     return user_registed
 

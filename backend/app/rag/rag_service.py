@@ -75,7 +75,7 @@ class RAGService:
             each containing page_content (str) and metadata with keys:
             city (str), section (str), source (str).
         """
-        return self.retriever.as_retriever(k=k).invoke(query)
+        return self.retriever.get_retriever(k=k).invoke(query)
 
     def get_stats(self) -> dict:
         """

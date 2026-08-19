@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Annotated, Any
 from app import crud
+from app.core.security import create_access_token
 from app.utils import generate_password_reset_token, generate_password_reset_email, send_email, verify_password_reset_token
 from app.models import Message, NewPassword, Token, UserPublicDTO, UserUpdateDTO
 from app.api.deps import CurrentUserDep, SessionDep
@@ -25,7 +26,12 @@ def login_access_token(session:SessionDep, form_data: Annotated[OAuth2PasswordRe
     
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    return Token(user.id, expires_delta = access_token_expires)
+    return Token(
+    access_token=create_access_token(
+        subject=str(user.id),
+        expires_delta=access_token_expires
+    )
+)
     
 @router.post("/test-token", response_model= UserPublicDTO)
 def test_token(current_user: CurrentUserDep) -> Any:

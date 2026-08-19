@@ -266,7 +266,7 @@ class SearchSessionPublicDTO(SQLModel):
     children:    int
     trip_type:   TripType | None
     created_at:  datetime | None
-    packages:    list["TravelPackagePublicDTO"]
+    travel_packages:    list["TravelPackagePublicDTO"]
 
 class SearchSessionsPublicDTO(SQLModel):
     """

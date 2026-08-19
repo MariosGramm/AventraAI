@@ -34,7 +34,7 @@ class HotelsService:
 
     def __init__(self):
         config = get_agent_config()
-        self.api_key = config.stayingapi_key
+        self.api_key = config.stayingapi_api_key
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type":  "application/json",

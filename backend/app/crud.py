@@ -154,7 +154,7 @@ def create_chat_message(*, session:Session, chat_creation_data:ChatMessageCreate
     CRUD method for chat message creation.
     """
     db_obj = ChatMessage(
-        content=ChatMessageCreateDTO,
+        content=chat_creation_data.content,
         role=role, 
         chat_session_id=chat_session_id
     )
@@ -182,10 +182,10 @@ def get_chat_messages_by_session(*, session:Session, chat_session_id:uuid.UUID) 
     CRUD method for finding chat messages in a chat session.
     """
     statement = (
-        select(ChatMessage)
-        .where(chat_session_id = chat_session_id)
-        .order_by(ChatSession.created_at)
-    )
+    select(ChatMessage)
+    .where(ChatMessage.chat_session_id == chat_session_id)
+    .order_by(ChatMessage.created_at)
+)
 
     return session.exec(statement).all()
 
@@ -219,7 +219,7 @@ def authenticate(*, session: Session, email:str, password:str) -> User | None:
     """
     Method for authenticating the user.
     """
-    user = get_user_by_email(session, email)
+    user = get_user_by_email(session=session, email=email)
     if not user:
         # Prevent time attack
         verify_password(password, DUMMY_HASH)

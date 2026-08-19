@@ -18,7 +18,7 @@ def create_chat(session:SessionDep, current_user:CurrentUserDep, chat_session_cr
     """
     Method for chat session creation.
     """
-    chat_session = crud.create_chat_session(session, current_user.id, chat_session_create_data)
+    chat_session = crud.create_chat_session(session=session, owner_id=current_user.id, chat_session_creation_data=chat_session_create_data)
 
     return chat_session
 
@@ -27,11 +27,11 @@ def get_chats(session:SessionDep, current_user:CurrentUserDep) -> Any:
     """
     Method for chat sessions retrieval in the form of a list.
     """
-    chat_sessions_query = select(ChatSession).where(col(ChatSession.owner_id == current_user.id)).order_by(ChatSession.created_at.desc())
+    chat_sessions_query = select(ChatSession).where(ChatSession.owner_id == current_user.id).order_by(ChatSession.created_at.desc())
 
     chat_sessions = session.exec(chat_sessions_query).all()
 
-    return ChatSessionsPublicDTO(data = chat_sessions, count= len(chat_sessions))
+    return ChatSessionsPublicDTO(chat_sessions=chat_sessions, count=len(chat_sessions))
 
 @router.get("session/{chat_session_id}/messages", response_model=ChatMessagesPublicDTO)
 def get_chat_session_messages(session:SessionDep, chat_session_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
@@ -67,19 +67,19 @@ def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCr
     if chat_session.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="User is does not have enough enough privileges to send a message in this chat session")
 
-    chat_message = crud.create_chat_message(session, chat_message_create_data, role=ChatRole.USER, chat_session_id=chat_session_id)
+    chat_message = crud.create_chat_message(session=session, chat_creation_data=chat_message_create_data, role=ChatRole.USER, chat_session_id=chat_session_id)
 
     # Load chat history - needed for accurate response from the agent
-    chat_history = crud.get_chat_messages_by_session(session, chat_session_id)
+    chat_history = crud.get_chat_messages_by_session(session=session, chat_session_id=chat_session_id)
 
     try:
         # Run agent pipeline -> Chat Mode (run_chat method)
         agent_pipeline = TravelAgentPipeline()
-        agent_chat_response = agent_pipeline.run_chat(chat_message, chat_history, current_user)
+        agent_chat_response = agent_pipeline.run_chat(chat_message.content, chat_history, current_user)
     except Exception as e:
         raise HTTPException(500, f"Agent pipeline failed:{e}")
 
-    agent_message = crud.create_chat_message(session, ChatMessageCreateDTO(content=agent_chat_response), ChatRole.ASSISTANT, chat_session_id)
+    agent_message = crud.create_chat_message(session=session, chat_creation_data=ChatMessageCreateDTO(content=agent_chat_response), role=ChatRole.ASSISTANT, chat_session_id=chat_session_id)
 
     return ChatResponseDTO(
         session_id=chat_session_id,

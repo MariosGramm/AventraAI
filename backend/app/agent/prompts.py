@@ -25,8 +25,8 @@ package tailored to the user's destination, dates, adults, children,
 and trip type.
 
 If the user has specified a budget, create a package that best fits
-that budget and label it accordingly (budget, mid, or luxury).
-If no budget is specified, create a mid-range package.
+that budget and label it accordingly (budget, standard, or luxury).
+If no budget is specified, create a standard package.
 
 The package must include a realistic day-by-day itinerary,
 accommodation suggestions with booking URLs, activities, restaurants,
@@ -40,10 +40,10 @@ Do NOT include markdown code blocks (no ```json).
 Do NOT include any text before or after the JSON.
 Do NOT add explanations or comments inside the JSON.
 Use this exact structure:
-{
+{{
     "packages": [
-        {
-            "tier": "budget" | "mid" | "luxury",
+        {{
+            "tier": "budget" | "standard" | "luxury",
             "estimated_cost_min": float,
             "estimated_cost_max": float,
             "currency": "EUR",
@@ -51,7 +51,7 @@ Use this exact structure:
             "weather_summary": "string or null",
             "travel_tips": ["tip1", "tip2"],
             "itinerary": [
-                {
+                {{
                     "day_number": int,
                     "description": "string",
                     "morning": "string",
@@ -59,28 +59,28 @@ Use this exact structure:
                     "evening": "string",
                     "estimated_daily_cost": float,
                     "activities": [
-                        {
+                        {{
                             "title": "string",
-                            "type": "sightseeing" | "food" | "adventure" | "culture" | "nature" | "shopping",
+                            "type": "sightseeing" | "food" | "adventure",
                             "estimated_cost": float,
                             "average_duration_hours": int,
                             "part_of_day": "morning" | "afternoon" | "evening"
-                        }
+                        }}
                     ]
-                }
+                }}
             ],
             "accommodations": [
-                {
+                {{
                     "name": "string",
-                    "type": "hotel" | "hostel" | "apartment" | "resort" | "guesthouse",
+                    "type": "hotel" | "hostel" | "airbnb",
                     "area": "string",
                     "cost_per_night": float,
                     "rating": float
-                }
+                }}
             ]
-        }
+        }}
     ]
-}
+}}
 
 """
 
