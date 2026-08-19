@@ -57,6 +57,7 @@ class Settings(BaseSettings):
         RESEND_API_KEY (str): API key of email provider.
         GOOGLE_CLIENT_ID (str): Identifies the application to Google.  
         GOOGLE_CLIENT_SECRET (str): A secret associated with the application, used to authenticate the application to Google.
+        SENTRY_DSN (HttpUrl | None): The DSN for Sentry error tracking.
     """
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
