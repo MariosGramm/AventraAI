@@ -18,6 +18,7 @@ import json
 import logging
 import re
 
+from app.agent.infrastructure.flights import FlightsService, search_flight_prices_tool
 from langchain.agents import create_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
@@ -66,6 +67,7 @@ class TravelAgentPipeline:
         self.weather_service = WeatherService()
         self.hotels_service  = HotelsService()
         self.places_service  = PlacesService()
+        self.flights_service = FlightsService()
         self.rag_pipeline    = RAGService()
 
         self._chat_tools = [
@@ -74,6 +76,7 @@ class TravelAgentPipeline:
             get_place_details_tool,
             get_hotels_tool,
             get_price_compare_tool,
+            search_flight_prices_tool,
         ]
 
     def run_search(
@@ -116,6 +119,15 @@ class TravelAgentPipeline:
             adults=search_data.adults,
             currency=search_data.currency.value,
         )
+        flights = None
+        if search_data.origin:
+            flights = self.flights_service.get_flights(
+                origin=search_data.origin,
+                destination=search_data.destination,
+                date_from=search_data.date_from.strftime("%Y-%m-%d"),
+                date_to=search_data.date_to.strftime("%Y-%m-%d"),
+            )
+
         attractions = self.places_service.get_places(search_data.destination, "attractions")
         restaurants = self.places_service.get_places(search_data.destination, "restaurants")
 
@@ -293,6 +305,7 @@ class TravelAgentPipeline:
         hotels:      list,
         attractions: list,
         restaurants: list,
+        flights: str | None = None
     ) -> str:
         """
         Aggregate data from all sources into a single formatted string
@@ -350,6 +363,11 @@ class TravelAgentPipeline:
             parts.append(f"=== HOTELS ===\n" + "\n".join(hotel_lines))
         else:
             logger.warning(f"No context received from Hotels API for {destination}")
+
+        if flights:
+            parts.append(f"=== FLIGHTS ===\n{flights}")
+        else:
+            logger.warning(f"No flight data for {destination} — origin not provided")
 
         if attractions:
             attr_lines = [
