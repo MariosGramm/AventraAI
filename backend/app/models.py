@@ -282,6 +282,10 @@ class SearchSessionCreateDTO(SQLModel):
         max_length=200,
         description="The travel destination."
     )
+    origin: str | None = Field(
+        default=None,
+        description="Optional departure location for the trip."
+    )
     date_from: datetime = Field(
         description="The start date of the trip."
     )
