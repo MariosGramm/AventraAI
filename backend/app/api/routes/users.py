@@ -136,8 +136,7 @@ def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) ->
     if user:
         raise HTTPException(400, "User with this email already exists")
 
-    userCreateSignupDTO = UserCreateSignupDTO.model_validate(user_register_data)
-    user_registered = crud.create_user(session=session, user_creation_data=userCreateSignupDTO)
+    user_registered = crud.create_user(session=session, user_creation_data=user_register_data)
 
     # Send welcome email
     try:
