@@ -1,4 +1,5 @@
 
+import logging
 from typing import Any
 import uuid
 
@@ -10,6 +11,9 @@ from app.api.deps import CurrentUserDep, SessionDep, get_current_active_superuse
 from app.models import Message, UpdatePassword, User, UserCreateDTO, UserCreateSignupDTO, UserPublicDTO, UserUpdateDTO, UserUpdateSelfDTO, UsersPublicDTO
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
+
 
 
 router = APIRouter(tags=["users"])
@@ -133,9 +137,24 @@ def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) ->
         raise HTTPException(400, "User with this email already exists")
 
     userCreateSignupDTO = UserCreateSignupDTO.model_validate(user_register_data)
-    user_registed = crud.create_user(session=session, userCreateSignupDTO=userCreateSignupDTO)
+    user_registered = crud.create_user(session=session, user_creation_data=userCreateSignupDTO)
 
-    return user_registed
+    # Send welcome email
+    try:
+        email_data = generate_new_account_email(
+            email_to=user_registered.email,
+            username=user_registered.email,
+            password=user_register_data.password
+        )
+        send_email(
+            email_to=user_registered.email,
+            subject=email_data.subject,
+            html_content=email_data.html_content
+        )
+    except Exception as e:
+        logger.warning(f"Failed to send welcome email: {e}")
+
+    return user_registered
 
 @router.get("/{user_id}", response_model=UserPublicDTO)
 def read_user_by_id(
