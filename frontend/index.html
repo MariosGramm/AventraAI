@@ -5,6 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+      <style>
+          @keyframes fly {
+              from { left: -60px; top: 40px; }
+              to { left: 110%; top: 20px; }
+          }
+          @keyframes float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-14px); }
+          }
+          @keyframes pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.06); }
+          }
+      </style>
   </head>
   <body>
     <div id="root"></div>
