@@ -130,6 +130,93 @@ function LandingPage() {
             </div>
 
             {/* Pricing Section */}
+            <div style={{ padding: '4rem 0', background: 'white' }}>
+                <Container>
+                    <h2 style={{ textAlign: 'center', fontSize: '28px', fontWeight: 500, marginBottom: '0.5rem' }}>
+                        Simple, transparent pricing
+                    </h2>
+                    <p style={{ textAlign: 'center', color: '#6c757d', marginBottom: '3rem' }}>
+                        Start for free. Upgrade when you're ready.
+                    </p>
+
+                    <Row className="justify-content-center">
+
+                        {/* Free Plan */}
+                        <Col md={4} className="mb-4">
+                            <div style={{
+                                border: '0.5px solid #e0e0e0',
+                                borderRadius: '12px',
+                                padding: '1.5rem',
+                                height: '100%'
+                            }}>
+                                <h3 style={{ fontSize: '16px', fontWeight: 500 }}>Free</h3>
+                                <p style={{ fontSize: '13px', color: '#6c757d' }}>Perfect for trying it out</p>
+                                <div style={{ fontSize: '32px', fontWeight: 500, margin: '0.5rem 0' }}>
+                                    €0 <span style={{ fontSize: '15px', fontWeight: 400, color: '#6c757d' }}>/ month</span>
+                                </div>
+                                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem' }}>
+                                    {[
+                                        '3 travel packages / month',
+                                        'AI chat assistant',
+                                        'Weather forecasts',
+                                        'Hotel suggestions'
+                                    ].map((feature, index) => (
+                                        <li key={index} style={{ fontSize: '13px', color: '#6c757d', padding: '4px 0' }}>
+                                            ✓ {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Button variant="outline-secondary" style={{ width: '100%' }}>
+                                    Get started
+                                </Button>
+                            </div>
+                        </Col>
+
+                        {/* Pro Plan */}
+                        <Col md={4} className="mb-4">
+                            <div style={{
+                                border: '2px solid #7F77DD',
+                                borderRadius: '12px',
+                                padding: '1.5rem',
+                                height: '100%'
+                            }}>
+                    <span style={{
+                        display: 'inline-block',
+                        background: '#EEEDFE',
+                        color: '#534AB7',
+                        borderRadius: '99px',
+                        padding: '2px 10px',
+                        fontSize: '12px',
+                        marginBottom: '8px'
+                    }}>
+                        Most popular
+                    </span>
+                                <h3 style={{ fontSize: '16px', fontWeight: 500 }}>Pro</h3>
+                                <p style={{ fontSize: '13px', color: '#6c757d' }}>For frequent travelers</p>
+                                <div style={{ fontSize: '32px', fontWeight: 500, margin: '0.5rem 0' }}>
+                                    €5.99 <span style={{ fontSize: '15px', fontWeight: 400, color: '#6c757d' }}>/ month</span>
+                                </div>
+                                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem' }}>
+                                    {[
+                                        'Unlimited packages',
+                                        'Better AI Model',
+                                        'Priority support',
+                                        'Everything in Free'
+                                    ].map((feature, index) => (
+                                        <li key={index} style={{ fontSize: '13px', color: '#6c757d', padding: '4px 0' }}>
+                                            ✓ {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Button style={{ width: '100%', backgroundColor: '#7F77DD', border: 'none' }}>
+                                    Upgrade to Pro
+                                </Button>
+                            </div>
+                        </Col>
+
+                    </Row>
+                </Container>
+            </div>
 
             {/* Footer */}
         </>
