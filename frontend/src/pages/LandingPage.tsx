@@ -219,6 +219,21 @@ function LandingPage() {
             </div>
 
             {/* Footer */}
+            <footer style={{
+                padding: '2rem 0',
+                borderTop: '0.5px solid #e0e0e0',
+                textAlign: 'center',
+                color: '#6c757d',
+                fontSize: '13px'
+            }}>
+                <Container>
+                    <p style={{ margin: 0 }}>
+                        © 2026 AventraAI ·
+                        <a href="/privacy" style={{ color: '#7F77DD', textDecoration: 'none', margin: '0 8px' }}>Privacy</a> ·
+                        <a href="/terms" style={{ color: '#7F77DD', textDecoration: 'none', margin: '0 8px' }}>Terms</a>
+                    </p>
+                </Container>
+            </footer>
         </>
     )
 }
