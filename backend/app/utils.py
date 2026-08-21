@@ -46,24 +46,49 @@ def generate_password_reset_token(email:str) -> str:
 
     return encoded_jwt
 
-def generate_password_reset_email(email_to:str, email:str, token:str) -> EmailData:
+def generate_password_reset_email(email_to: str, email: str, token: str) -> EmailData:
     """
     Method for password reset email generation.
     """
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - Password recovery for user {email}"
+    subject = f"{project_name} - Password Reset Request"
     link = f"{settings.FRONTEND_HOST}/reset-password?token={token}"
-    html_content = render_email_template(
-        email_template_name="reset_password.html",
-        context= {
-            "project_name": settings.PROJECT_NAME,
-            "username": email,
-            "email": email_to,
-            "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
-            "link": link,
-        },
-    )
-
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #7F77DD;">{project_name}</h1>
+        </div>
+        <h2 style="color: #26215C;">Reset your password</h2>
+        <p style="color: #6c757d; line-height: 1.8;">
+            We received a request to reset the password for your account 
+            associated with <strong>{email_to}</strong>.
+        </p>
+        <p style="color: #6c757d; line-height: 1.8;">
+            Click the button below to reset your password. 
+            This link will expire in <strong>{settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS} hours</strong>.
+        </p>
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{link}" 
+               style="background: #7F77DD; color: white; padding: 12px 32px; 
+                      border-radius: 8px; text-decoration: none; font-weight: 500;">
+                Reset Password →
+            </a>
+        </div>
+        <div style="background: #EEEDFE; border-radius: 12px; padding: 20px; margin: 20px 0;">
+            <p style="color: #534AB7; margin: 0; font-size: 13px;">
+                If you did not request a password reset, you can safely ignore this email. 
+                Your password will not be changed.
+            </p>
+        </div>
+        <p style="color: #6c757d; font-size: 12px; margin-top: 30px; text-align: center;">
+            © 2026 {project_name} · 
+            <a href="{settings.FRONTEND_HOST}/privacy" style="color: #7F77DD;">Privacy</a> · 
+            <a href="{settings.FRONTEND_HOST}/terms" style="color: #7F77DD;">Terms</a>
+        </p>
+    </body>
+    </html>
+    """
     return EmailData(html_content=html_content, subject=subject)
 
 def generate_new_account_email(email_to: str, username: str) -> EmailData:
@@ -76,7 +101,7 @@ def generate_new_account_email(email_to: str, username: str) -> EmailData:
     <html>
     <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #7F77DD;"> {project_name}</h1>
+            <h1 style="color: #7F77DD;">{project_name}</h1>
         </div>
         <h2 style="color: #26215C;">Welcome aboard, {username}!</h2>
         <p style="color: #6c757d; line-height: 1.8;">
