@@ -142,8 +142,7 @@ def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) ->
     try:
         email_data = generate_new_account_email(
             email_to=user_registered.email,
-            username=user_registered.email,
-            password=user_register_data.password
+            username=user_registered.first_name or user_registered.email,
         )
         send_email(
             email_to=user_registered.email,

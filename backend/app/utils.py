@@ -66,24 +66,44 @@ def generate_password_reset_email(email_to:str, email:str, token:str) -> EmailDa
 
     return EmailData(html_content=html_content, subject=subject)
 
-def generate_new_account_email(email_to:str, username:str, password:str) -> EmailData:
+def generate_new_account_email(email_to: str, username: str) -> EmailData:
     """
-    Method for new account email generation.
+    Method for new account welcome email generation.
     """
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - New account for user {username}"
-    html_content = render_email_template(
-        email_template_name="new_account.html",
-        context={
-            "project_name": settings.PROJECT_NAME,
-            "username": username,
-            "password": password,
-            "email": email_to,
-            "link":settings.FRONTEND_HOST
-        }
-    )
-
-    return EmailData(html_content= html_content, subject= subject)
+    subject = f"Welcome to {project_name}!"
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #7F77DD;"> {project_name}</h1>
+        </div>
+        <h2 style="color: #26215C;">Welcome aboard, {username}!</h2>
+        <p style="color: #6c757d; line-height: 1.8;">
+            Your account has been created successfully. 
+            You're now ready to start planning your next adventure with AI.
+        </p>
+        <div style="background: #EEEDFE; border-radius: 12px; padding: 20px; margin: 20px 0;">
+            <p style="color: #534AB7; margin: 0;">
+                <strong>Account:</strong> {email_to}
+            </p>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{settings.FRONTEND_HOST}/chat" 
+               style="background: #7F77DD; color: white; padding: 12px 32px; 
+                      border-radius: 8px; text-decoration: none; font-weight: 500;">
+                Start Planning →
+            </a>
+        </div>
+        <p style="color: #6c757d; font-size: 12px; margin-top: 30px; text-align: center;">
+            © 2026 {project_name} · 
+            <a href="{settings.FRONTEND_HOST}/privacy" style="color: #7F77DD;">Privacy</a> · 
+            <a href="{settings.FRONTEND_HOST}/terms" style="color: #7F77DD;">Terms</a>
+        </p>
+    </body>
+    </html>
+    """
+    return EmailData(html_content=html_content, subject=subject)
 
 def send_email(*, email_to: str, subject: str = "", html_content: str = "") -> None:
     """
