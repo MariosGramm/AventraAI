@@ -1,4 +1,4 @@
-import {Button, Container } from "react-bootstrap";
+import {Button, Col, Container, Row} from "react-bootstrap";
 import Navbar from "../components/Navbar.tsx";
 
 
@@ -78,6 +78,56 @@ function LandingPage() {
             </div>
 
             {/* Features Section */}
+            {/* Features Section */}
+            <div style={{ padding: '4rem 0', background: '#f8f8ff' }}>
+                <Container>
+                    <h2 style={{ textAlign: 'center', fontSize: '28px', fontWeight: 500, marginBottom: '0.5rem' }}>
+                        Everything you need to travel smarter
+                    </h2>
+                    <p style={{ textAlign: 'center', color: '#6c757d', marginBottom: '3rem' }}>
+                        Powered by AI, real-time data, and local expertise
+                    </p>
+
+                    <Row>
+                        {[
+                            { icon: '🤖', title: 'AI travel agent', desc: 'Chat naturally and get personalized travel packages tailored to your style.' },
+                            { icon: '🌤️', title: 'Real-time weather', desc: 'Get accurate forecasts for your travel dates so you can pack right.' },
+                            { icon: '🏨', title: 'Hotel prices', desc: 'Compare live hotel prices across Booking.com, Airbnb and more.' },
+                            { icon: '📍', title: 'Local attractions', desc: 'Discover the best restaurants, sights and experiences at your destination.' },
+                        ].map((feature, index) => (
+                            <Col key={index} md={3} sm={6} className="mb-4">
+                                <div style={{
+                                    background: 'white',
+                                    border: '0.5px solid #e0e0e0',
+                                    borderRadius: '12px',
+                                    padding: '1.25rem',
+                                    height: '100%'
+                                }}>
+                                    <div style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        background: '#EEEDFE',
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginBottom: '12px',
+                                        fontSize: '20px'
+                                    }}>
+                                        {feature.icon}
+                                    </div>
+                                    <h3 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '6px' }}>
+                                        {feature.title}
+                                    </h3>
+                                    <p style={{ fontSize: '13px', color: '#6c757d', lineHeight: 1.6, margin: 0 }}>
+                                        {feature.desc}
+                                    </p>
+                                </div>
+                            </Col>
+                        ))}
+                    </Row>
+                </Container>
+            </div>
 
             {/* Pricing Section */}
 
