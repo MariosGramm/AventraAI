@@ -114,7 +114,7 @@ def generate_new_account_email(email_to: str, username: str) -> EmailData:
             </p>
         </div>
         <div style="text-align: center; margin-top: 30px;">
-            <a href="{settings.FRONTEND_HOST}/chat" 
+            <a href="{settings.FRONTEND_HOST}" 
                style="background: #7F77DD; color: white; padding: 12px 32px; 
                       border-radius: 8px; text-decoration: none; font-weight: 500;">
                 Start Planning →
