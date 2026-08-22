@@ -1,6 +1,6 @@
 import StartPlanningButton from '../components/StartPlanningButton.tsx'
 
-function RegisterSuccessPage() {
+function UpgradeSuccessPage() {
 
     return (
         <div style={{
@@ -20,18 +20,18 @@ function RegisterSuccessPage() {
                 textAlign: 'center',
                 boxShadow: '0 4px 24px rgba(127, 119, 221, 0.15)'
             }}>
-                <div style={{ fontSize: '48px', marginBottom: '1rem' }}>✈️</div>
+                <div style={{ fontSize: '48px', marginBottom: '1rem' }}>🎉</div>
 
                 <h1 style={{ fontSize: '24px', fontWeight: 500, color: '#26215C', marginBottom: '0.5rem' }}>
-                    Welcome to AventraAI!
+                    You have successfully upgraded!
                 </h1>
 
                 <p style={{ color: '#6c757d', lineHeight: 1.8, marginBottom: '0.5rem' }}>
-                    Your account has been created successfully.
+                    Thank you for subscribing to AventraAI Pro.
                 </p>
 
                 <p style={{ color: '#6c757d', fontSize: '13px', marginBottom: '2rem' }}>
-                    We sent a welcome email to your inbox.
+                    We sent a confirmation email to your inbox.
                 </p>
 
                 <div style={{
@@ -41,7 +41,7 @@ function RegisterSuccessPage() {
                     marginBottom: '2rem'
                 }}>
                     <p style={{ color: '#534AB7', fontSize: '13px', margin: 0 }}>
-                        Start chatting with your AI travel agent and plan your next adventure!
+                        You now have unlimited access to AI-powered travel planning. Let's plan your next adventure!
                     </p>
                 </div>
 
@@ -51,4 +51,4 @@ function RegisterSuccessPage() {
     )
 }
 
-export default RegisterSuccessPage
+export default UpgradeSuccessPage

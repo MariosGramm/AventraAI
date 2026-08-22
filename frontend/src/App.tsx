@@ -5,6 +5,7 @@ import TermsPage from "./pages/TermsPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import RegisterSuccessPage from "./pages/RegisterSuccessPage.tsx";
+import UpgradeSuccessPage from "./pages/UpgradeSuccessPage.tsx";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path ="/register-success" element={<RegisterSuccessPage />} />
+                <Route path="/dashboard" element={<UpgradeSuccessPage />} />
             </Routes>
         </BrowserRouter>
     </>)
