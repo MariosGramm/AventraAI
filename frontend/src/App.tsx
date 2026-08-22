@@ -6,6 +6,8 @@ import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import RegisterSuccessPage from "./pages/RegisterSuccessPage.tsx";
 import UpgradeSuccessPage from "./pages/UpgradeSuccessPage.tsx";
+import AlreadySubscribedPage from "./pages/AlreadySubscribedPage.tsx";
+import LoggingOutPage from "./pages/LoggingOutPage.tsx";
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path ="/register-success" element={<RegisterSuccessPage />} />
                 <Route path="/dashboard" element={<UpgradeSuccessPage />} />
+                <Route path="/already-subscribed" element={<AlreadySubscribedPage />} />
+                <Route path="/logging-out" element={<LoggingOutPage />} />
             </Routes>
         </BrowserRouter>
     </>)

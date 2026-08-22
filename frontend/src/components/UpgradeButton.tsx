@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
+import axios from 'axios'
 import client from '../services/client'
 
 interface UpgradeButtonProps {
@@ -16,6 +18,7 @@ function UpgradeButton({
                            style
                        }: UpgradeButtonProps) {
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const handleUpgrade = async () => {
         setLoading(true)
@@ -23,7 +26,11 @@ function UpgradeButton({
             const response = await client.post('/payments/create-checkout-session')
             window.location.href = response.data.checkout_url
         } catch (err) {
-            console.error('Failed to create checkout session')
+            if (axios.isAxiosError(err) && err.response?.status === 400) {
+                navigate('/already-subscribed')
+            } else {
+                console.error('Failed to create checkout session')
+            }
         } finally {
             setLoading(false)
         }

@@ -25,3 +25,11 @@ export const register = async (
     })
     return response.data
 }
+
+export const isAuthenticated = () => {
+    return Boolean(localStorage.getItem('token'))
+}
+
+export const logout = () => {
+    localStorage.removeItem('token')
+}
