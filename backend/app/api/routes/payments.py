@@ -5,12 +5,11 @@ from app.api.deps import CurrentUserDep, SessionDep
 from app.core.config import settings
 from app.enums import SubscriptionTier
 from app.models import Message, User
+from app.utils import generate_subscription_email, send_email
 from fastapi import APIRouter, HTTPException, Header, Request
 from sqlalchemy import Engine, select
 from sqlmodel import Session
 import stripe
-import stripe
-from app.core.config import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -64,7 +63,7 @@ async def stripe_webhook(request: Request, session: SessionDep,stripe_signature:
 
     # Event handling logic
     if event["type"] == "checkout.session.completed":
-        session_data = event["data"]["object"]
+        session_data = event["data"]["object"].to_dict()
         user_id      = session_data.get("metadata", {}).get("user_id")
 
         if user_id:
@@ -77,8 +76,33 @@ async def stripe_webhook(request: Request, session: SessionDep,stripe_signature:
                     db.add(user)
                     db.commit()
 
+                    if settings.emails_enabled:
+                        email_data = generate_subscription_email(email_to=user.email)
+                        try:
+                            send_email(
+                                email_to=user.email,
+                                subject=email_data.subject,
+                                html_content=email_data.html_content,
+                            )
+                        except Exception:
+                            logger.exception(
+                                "Subscription confirmation email failed for %s",
+                                user.email,
+                            )
+                    else:
+                        logger.warning(
+                            "Subscription confirmation email skipped: Resend is not configured"
+                        )
+                else:
+                    logger.warning("Stripe checkout completed for unknown user id %s", user_id)
+        else:
+            logger.warning(
+                "checkout.session.completed event %s has no user_id in metadata",
+                event.get("id"),
+            )
+
     elif event["type"] == "customer.subscription.deleted":
-        subscription_data = event["data"]["object"]
+        subscription_data = event["data"]["object"].to_dict()
         customer_email    = subscription_data.get("customer_email")
 
         if customer_email:

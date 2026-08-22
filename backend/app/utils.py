@@ -130,6 +130,43 @@ def generate_new_account_email(email_to: str, username: str) -> EmailData:
     """
     return EmailData(html_content=html_content, subject=subject)
 
+def generate_subscription_email(email_to: str) -> EmailData:
+    """
+    Method for subscription confirmation email generation.
+    """
+    project_name = settings.PROJECT_NAME
+    subject = f"Thank you for subscribing to {project_name}!"
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #7F77DD;">{project_name}</h1>
+        </div>
+        <h2 style="color: #26215C;">Thank you for your subscription!</h2>
+        <p style="color: #6c757d; line-height: 1.8;">
+            Your payment was successful and your account is now on the paid plan.
+        </p>
+        <p style="color: #6c757d; line-height: 1.8;">
+            We're glad to have you with us, and we hope {project_name} helps you plan
+            your next adventure.
+        </p>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{settings.FRONTEND_HOST}/dashboard"
+               style="background: #7F77DD; color: white; padding: 12px 32px;
+                      border-radius: 8px; text-decoration: none; font-weight: 500;">
+                Start Planning
+            </a>
+        </div>
+        <p style="color: #6c757d; font-size: 12px; margin-top: 30px; text-align: center;">
+            © 2026 {project_name} ·
+            <a href="{settings.FRONTEND_HOST}/privacy" style="color: #7F77DD;">Privacy</a> ·
+            <a href="{settings.FRONTEND_HOST}/terms" style="color: #7F77DD;">Terms</a>
+        </p>
+    </body>
+    </html>
+    """
+    return EmailData(html_content=html_content, subject=subject)
+
 def send_email(*, email_to: str, subject: str = "", html_content: str = "") -> None:
     """
     Method for sending emails via Resend.

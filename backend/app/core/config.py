@@ -115,6 +115,7 @@ class Settings(BaseSettings):
     # Stripe
     STRIPE_PRICE_ID: str = ""
     STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
@@ -137,7 +138,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:
-        return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
+        return bool(self.RESEND_API_KEY and self.EMAILS_FROM_EMAIL)
     
     EMAIL_TEST_USER: EmailStr = "test@example.com"
     FIRST_SUPERUSER: EmailStr
