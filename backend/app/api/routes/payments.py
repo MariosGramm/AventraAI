@@ -5,10 +5,14 @@ from app.api.deps import CurrentUserDep, SessionDep
 from app.core.config import settings
 from app.enums import SubscriptionTier
 from app.models import Message, User
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Header, Request
 from sqlalchemy import Engine, select
 from sqlmodel import Session
 import stripe
+import stripe
+from app.core.config import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -42,7 +46,7 @@ def create_checkout_session(current_user: CurrentUserDep, session: SessionDep) -
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request, session: SessionDep) -> Message:
+async def stripe_webhook(request: Request, session: SessionDep,stripe_signature: str = Header(None, alias="stripe-signature")) -> Message:
     """
     Handle Stripe webhook events.
     Verifies webhook signature and updates user subscription tier.
