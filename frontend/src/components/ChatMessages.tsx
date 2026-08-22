@@ -34,7 +34,7 @@ function ChatMessages({ messages, loading }: ChatMessagesProps) {
                         background: msg.role === 'user' ? '#534AB7' : '#EEEDFE',
                         color: msg.role === 'user' ? 'white' : '#534AB7'
                     }}>
-                        {msg.role === 'user' ? 'U' : '✈️'}
+                        {msg.role === 'user' ? 'U' : '🤖'}
                     </div>
 
                     {/* Bubble */}

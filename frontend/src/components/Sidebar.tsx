@@ -25,7 +25,7 @@ function Sidebar({ onNewChat }: SidebarProps) {
                     onClick={() => navigate('/')}
                     style={{ fontSize: '14px', fontWeight: 500, color: '#7F77DD', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', cursor: 'pointer' }}
                 >
-                    ✈️ AventraAI
+                     AventraAI
                 </div>
 
                 {/* New Chat Button */}
