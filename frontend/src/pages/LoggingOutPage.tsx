@@ -6,20 +6,21 @@ import { logout } from '../services/authService'
 function LoggingOutPage() {
     const navigate = useNavigate()
     const [progress, setProgress] = useState(10)
+    const [done, setDone] = useState(false)
 
     useEffect(() => {
         logout()
 
         const progressTimer = setInterval(() => {
-            setProgress((prev) => Math.min(prev + 20, 100))
+            setProgress((prev) => Math.min(prev + 10, 100))
         }, 150)
 
-        const redirectTimer = setTimeout(() => {
-            navigate('/')
-        }, 1000)
+        const doneTimer = setTimeout(() => setDone(true), 1600)
+        const redirectTimer = setTimeout(() => navigate('/'), 3000)
 
         return () => {
             clearInterval(progressTimer)
+            clearTimeout(doneTimer)
             clearTimeout(redirectTimer)
         }
     }, [navigate])
@@ -42,10 +43,12 @@ function LoggingOutPage() {
                 textAlign: 'center',
                 boxShadow: '0 4px 24px rgba(127, 119, 221, 0.15)'
             }}>
-                <div style={{ fontSize: '36px', marginBottom: '1rem' }}>👋</div>
+                <div style={{ fontSize: '36px', marginBottom: '1rem' }}>
+                    {done ? '✅' : '👋'}
+                </div>
 
                 <h1 style={{ fontSize: '18px', fontWeight: 500, color: '#26215C', marginBottom: '1.25rem' }}>
-                    Logging out...
+                    {done ? 'You’ve been successfully logged out.' : 'Logging out...'}
                 </h1>
 
                 <ProgressBar
@@ -59,3 +62,4 @@ function LoggingOutPage() {
 }
 
 export default LoggingOutPage
+
