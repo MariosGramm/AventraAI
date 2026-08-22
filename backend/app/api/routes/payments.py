@@ -25,6 +25,9 @@ def create_checkout_session(current_user: CurrentUserDep, session: SessionDep) -
     Create a Stripe checkout session for upgrading to paid tier.
     Returns a checkout URL for the frontend to redirect to.
     """
+    if current_user.subscription_tier == SubscriptionTier.PAID:
+        raise HTTPException(status_code=400, detail="User is already subscribed to the Pro plan.")
+
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
