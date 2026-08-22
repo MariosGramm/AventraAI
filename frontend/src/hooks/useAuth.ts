@@ -13,7 +13,7 @@ export function useAuth() {
         try {
             const data = await login(email, password)
             localStorage.setItem('token', data.access_token)
-            navigate('/register-success')
+            navigate('/chat')
         } catch (err) {
             setError('Invalid email or password')
         } finally {

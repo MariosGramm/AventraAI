@@ -1,5 +1,6 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
 import Navbar from "../components/Navbar.tsx";
+import UpgradeButton from "../components/UpgradeButton.tsx";
 
 
 function LandingPage() {
@@ -77,7 +78,6 @@ function LandingPage() {
                 </Container>
             </div>
 
-            {/* Features Section */}
             {/* Features Section */}
             <div style={{ padding: '4rem 0', background: '#f8f8ff' }}>
                 <Container>
@@ -208,9 +208,7 @@ function LandingPage() {
                                         </li>
                                     ))}
                                 </ul>
-                                <Button style={{ width: '100%', backgroundColor: '#7F77DD', border: 'none' }}>
-                                    Upgrade to Pro
-                                </Button>
+                                <UpgradeButton style={{ width: '100%' }} />
                             </div>
                         </Col>
 
