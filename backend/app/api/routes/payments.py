@@ -1,4 +1,6 @@
 
+import logging
+
 from app.api.deps import CurrentUserDep, SessionDep
 from app.core.config import settings
 from app.enums import SubscriptionTier
@@ -7,6 +9,9 @@ from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import Engine, select
 from sqlmodel import Session
 import stripe
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(tags=["payments"])
@@ -33,6 +38,7 @@ def create_checkout_session(current_user: CurrentUserDep, session: SessionDep) -
 
         return {"checkout_url": checkout_session.url}
     except Exception as e:
+        logger.error(f"Stripe error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/webhook")
