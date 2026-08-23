@@ -7,7 +7,7 @@ interface ChatSession {
     id: string
     title: string
     created_at: string
-    pinned?: boolean
+    is_pinned: boolean
 }
 
 interface SidebarProps {
@@ -16,6 +16,8 @@ interface SidebarProps {
     onSelectChat: (sessionId: string) => void
     refreshTrigger: number
 }
+
+const MAX_PINNED = 3
 
 function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: SidebarProps) {
     const navigate = useNavigate()
@@ -36,8 +38,8 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
         try {
             const response = await client.get('/chat/sessions')
             const allSessions: ChatSession[] = response.data.chat_sessions || []
-            setPinned(allSessions.filter(s => s.pinned))
-            setSessions(allSessions.filter(s => !s.pinned))
+            setPinned(allSessions.filter(s => s.is_pinned))
+            setSessions(allSessions.filter(s => !s.is_pinned))
         } catch (err) {
             console.error('Failed to load sessions', err)
         }
@@ -53,10 +55,20 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
     )
 
     // Context menu actions
-    const handlePin = async (_sessionId: string) => {
-        // TODO: implement pin API call
-        setContextMenu(null)
-        loadSessions()
+    const handlePin = async (sessionId: string) => {
+        const isPinned = pinned.some(s => s.id === sessionId)
+        if (!isPinned && pinned.length >= MAX_PINNED) {
+            alert(`You can pin up to ${MAX_PINNED} chats.`)
+            setContextMenu(null)
+            return
+        }
+        try {
+            await client.patch(`/chat/session/${sessionId}/pin`)
+            setContextMenu(null)
+            loadSessions()
+        } catch (err) {
+            console.error('Failed to pin session', err)
+        }
     }
 
     const handleRename = async (_sessionId: string) => {
@@ -155,7 +167,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                 }}>
                     {[
                         { label: '✏️ Rename', action: () => handleRename(contextMenu.sessionId) },
-                        { label: '📌 Pin', action: () => handlePin(contextMenu.sessionId) },
+                        {
+                            label: pinned.some(s => s.id === contextMenu.sessionId) ? '📌 Unpin' : '📌 Pin',
+                            action: () => handlePin(contextMenu.sessionId)
+                        },
                         { label: '🗑️ Delete', action: () => handleDelete(contextMenu.sessionId) },
                     ].map((item, i) => (
                         <div
