@@ -17,6 +17,13 @@ function ChatPage() {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string | null>(null)
+    const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+    const handleNewChat = () => {
+        setMessages([])
+        setSessionId(null)
+        setRefreshTrigger(prev => prev + 1)
+    }
 
     // Redirect αν δεν είναι logged in
     useEffect(() => {
@@ -29,8 +36,11 @@ function ChatPage() {
         const response = await client.post('/chat/session', {
             title: 'New chat'
         })
+        setRefreshTrigger(prev => prev + 1)
         return response.data.id
     }
+
+
 
     const handleSend = async (message: string) => {
         setLoading(true)
@@ -76,14 +86,14 @@ function ChatPage() {
         }
     }
 
-    const handleNewChat = () => {
-        setMessages([])
-        setSessionId(null)
-    }
-
     return (
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-            <Sidebar onNewChat={handleNewChat} />
+            <Sidebar
+                onNewChat={handleNewChat}
+                currentSessionId={sessionId}
+                onSelectChat={(id) => setSessionId(id)}
+                refreshTrigger={refreshTrigger}
+            />
 
             <div style={{
                 flex: 1, display: 'flex', flexDirection: 'column',

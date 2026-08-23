@@ -54,7 +54,7 @@ def get_chat_session_messages(session:SessionDep, chat_session_id:uuid.UUID, cur
 
     return ChatMessagesPublicDTO(data=chat_messages, count=len(chat_messages))
 
-@router.post("session/{chat_session_id}/send_message", response_model= ChatResponseDTO)
+@router.post("/session/{chat_session_id}/send_message", response_model= ChatResponseDTO)
 def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCreateDTO, chat_session_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
     """
     Method for sending a message to the agent during a chat session.
