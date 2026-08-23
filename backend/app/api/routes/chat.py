@@ -13,6 +13,8 @@ from sqlmodel import Session, col, select
 
 router = APIRouter(tags=["chat"])
 
+MAX_PINNED_CHAT_SESSIONS = 3
+
 @router.post("/session", response_model=ChatSessionPublicDTO)
 def create_chat(session:SessionDep, current_user:CurrentUserDep, chat_session_create_data:ChatSessionCreateDTO) -> Any:
     """
@@ -100,6 +102,15 @@ def pin_chat_session(
         raise HTTPException(404, "Chat session not found")
     if chat_session.owner_id != current_user.id:
         raise HTTPException(403, "Not enough privileges")
+
+    if not chat_session.is_pinned:
+        pinned_count = len(session.exec(
+            select(ChatSession)
+            .where(ChatSession.owner_id == current_user.id)
+            .where(ChatSession.is_pinned == True)  # noqa: E712
+        ).all())
+        if pinned_count >= MAX_PINNED_CHAT_SESSIONS:
+            raise HTTPException(400, f"You can pin up to {MAX_PINNED_CHAT_SESSIONS} chats")
 
     chat_session.is_pinned = not chat_session.is_pinned
     session.add(chat_session)

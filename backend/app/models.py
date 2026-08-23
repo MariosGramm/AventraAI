@@ -151,6 +151,7 @@ class ChatSessionPublicDTO(SQLModel):
     id: uuid.UUID
     owner_id: uuid.UUID
     title: str | None
+    is_pinned: bool
     created_at: datetime | None
     updated_at: datetime | None
 
