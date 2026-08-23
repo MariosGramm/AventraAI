@@ -86,7 +86,26 @@ def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCr
         role=ChatRole.ASSISTANT,
         content=agent_chat_response,
         created_at=agent_message.created_at
-    ) 
+    )
+
+@router.patch("/session/{chat_session_id}/pin")
+def pin_chat_session(
+    session: SessionDep,
+    chat_session_id: uuid.UUID,
+    current_user: CurrentUserDep
+) -> ChatSessionPublicDTO:
+    """Pin or unpin a chat session."""
+    chat_session = session.get(ChatSession, chat_session_id)
+    if not chat_session:
+        raise HTTPException(404, "Chat session not found")
+    if chat_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+
+    chat_session.is_pinned = not chat_session.is_pinned
+    session.add(chat_session)
+    session.commit()
+    session.refresh(chat_session)
+    return chat_session 
 
 
     

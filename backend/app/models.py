@@ -140,6 +140,7 @@ class ChatSession(AuditableBase, table=True):
     title: str | None = Field(default=None, max_length=100, description="The title of the chat session")
     owner: "User" = Relationship(back_populates="chat_sessions")
     messages : list["ChatMessage"] = Relationship(back_populates="session", cascade_delete=True)
+    is_pinned: bool = Field(default=False)
 
 # Public chat session DTOs for API responses
 class ChatSessionPublicDTO(SQLModel):
