@@ -19,7 +19,7 @@ interface SidebarProps {
 
 function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: SidebarProps) {
     const navigate = useNavigate()
-    const { user, logout } = useAuthContext()
+    const { user } = useAuthContext()
     const [search, setSearch] = useState('')
     const [sessions, setSessions] = useState<ChatSession[]>([])
     const [pinned, setPinned] = useState<ChatSession[]>([])
@@ -73,10 +73,6 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
         loadSessions()
     }
 
-    const handleLogout = () => {
-        logout()
-        navigate('/login')
-    }
 
     return (
         <div
@@ -190,13 +186,6 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                         </div>
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>
-                    <span
-                        onClick={(e) => { e.stopPropagation(); handleLogout() }}
-                        style={{ fontSize: '13px', color: '#aaa', cursor: 'pointer' }}
-                        title="Logout"
-                    >
-                        ⎋
-                    </span>
                 </div>
             </div>
         </div>
@@ -230,7 +219,7 @@ function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: Chat
         >
             {isPinned
                 ? <div style={{ width: '6px', height: '6px', background: '#7F77DD', borderRadius: '50%', flexShrink: 0 }} />
-                : <span style={{ fontSize: '13px' }}>💬</span>
+                : <span style={{ fontSize: '13px', color: '#aaa' }}></span>
             }
             <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {session.title}
