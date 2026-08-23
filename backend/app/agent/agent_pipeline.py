@@ -117,9 +117,12 @@ class TravelAgentPipeline:
             adults=search_data.adults,
             currency=search_data.currency.value,
         )
+
         flight_info = None
         origin_iata = search_data.origin_iata or resolve_city_iata(search_data.origin)
         destination_iata = search_data.destination_iata or resolve_city_iata(search_data.destination)
+
+        # Construct the Skyscanner URL
         if origin_iata and destination_iata:
             origin_iata = origin_iata.lower()
             destination_iata = destination_iata.lower()
