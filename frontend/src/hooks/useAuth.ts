@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login, register } from '../services/authService'
+import { useAuthContext } from "../context/AuthContext.tsx"
+import client from "../services/client.ts"
 
 export function useAuth() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const navigate = useNavigate()
+    const { setUser } = useAuthContext()
 
     const handleLogin = async (email: string, password: string) => {
         setLoading(true)
@@ -13,6 +16,8 @@ export function useAuth() {
         try {
             const data = await login(email, password)
             localStorage.setItem('token', data.access_token)
+            const userResponse = await client.get('/users/me')
+            setUser(userResponse.data)
             navigate('/chat')
         } catch (err) {
             setError('Invalid email or password')
@@ -31,9 +36,10 @@ export function useAuth() {
         setError('')
         try {
             await register(firstName, lastName, email, password)
-            // Auto login after register
             const data = await login(email, password)
             localStorage.setItem('token', data.access_token)
+            const userResponse = await client.get('/users/me')
+            setUser(userResponse.data)
             navigate('/register-success')
         } catch (err) {
             setError('Something went wrong. Please try again.')

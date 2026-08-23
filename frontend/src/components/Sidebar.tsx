@@ -53,13 +53,13 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
     )
 
     // Context menu actions
-    const handlePin = async (sessionId: string) => {
+    const handlePin = async (_sessionId: string) => {
         // TODO: implement pin API call
         setContextMenu(null)
         loadSessions()
     }
 
-    const handleRename = async (sessionId: string) => {
+    const handleRename = async (_sessionId: string) => {
         const newTitle = prompt('Enter new name:')
         if (!newTitle) return
         // TODO: implement rename API call
@@ -67,7 +67,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
         loadSessions()
     }
 
-    const handleDelete = async (sessionId: string) => {
+    const handleDelete = async (_sessionId: string) => {
         // TODO: implement delete API call
         setContextMenu(null)
         loadSessions()
@@ -176,7 +176,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
             {/* Profile */}
             <div style={{ padding: '12px', borderTop: '0.5px solid #e0e0e0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}
-                     onClick={handleLogout}
+                     onClick={() => navigate('/profile')}
                 >
                     <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#EEEDFE', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 500, color: '#534AB7', flexShrink: 0 }}>
                         {getInitials()}
@@ -186,10 +186,17 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                             {user ? `${user.first_name} ${user.last_name}` : ''}
                         </div>
                         <div style={{ fontSize: '11px', color: '#aaa' }}>
-                            {user?.subscription_tier === 'paid' ? 'Pro · Unlimited searches' : 'Free plan'}
+                            {user?.subscription_tier === 'PAID' ? 'Pro · Unlimited searches' : 'Free plan'}
                         </div>
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>
+                    <span
+                        onClick={(e) => { e.stopPropagation(); handleLogout() }}
+                        style={{ fontSize: '13px', color: '#aaa', cursor: 'pointer' }}
+                        title="Logout"
+                    >
+                        ⎋
+                    </span>
                 </div>
             </div>
         </div>
