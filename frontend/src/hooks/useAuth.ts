@@ -18,7 +18,15 @@ export function useAuth() {
             localStorage.setItem('token', data.access_token)
             const userResponse = await client.get('/users/me')
             setUser(userResponse.data)
-            navigate('/chat')
+
+            const pendingRedirect = localStorage.getItem('post_login_redirect')
+            if (pendingRedirect === 'upgrade') {
+                localStorage.removeItem('post_login_redirect')
+                const checkoutRes = await client.post('/payments/create-checkout-session')
+                window.location.href = checkoutRes.data.checkout_url
+            } else {
+                navigate('/chat')
+            }
         } catch (err) {
             setError('Invalid email or password')
         } finally {
