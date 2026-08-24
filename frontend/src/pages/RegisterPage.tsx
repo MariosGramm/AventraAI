@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import GoogleLoginButton from "../components/GoogleLoginButton.tsx";
 import {useAuth} from "../hooks/useAuth.ts";
 
@@ -9,6 +9,7 @@ function RegisterPage() {
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const navigate = useNavigate()
 
     const { handleRegister, loading, error } = useAuth()
 
@@ -37,7 +38,7 @@ function RegisterPage() {
                     padding: '2rem',
                     textAlign: 'center'
                 }}>
-                    <div style={{ color: '#7F77DD', fontWeight: 500, marginBottom: '1rem' }}>
+                    <div onClick={() => navigate('/')} style={{ color: '#7F77DD', fontWeight: 500, marginBottom: '1rem', cursor: 'pointer' }}>
                         AventraAI
                     </div>
                     <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#26215C', margin: '0 0 4px' }}>
