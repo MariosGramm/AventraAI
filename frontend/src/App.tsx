@@ -9,6 +9,7 @@ import UpgradeSuccessPage from "./pages/UpgradeSuccessPage.tsx";
 import AlreadySubscribedPage from "./pages/AlreadySubscribedPage.tsx";
 import LoggingOutPage from "./pages/LoggingOutPage.tsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import ChatPage from "./pages/ChatPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/already-subscribed" element={<AlreadySubscribedPage />} />
                 <Route path="/logging-out" element={<LoggingOutPage />} />
                 <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
+                <Route path="/reset-password" element={<GuestRoute><ResetPasswordPage /></GuestRoute>} />
                 <Route path="/chat" element={<ChatPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
             </Routes>
