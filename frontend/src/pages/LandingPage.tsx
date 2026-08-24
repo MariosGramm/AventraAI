@@ -197,7 +197,7 @@ function LandingPage() {
                         }}
                         onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(127,119,221,0.45)' }}
                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(127,119,221,0.35)' }}
-                        onClick={() => navigate('/chat?guest=true')}>
+                        onClick={() => navigate('/register')}>
                             Try it out →
                         </Button>
                     </div>

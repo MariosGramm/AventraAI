@@ -221,7 +221,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '13px', fontWeight: 500, color: '#26215C' }}>Guest</div>
                                 <div style={{ fontSize: '11px', color: '#aaa' }}>
-                                    Free tier · {guestMessagesLeft} messages left
+                                    {guestMessagesLeft} messages left
                                 </div>
                             </div>
                         </div>
