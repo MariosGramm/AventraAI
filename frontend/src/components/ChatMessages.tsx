@@ -82,7 +82,7 @@ function ChatMessages({ messages, loading, streamingText }: ChatMessagesProps) {
                             fontSize: '14px', lineHeight: 1.6, color: '#26215C',
                             whiteSpace: 'pre-wrap'
                         }}>
-                            {streamingText}<span style={{ color: '#7F77DD', fontWeight: 'bold' }}>▍</span>
+                            {streamingText}
                         </div>
                     </div>
                 )}

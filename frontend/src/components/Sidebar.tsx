@@ -15,11 +15,13 @@ interface SidebarProps {
     currentSessionId: string | null
     onSelectChat: (sessionId: string) => void
     refreshTrigger: number
+    isGuest?: boolean
+    guestMessagesLeft?: number
 }
 
 const MAX_PINNED = 3
 
-function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: SidebarProps) {
+function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, isGuest, guestMessagesLeft }: SidebarProps) {
     const navigate = useNavigate()
     const { user } = useAuthContext()
     const [search, setSearch] = useState('')
@@ -46,7 +48,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
     }
 
     useEffect(() => {
-        loadSessions()
+        if (!isGuest) loadSessions()
     }, [refreshTrigger])
 
     // Filter by search
@@ -109,6 +111,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
             </div>
 
             {/* Search */}
+            {!isGuest && (
             <div style={{ padding: '8px 12px' }}>
                 <input
                     type="text"
@@ -118,9 +121,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                     style={{ width: '100%', padding: '6px 10px', border: '0.5px solid #e0e0e0', borderRadius: '8px', background: 'white', fontSize: '13px', boxSizing: 'border-box' as const, outline: 'none' }}
                 />
             </div>
+            )}
 
             {/* Pinned */}
-            {pinned.length > 0 && (
+            {!isGuest && pinned.length > 0 && (
                 <div style={{ padding: '4px 12px' }}>
                     <div style={{ fontSize: '11px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Pinned</div>
                     {pinned.map(session => (
@@ -139,9 +143,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                 </div>
             )}
 
-            {pinned.length > 0 && <div style={{ height: '0.5px', background: '#e0e0e0', margin: '4px 12px' }} />}
+            {!isGuest && pinned.length > 0 && <div style={{ height: '0.5px', background: '#e0e0e0', margin: '4px 12px' }} />}
 
             {/* Recent */}
+            {!isGuest ? (
             <div style={{ padding: '4px 12px', flex: 1, overflowY: 'auto' as const }}>
                 <div style={{ fontSize: '11px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Recent</div>
                 {filtered.map(session => (
@@ -157,6 +162,12 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                     />
                 ))}
             </div>
+            ) : (
+                <div style={{ padding: '16px 12px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '13px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💬</div>
+                    Sign up to save your chats
+                </div>
+            )}
 
             {/* Context Menu */}
             {contextMenu && (
@@ -186,6 +197,27 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
 
             {/* Profile */}
             <div style={{ padding: '12px', borderTop: '0.5px solid #e0e0e0' }}>
+                {isGuest ? (
+                    <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#EEEDFE', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', flexShrink: 0 }}>
+                                👤
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', fontWeight: 500, color: '#26215C' }}>Guest</div>
+                                <div style={{ fontSize: '11px', color: '#aaa' }}>
+                                    Free tier · {guestMessagesLeft} messages left
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => navigate('/register')}
+                            style={{ width: '100%', marginTop: '4px', padding: '8px', background: '#7F77DD', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}
+                        >
+                            Sign up for free →
+                        </button>
+                    </>
+                ) : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}
                      onClick={() => navigate('/profile')}
                 >
@@ -202,6 +234,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>
                 </div>
+                )}
             </div>
         </div>
     )

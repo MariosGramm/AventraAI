@@ -1,13 +1,16 @@
 
 import logging
+from datetime import UTC, datetime
+from types import SimpleNamespace
 from typing import Any
 import uuid
 
+from pydantic import BaseModel
 from app import crud
 from app.agent.agent_pipeline import TravelAgentPipeline
 from app.api.deps import CurrentUserDep, SessionDep
-from app.enums import ChatRole
-from app.models import ChatMessage, ChatMessageCreateDTO, ChatMessagesPublicDTO, ChatResponseDTO, ChatSession, ChatSessionCreateDTO, ChatSessionPublicDTO, ChatSessionsPublicDTO
+from app.enums import ChatRole, SubscriptionTier
+from app.models import ChatMessage, ChatMessageCreateDTO, ChatMessagesPublicDTO, ChatResponseDTO, ChatSession, ChatSessionCreateDTO, ChatSessionPublicDTO, ChatSessionsPublicDTO, User
 from fastapi import APIRouter, HTTPException
 from sqlmodel import Session, col, select
 
@@ -160,6 +163,38 @@ def generate_chat_title(
     session.commit()
     session.refresh(chat_session)
     return chat_session
+
+
+class _GuestHistoryMessage(BaseModel):
+    role: str
+    content: str
+
+class GuestChatRequestDTO(BaseModel):
+    content: str
+    history: list[_GuestHistoryMessage] = []
+
+@router.post("/guest/send_message")
+def guest_send_message(data: GuestChatRequestDTO) -> dict:
+    """Guest chat endpoint — no authentication required."""
+    history = [
+        SimpleNamespace(role=ChatRole(msg.role), content=msg.content)
+        for msg in data.history
+    ]
+
+    dummy_user = User(
+        first_name="Guest", last_name="User",
+        email="guest@aventraai.com", hashed_password="",
+        subscription_tier=SubscriptionTier.FREE,
+    )
+
+    try:
+        pipeline = TravelAgentPipeline()
+        response = pipeline.run_chat(data.content, history, dummy_user)
+    except Exception:
+        logger.exception("Guest agent pipeline failed")
+        response = "I'm having trouble right now. Please try again."
+
+    return {"content": response, "created_at": datetime.now(UTC).isoformat()}
 
 
     

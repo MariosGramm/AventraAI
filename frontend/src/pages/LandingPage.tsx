@@ -1,9 +1,11 @@
 import {Button, Col, Container, Row} from "react-bootstrap";
+import { useNavigate } from 'react-router-dom'
 import Navbar from "../components/Navbar.tsx";
 import UpgradeButton from "../components/UpgradeButton.tsx";
 
 
 function LandingPage() {
+    const navigate = useNavigate()
 
     return (
         <>
@@ -72,7 +74,7 @@ function LandingPage() {
                         Tell AventraAI where you want to go. Get personalized travel packages with hotels, activities, and real-time weather — in seconds.
                     </p>
 
-                    <Button size="lg" style={{ backgroundColor: '#7F77DD', border: 'none', padding: '12px 32px' }}>
+                    <Button size="lg" style={{ backgroundColor: '#7F77DD', border: 'none', padding: '12px 32px' }} onClick={() => navigate('/chat?guest=true')}>
                         Try it out
                     </Button>
                 </Container>
