@@ -165,6 +165,22 @@ def generate_chat_title(
     return chat_session
 
 
+@router.delete("/session/{chat_session_id}", status_code=204)
+def delete_chat_session(
+    session: SessionDep,
+    chat_session_id: uuid.UUID,
+    current_user: CurrentUserDep,
+) -> None:
+    """Permanently delete a chat session and all of its messages."""
+    chat_session = session.get(ChatSession, chat_session_id)
+    if not chat_session:
+        raise HTTPException(404, "Chat session not found")
+    if chat_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+
+    crud.delete_chat_session(session=session, chat_session=chat_session)
+
+
 class _RenameDTO(BaseModel):
     title: str
 

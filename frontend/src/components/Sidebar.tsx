@@ -91,9 +91,15 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
         setRenaming(null)
     }
 
-    const handleDelete = async (_sessionId: string) => {
+    const handleDelete = async (sessionId: string) => {
         setContextMenu(null)
-        loadSessions()
+        try {
+            await client.delete(`/chat/session/${sessionId}`)
+            if (currentSessionId === sessionId) onNewChat()
+            loadSessions()
+        } catch (err) {
+            console.error('Failed to delete session', err)
+        }
     }
 
 

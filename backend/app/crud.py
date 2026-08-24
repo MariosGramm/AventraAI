@@ -195,6 +195,13 @@ def get_chat_messages_by_session(*, session:Session, chat_session_id:uuid.UUID) 
 
     return session.exec(statement).all()
 
+def delete_chat_session(*, session:Session, chat_session:ChatSession) -> None:
+    """
+    CRUD method for permanently deleting a chat session and its messages (cascade).
+    """
+    session.delete(chat_session)
+    session.commit()
+
 #=======================================================================================================
 # SEARCH HISTORY METHOD
 #=======================================================================================================
