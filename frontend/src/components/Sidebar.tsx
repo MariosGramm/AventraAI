@@ -72,11 +72,23 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
         }
     }
 
-    const handleRename = async (_sessionId: string) => {
-        const newTitle = prompt('Enter new name:')
-        if (!newTitle) return
+    const [renaming, setRenaming] = useState<{ sessionId: string, title: string } | null>(null)
+
+    const handleRename = (sessionId: string) => {
+        const session = [...pinned, ...sessions].find(s => s.id === sessionId)
+        setRenaming({ sessionId, title: session?.title || '' })
         setContextMenu(null)
-        loadSessions()
+    }
+
+    const submitRename = async () => {
+        if (!renaming || !renaming.title.trim()) { setRenaming(null); return }
+        try {
+            await client.patch(`/chat/session/${renaming.sessionId}/rename`, { title: renaming.title.trim() })
+            loadSessions()
+        } catch (err) {
+            console.error('Failed to rename session', err)
+        }
+        setRenaming(null)
     }
 
     const handleDelete = async (_sessionId: string) => {
@@ -147,6 +159,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                                 setContextMenu({ sessionId: session.id, x: e.clientX, y: e.clientY })
                             }}
                             isPinned
+                            renaming={renaming}
+                            onRenameChange={t => setRenaming(prev => prev ? { ...prev, title: t } : null)}
+                            onRenameSubmit={submitRename}
+                            onRenameCancel={() => setRenaming(null)}
                         />
                     ))}
                 </div>
@@ -168,6 +184,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                             e.stopPropagation()
                             setContextMenu({ sessionId: session.id, x: e.clientX, y: e.clientY })
                         }}
+                        renaming={renaming}
+                        onRenameChange={t => setRenaming(prev => prev ? { ...prev, title: t } : null)}
+                        onRenameSubmit={submitRename}
+                        onRenameCancel={() => setRenaming(null)}
                     />
                 ))}
             </div>
@@ -257,9 +277,13 @@ interface ChatItemProps {
     onSelect: () => void
     onContextMenu: (e: React.MouseEvent) => void
     isPinned?: boolean
+    renaming?: { sessionId: string, title: string } | null
+    onRenameChange?: (title: string) => void
+    onRenameSubmit?: () => void
+    onRenameCancel?: () => void
 }
 
-function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: ChatItemProps) {
+function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned, renaming, onRenameChange, onRenameSubmit, onRenameCancel }: ChatItemProps) {
     const [hovered, setHovered] = useState(false)
     const [displayTitle, setDisplayTitle] = useState(session.title)
     const prevTitleRef = useRef(session.title)
@@ -299,7 +323,24 @@ function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: Chat
                 : <span style={{ fontSize: '13px', color: '#aaa' }}></span>
             }
             <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {displayTitle}
+                {renaming?.sessionId === session.id ? (
+                    <input
+                        autoFocus
+                        value={renaming.title}
+                        onChange={e => onRenameChange?.(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') onRenameSubmit?.()
+                            if (e.key === 'Escape') onRenameCancel?.()
+                        }}
+                        onBlur={() => onRenameSubmit?.()}
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                            width: '100%', border: 'none', outline: 'none',
+                            background: 'transparent', fontSize: '13px',
+                            color: '#26215C', fontFamily: 'inherit', padding: 0
+                        }}
+                    />
+                ) : displayTitle}
             </span>
             {hovered && (
                 <span

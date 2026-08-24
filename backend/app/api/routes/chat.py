@@ -165,6 +165,29 @@ def generate_chat_title(
     return chat_session
 
 
+class _RenameDTO(BaseModel):
+    title: str
+
+@router.patch("/session/{chat_session_id}/rename", response_model=ChatSessionPublicDTO)
+def rename_chat_session(
+    session: SessionDep,
+    chat_session_id: uuid.UUID,
+    current_user: CurrentUserDep,
+    data: _RenameDTO,
+) -> Any:
+    """Rename a chat session."""
+    chat_session = session.get(ChatSession, chat_session_id)
+    if not chat_session:
+        raise HTTPException(404, "Chat session not found")
+    if chat_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+    chat_session.title = data.title[:100]
+    session.add(chat_session)
+    session.commit()
+    session.refresh(chat_session)
+    return chat_session
+
+
 class _GuestHistoryMessage(BaseModel):
     role: str
     content: str
