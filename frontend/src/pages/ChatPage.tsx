@@ -51,23 +51,7 @@ function ChatPage() {
     // Redirect if not logged in and not guest
     useEffect(() => {
         const token = localStorage.getItem('token')
-        if (!token && !isGuest) navigate('/login')
-    }, [])
-
-    // Intercept browser back button with logout confirmation (authenticated only)
-    useEffect(() => {
-        if (isGuest) return
-        window.history.pushState(null, '', '/chat')
-        const handlePopState = () => {
-            if (window.confirm('Are you sure you want to log out?')) {
-                localStorage.removeItem('token')
-                window.location.href = '/'
-            } else {
-                window.history.pushState(null, '', '/chat')
-            }
-        }
-        window.addEventListener('popstate', handlePopState)
-        return () => window.removeEventListener('popstate', handlePopState)
+        if (!token && !isGuest) navigate('/login', { replace: true })
     }, [])
 
     // Δημιούργησε νέο chat session

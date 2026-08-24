@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form } from 'react-bootstrap'
 import { useAuthContext } from '../context/AuthContext'
@@ -8,6 +8,10 @@ import client from '../services/client'
 function ProfilePage() {
     const navigate = useNavigate()
     const { user, setUser, logout } = useAuthContext()
+
+    useEffect(() => {
+        if (!localStorage.getItem('token')) navigate('/login', { replace: true })
+    }, [])
 
     const [firstName, setFirstName] = useState(user?.first_name || '')
     const [lastName, setLastName] = useState(user?.last_name || '')
