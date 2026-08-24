@@ -3,9 +3,11 @@ import { useState } from "react"
 interface ChatInputProps {
     onSend: (message: string) => void
     loading: boolean
+    isStreaming?: boolean
+    onStop?: () => void
 }
 
-function ChatInput({ onSend, loading }: ChatInputProps) {
+function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
     const [message, setMessage] = useState('')
 
     const handleSend = () => {
@@ -43,18 +45,21 @@ function ChatInput({ onSend, loading }: ChatInputProps) {
                         }}
                     />
                     <button
-                        onClick={handleSend}
-                        disabled={!message.trim() || loading}
-                        aria-label="Send message"
+                        onClick={isStreaming ? onStop : handleSend}
+                        disabled={!isStreaming && (!message.trim() || loading)}
+                        aria-label={isStreaming ? 'Stop generating' : 'Send message'}
                         style={{
                             width: '32px', height: '32px', borderRadius: '8px',
-                            background: message.trim() && !loading ? '#7F77DD' : '#e0e0e0',
-                            border: 'none', cursor: message.trim() ? 'pointer' : 'default',
+                            background: isStreaming ? '#6c757d'
+                                : message.trim() && !loading ? '#7F77DD' : '#e0e0e0',
+                            border: 'none', cursor: isStreaming || message.trim() ? 'pointer' : 'default',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             flexShrink: 0, transition: 'background 0.2s'
                         }}
                     >
-                        <span style={{ color: 'white', fontSize: '16px' }}>↑</span>
+                        <span style={{ color: 'white', fontSize: isStreaming ? '12px' : '16px' }}>
+                            {isStreaming ? '■' : '↑'}
+                        </span>
                     </button>
                 </div>
             </div>

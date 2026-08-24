@@ -6,6 +6,7 @@ import ChatMessages from '../components/ChatMessages'
 import ChatInput from '../components/ChatInput'
 import WelcomeScreen from '../components/WelcomeScreen'
 import client from '../services/client'
+import { useAuthContext } from '../context/AuthContext'
 
 interface Message {
     role: 'user' | 'assistant'
@@ -19,6 +20,10 @@ function ChatPage() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const isGuest = searchParams.get('guest') === 'true'
+    const { user } = useAuthContext()
+
+    const userInitials = isGuest ? 'G'
+        : user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : 'U'
 
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
@@ -75,6 +80,30 @@ function ChatPage() {
     }
 
 
+
+    const stopStreaming = () => {
+        if (streamRef.current) {
+            clearInterval(streamRef.current)
+            streamRef.current = null
+        }
+        if (streamingText !== null) {
+            const partial = streamingText
+            setStreamingText(null)
+            if (partial) {
+                setMessages(prev => [...prev, {
+                    role: 'assistant' as const,
+                    content: partial,
+                    created_at: new Date().toISOString()
+                }])
+            }
+        }
+    }
+
+    const handleEdit = (index: number, newContent: string) => {
+        if (!newContent.trim()) return
+        setMessages(prev => prev.slice(0, index))
+        handleSend(newContent)
+    }
 
     const handleSend = async (message: string) => {
         if (isGuest && guestMessagesLeft <= 0) {
@@ -182,9 +211,9 @@ function ChatPage() {
             }}>
                 {messages.length === 0 && streamingText === null
                     ? <WelcomeScreen onSuggestion={handleSend} />
-                    : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} />
+                    : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} onEdit={handleEdit} userInitials={userInitials} />
                 }
-                <ChatInput onSend={handleSend} loading={loading || streamingText !== null} />
+                <ChatInput onSend={handleSend} loading={loading || streamingText !== null} isStreaming={streamingText !== null} onStop={stopStreaming} />
             </div>
         </div>
     )
