@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import client from '../services/client'
+import { useAuthContext } from '../context/AuthContext'
 
 function ResetPasswordPage() {
+    const { logout } = useAuthContext()
     const [searchParams] = useSearchParams()
     const token = searchParams.get('token') || ''
 
@@ -27,6 +29,8 @@ function ResetPasswordPage() {
         setLoading(true)
         try {
             await client.post('/login/reset-password/', { token, new_password: password })
+            // Old session token is now stale since the password changed; force a fresh sign-in.
+            logout()
             setSuccess(true)
         } catch (err: any) {
             const detail = err?.response?.data?.detail

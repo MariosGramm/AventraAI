@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import { login, register } from '../services/authService'
 import { useAuthContext } from "../context/AuthContext.tsx"
 import client from "../services/client.ts"
@@ -16,17 +17,34 @@ export function useAuth() {
         try {
             const data = await login(email, password)
             localStorage.setItem('token', data.access_token)
-            const userResponse = await client.get('/users/me')
-            setUser(userResponse.data)
 
+            // Resolve any pending post-login redirect before setUser() re-renders
+            // GuestRoute, which would otherwise bounce us to /chat once the token exists.
             const pendingRedirect = localStorage.getItem('post_login_redirect')
             if (pendingRedirect === 'upgrade') {
                 localStorage.removeItem('post_login_redirect')
-                const checkoutRes = await client.post('/payments/create-checkout-session')
-                window.location.href = checkoutRes.data.checkout_url
-            } else {
-                navigate('/chat')
+                try {
+                    const checkoutRes = await client.post('/payments/create-checkout-session')
+                    window.location.href = checkoutRes.data.checkout_url
+                    return
+                } catch (checkoutErr) {
+                    const userResponse = await client.get('/users/me')
+                    setUser(userResponse.data)
+                    if (axios.isAxiosError(checkoutErr) && checkoutErr.response?.status === 400) {
+                        // replace: once logged in, GuestRoute would bounce a back-navigation
+                        // to /login straight to /chat, so drop /login from the history stack.
+                        navigate('/already-subscribed', { replace: true })
+                    } else {
+                        console.error('Failed to start checkout after login', checkoutErr)
+                        navigate('/chat', { replace: true })
+                    }
+                    return
+                }
             }
+
+            const userResponse = await client.get('/users/me')
+            setUser(userResponse.data)
+            navigate('/chat')
         } catch (err) {
             setError('Invalid email or password')
         } finally {
