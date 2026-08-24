@@ -43,8 +43,7 @@ function ProfilePage() {
     }
 
     const handleLogout = () => {
-        logout()
-        navigate('/login')
+        navigate('/logging-out')
     }
 
     return (
@@ -149,10 +148,10 @@ function ProfilePage() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                         <div>
                             <div style={{ fontSize: '14px', fontWeight: 500, color: '#26215C' }}>
-                                {user?.subscription_tier === 'PAID' ? 'Pro plan' : 'Free plan'}
+                                {user?.subscription_tier === 'paid' ? 'Pro plan' : 'Free plan'}
                             </div>
                             <div style={{ fontSize: '13px', color: '#6c757d' }}>
-                                {user?.subscription_tier === 'PAID'
+                                {user?.subscription_tier === 'paid'
                                     ? 'Unlimited searches'
                                     : '3 searches / month'
                                 }
@@ -160,14 +159,14 @@ function ProfilePage() {
                         </div>
                         <span style={{
                             padding: '4px 12px', borderRadius: '99px', fontSize: '12px',
-                            background: user?.subscription_tier === 'PAID' ? '#EEEDFE' : '#f0f0f0',
-                            color: user?.subscription_tier === 'PAID' ? '#534AB7' : '#6c757d'
+                            background: user?.subscription_tier === 'paid' ? '#EEEDFE' : '#f0f0f0',
+                            color: user?.subscription_tier === 'paid' ? '#534AB7' : '#6c757d'
                         }}>
-                            {user?.subscription_tier === 'PAID' ? '✨ Pro' : 'Free'}
+                            {user?.subscription_tier === 'paid' ? '✨ Pro' : 'Free'}
                         </span>
                     </div>
 
-                    {user?.subscription_tier !== 'PAID' && (
+                    {user?.subscription_tier !== 'paid' && (
                         <UpgradeButton style={{ width: '100%' }} />
                     )}
                 </div>

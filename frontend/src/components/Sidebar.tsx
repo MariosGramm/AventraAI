@@ -244,7 +244,9 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                             {user ? `${user.first_name} ${user.last_name}` : ''}
                         </div>
                         <div style={{ fontSize: '11px', color: '#aaa' }}>
-                            {user?.subscription_tier === 'PAID' ? 'Pro · Unlimited searches' : 'Free plan'}
+                            {user?.subscription_tier === 'paid'
+                                ? 'Pro'
+                                : `Free tier · ${Math.max(0, 3 - (user?.monthly_searches_used || 0))}/3 searches left`}
                         </div>
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>

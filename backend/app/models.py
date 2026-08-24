@@ -121,6 +121,8 @@ class UserPublicDTO(UserBase):
     Used for API responses to avoid exposing sensitive information.
     """
     id: uuid.UUID = Field(description="The unique identifier for the user.")
+    subscription_tier: SubscriptionTier = Field(description="The subscription tier for the user.")
+    monthly_searches_used: int = Field(default=0, description="The number of searches used this month.")
     created_at: datetime | None = Field(description="The timestamp when the user was created.")
 
 class UsersPublicDTO(SQLModel):
