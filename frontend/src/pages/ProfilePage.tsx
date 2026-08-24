@@ -162,7 +162,7 @@ function ProfilePage() {
                             background: user?.subscription_tier === 'paid' ? '#EEEDFE' : '#f0f0f0',
                             color: user?.subscription_tier === 'paid' ? '#534AB7' : '#6c757d'
                         }}>
-                            {user?.subscription_tier === 'paid' ? '✨ Pro' : 'Free'}
+                            {user?.subscription_tier === 'paid' ? 'Pro' : 'Free'}
                         </span>
                     </div>
 

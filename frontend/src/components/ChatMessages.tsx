@@ -1,4 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
+import React from 'react'
+
+function formatMarkdown(text: string): React.ReactNode[] {
+    return text.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+        part.startsWith('**') && part.endsWith('**')
+            ? React.createElement('strong', { key: i }, part.slice(2, -2))
+            : part
+    )
+}
 
 interface Message {
     role: 'user' | 'assistant'
@@ -53,7 +62,7 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             fontSize: '14px', lineHeight: 1.6, color: '#26215C',
                             whiteSpace: 'pre-wrap'
                         }}>
-                            {streamingText}
+                            {formatMarkdown(streamingText)}
                         </div>
                     </div>
                 )}
@@ -73,7 +82,7 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             background: 'white', border: '0.5px solid #e0e0e0',
                             fontSize: '14px', color: '#6c757d'
                         }}>
-                            Planning your trip...
+                            Thinking...
                         </div>
                     </div>
                 )}
@@ -164,7 +173,7 @@ function MessageBubble({ msg, index, onEdit, userInitials }: { msg: Message, ind
                     border: msg.role === 'assistant' ? '0.5px solid #e0e0e0' : 'none',
                     whiteSpace: 'pre-wrap'
                 }}>
-                    {msg.content}
+                    {formatMarkdown(msg.content)}
                 </div>
             )}
 
