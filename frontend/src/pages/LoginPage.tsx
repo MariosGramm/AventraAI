@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import GoogleLoginButton from "../components/GoogleLoginButton.tsx"
+import PasswordInput from "../components/PasswordInput.tsx"
+import AuthLogo from "../components/AuthLogo.tsx"
 import { useAuth } from "../hooks/useAuth.ts"
 
 function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
     const { handleLogin, loading, error } = useAuth()
-    const navigate = useNavigate()
 
     return (
         <>
@@ -36,9 +36,7 @@ function LoginPage() {
                         padding: '2rem',
                         textAlign: 'center'
                     }}>
-                        <div onClick={() => navigate('/')} style={{ color: '#7F77DD', fontWeight: 500, marginBottom: '1rem', cursor: 'pointer' }}>
-                             AventraAI
-                        </div>
+                        <AuthLogo />
                         <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#26215C', margin: '0 0 4px' }}>
                             Welcome back
                         </h1>
@@ -81,31 +79,7 @@ function LoginPage() {
 
                             <Form.Group className="mb-2">
                                 <Form.Label style={{ fontSize: '13px', color: '#6c757d' }}>Password</Form.Label>
-                                <div style={{ position: 'relative' }}>
-                                    <Form.Control
-                                        type={showPassword ? 'text' : 'password'}
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={e => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(prev => !prev)}
-                                        style={{
-                                            position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
-                                            background: 'none', border: 'none', cursor: 'pointer',
-                                            padding: '2px', display: 'flex', alignItems: 'center'
-                                        }}
-                                        tabIndex={-1}
-                                    >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6c757d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                            <circle cx="12" cy="12" r="3" />
-                                            {showPassword && <line x1="1" y1="1" x2="23" y2="23" />}
-                                        </svg>
-                                    </button>
-                                </div>
+                                <PasswordInput value={password} onChange={setPassword} required />
                             </Form.Group>
 
                             <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
