@@ -29,13 +29,11 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
     const [pinned, setPinned] = useState<ChatSession[]>([])
     const [contextMenu, setContextMenu] = useState<{ sessionId: string, x: number, y: number } | null>(null)
 
-    // Παίρνεις initials από το όνομα
     const getInitials = () => {
         if (!user) return '?'
         return `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase()
     }
 
-    // Φόρτωσε chat sessions από backend
     const loadSessions = async () => {
         try {
             const response = await client.get('/chat/sessions')
@@ -51,12 +49,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
         if (!isGuest) loadSessions()
     }, [refreshTrigger])
 
-    // Filter by search
     const filtered = sessions.filter(s =>
         s.title.toLowerCase().includes(search.toLowerCase())
     )
 
-    // Context menu actions
     const [pinError, setPinError] = useState<string | null>(null)
 
     const handlePin = async (sessionId: string) => {
@@ -79,13 +75,11 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
     const handleRename = async (_sessionId: string) => {
         const newTitle = prompt('Enter new name:')
         if (!newTitle) return
-        // TODO: implement rename API call
         setContextMenu(null)
         loadSessions()
     }
 
     const handleDelete = async (_sessionId: string) => {
-        // TODO: implement delete API call
         setContextMenu(null)
         loadSessions()
     }
@@ -257,7 +251,6 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
     )
 }
 
-// ChatItem component
 interface ChatItemProps {
     session: ChatSession
     isActive: boolean

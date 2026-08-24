@@ -13,7 +13,6 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import ChatPage from "./pages/ChatPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 
-// Redirects authenticated users to /chat
 function GuestRoute({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('token')
     if (token) return <Navigate to="/chat" replace />

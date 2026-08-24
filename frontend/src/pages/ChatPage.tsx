@@ -39,13 +39,11 @@ function ChatPage() {
         setRefreshTrigger(prev => prev + 1)
     }
 
-    // Redirect if not logged in
     useEffect(() => {
         const token = localStorage.getItem('token')
         if (!token) navigate('/login', { replace: true })
     }, [])
 
-    // Δημιούργησε νέο chat session
     const createSession = async (): Promise<string> => {
         const response = await client.post('/chat/session', {
             title: 'New chat'
@@ -114,7 +112,6 @@ function ChatPage() {
 
             setLoading(false)
 
-            // Typewriter streaming effect
             let i = 0
             setStreamingText('')
             streamRef.current = setInterval(() => {
