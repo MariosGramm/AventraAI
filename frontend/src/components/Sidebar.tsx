@@ -166,12 +166,12 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 1000, minWidth: '140px'
                 }}>
                     {[
-                        { label: '✏️ Rename', action: () => handleRename(contextMenu.sessionId) },
+                        { label: 'Rename', action: () => handleRename(contextMenu.sessionId) },
                         {
-                            label: pinned.some(s => s.id === contextMenu.sessionId) ? '📌 Unpin' : '📌 Pin',
+                            label: pinned.some(s => s.id === contextMenu.sessionId) ? 'Unpin' : 'Pin',
                             action: () => handlePin(contextMenu.sessionId)
                         },
-                        { label: '🗑️ Delete', action: () => handleDelete(contextMenu.sessionId) },
+                        { label: 'Delete', action: () => handleDelete(contextMenu.sessionId) },
                     ].map((item, i) => (
                         <div
                             key={i}

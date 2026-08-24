@@ -170,9 +170,6 @@ function ProfilePage() {
 
                 {/* Danger Zone */}
                 <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem' }}>
-                    <h2 style={{ fontSize: '16px', fontWeight: 500, color: '#26215C', marginBottom: '1rem' }}>
-                        Account
-                    </h2>
                     <Button
                         variant="outline-danger"
                         style={{ width: '100%' }}
