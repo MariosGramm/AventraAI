@@ -226,44 +226,80 @@ function LandingPage() {
             </div>
 
             {/* Features Section */}
-            <div style={{ padding: '4rem 0', background: '#f8f8ff' }}>
+            <div style={{ padding: '5rem 0', background: '#f8f8ff' }}>
                 <Container>
-                    <h2 style={{ textAlign: 'center', fontSize: '28px', fontWeight: 500, marginBottom: '0.5rem' }}>
+                    <h2 style={{ textAlign: 'center', fontSize: '28px', fontWeight: 600, marginBottom: '0.5rem', color: '#26215C' }}>
                         Everything you need to travel smarter
                     </h2>
-                    <p style={{ textAlign: 'center', color: '#6c757d', marginBottom: '3rem' }}>
+                    <p style={{ textAlign: 'center', color: '#6c757d', marginBottom: '3.5rem' }}>
                         Powered by AI, real-time data, and local expertise
                     </p>
 
                     <Row>
                         {[
-                            { icon: '🤖', title: 'AI travel agent', desc: 'Chat naturally and get personalized travel packages tailored to your style.' },
-                            { icon: '🌤️', title: 'Real-time weather', desc: 'Get accurate forecasts for your travel dates so you can pack right.' },
-                            { icon: '🏨', title: 'Hotel prices', desc: 'Compare live hotel prices across Booking.com, Airbnb and more.' },
-                            { icon: '📍', title: 'Local attractions', desc: 'Discover the best restaurants, sights and experiences at your destination.' },
+                            { title: 'AI travel agent', desc: 'Chat naturally and get personalized travel packages tailored to your style.', icon: (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    <path d="M8 10h.01M12 10h.01M16 10h.01"/>
+                                </svg>
+                            )},
+                            { title: 'Real-time weather', desc: 'Get accurate forecasts for your travel dates so you can pack right.', icon: (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                </svg>
+                            )},
+                            { title: 'Hotel prices', desc: 'Compare live hotel prices across Booking.com, Airbnb and more.', icon: (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                </svg>
+                            )},
+                            { title: 'Local attractions', desc: 'Discover the best restaurants, sights and experiences at your destination.', icon: (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            )},
                         ].map((feature, index) => (
                             <Col key={index} md={3} sm={6} className="mb-4">
                                 <div style={{
                                     background: 'white',
-                                    border: '0.5px solid #e0e0e0',
-                                    borderRadius: '12px',
-                                    padding: '1.25rem',
-                                    height: '100%'
-                                }}>
+                                    border: '1px solid #e8e6f0',
+                                    borderRadius: '16px',
+                                    padding: '1.5rem',
+                                    height: '100%',
+                                    transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                                    cursor: 'default',
+                                    animation: `fadeSlideUp 0.6s ease-out ${index * 0.1}s both`
+                                }}
+                                onMouseEnter={e => {
+                                    e.currentTarget.style.transform = 'translateY(-6px)';
+                                    e.currentTarget.style.boxShadow = '0 12px 36px rgba(127,119,221,0.15)';
+                                    e.currentTarget.style.borderColor = '#c4bef5';
+                                }}
+                                onMouseLeave={e => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                    e.currentTarget.style.borderColor = '#e8e6f0';
+                                }}
+                                >
                                     <div style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        background: '#EEEDFE',
-                                        borderRadius: '8px',
+                                        width: '44px',
+                                        height: '44px',
+                                        background: 'linear-gradient(135deg, #EEEDFE, #d4d0f8)',
+                                        borderRadius: '12px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        marginBottom: '12px',
-                                        fontSize: '20px'
+                                        marginBottom: '14px'
                                     }}>
                                         {feature.icon}
                                     </div>
-                                    <h3 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '6px' }}>
+                                    <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '8px', color: '#26215C' }}>
                                         {feature.title}
                                     </h3>
                                     <p style={{ fontSize: '13px', color: '#6c757d', lineHeight: 1.6, margin: 0 }}>
