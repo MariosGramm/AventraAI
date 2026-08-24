@@ -7,7 +7,7 @@ import client from '../services/client'
 
 function ProfilePage() {
     const navigate = useNavigate()
-    const { user, setUser, logout } = useAuthContext()
+    const { user, setUser } = useAuthContext()
 
     useEffect(() => {
         if (!localStorage.getItem('token')) navigate('/login', { replace: true })
