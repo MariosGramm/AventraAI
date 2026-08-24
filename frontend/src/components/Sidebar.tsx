@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 import client from '../services/client'
@@ -15,11 +15,13 @@ interface SidebarProps {
     currentSessionId: string | null
     onSelectChat: (sessionId: string) => void
     refreshTrigger: number
+    isGuest?: boolean
+    guestMessagesLeft?: number
 }
 
 const MAX_PINNED = 3
 
-function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: SidebarProps) {
+function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, isGuest, guestMessagesLeft }: SidebarProps) {
     const navigate = useNavigate()
     const { user } = useAuthContext()
     const [search, setSearch] = useState('')
@@ -27,13 +29,11 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
     const [pinned, setPinned] = useState<ChatSession[]>([])
     const [contextMenu, setContextMenu] = useState<{ sessionId: string, x: number, y: number } | null>(null)
 
-    // Παίρνεις initials από το όνομα
     const getInitials = () => {
         if (!user) return '?'
         return `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase()
     }
 
-    // Φόρτωσε chat sessions από backend
     const loadSessions = async () => {
         try {
             const response = await client.get('/chat/sessions')
@@ -46,19 +46,20 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
     }
 
     useEffect(() => {
-        loadSessions()
+        if (!isGuest) loadSessions()
     }, [refreshTrigger])
 
-    // Filter by search
     const filtered = sessions.filter(s =>
         s.title.toLowerCase().includes(search.toLowerCase())
     )
 
-    // Context menu actions
+    const [pinError, setPinError] = useState<string | null>(null)
+
     const handlePin = async (sessionId: string) => {
         const isPinned = pinned.some(s => s.id === sessionId)
         if (!isPinned && pinned.length >= MAX_PINNED) {
-            alert(`You can pin up to ${MAX_PINNED} chats.`)
+            setPinError(`You can pin up to ${MAX_PINNED} chats.`)
+            setTimeout(() => setPinError(null), 3000)
             setContextMenu(null)
             return
         }
@@ -71,16 +72,26 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
         }
     }
 
-    const handleRename = async (_sessionId: string) => {
-        const newTitle = prompt('Enter new name:')
-        if (!newTitle) return
-        // TODO: implement rename API call
+    const [renaming, setRenaming] = useState<{ sessionId: string, title: string } | null>(null)
+
+    const handleRename = (sessionId: string) => {
+        const session = [...pinned, ...sessions].find(s => s.id === sessionId)
+        setRenaming({ sessionId, title: session?.title || '' })
         setContextMenu(null)
-        loadSessions()
+    }
+
+    const submitRename = async () => {
+        if (!renaming || !renaming.title.trim()) { setRenaming(null); return }
+        try {
+            await client.patch(`/chat/session/${renaming.sessionId}/rename`, { title: renaming.title.trim() })
+            loadSessions()
+        } catch (err) {
+            console.error('Failed to rename session', err)
+        }
+        setRenaming(null)
     }
 
     const handleDelete = async (_sessionId: string) => {
-        // TODO: implement delete API call
         setContextMenu(null)
         loadSessions()
     }
@@ -88,9 +99,21 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
 
     return (
         <div
-            style={{ width: '240px', background: '#f8f8ff', borderRight: '0.5px solid #e0e0e0', display: 'flex', flexDirection: 'column', height: '100vh', flexShrink: 0 }}
+            style={{ width: '240px', background: '#f8f8ff', borderRight: '0.5px solid #e0e0e0', display: 'flex', flexDirection: 'column', height: '100vh', flexShrink: 0, position: 'relative' }}
             onClick={() => setContextMenu(null)}
         >
+            {/* Pin limit toast */}
+            {pinError && (
+                <div style={{
+                    position: 'absolute', top: '12px', left: '12px', right: '12px',
+                    background: '#fff0f0', border: '0.5px solid #ffcccc', borderRadius: '8px',
+                    padding: '8px 12px', fontSize: '12px', color: '#cc0000',
+                    zIndex: 1001, textAlign: 'center'
+                }}>
+                    {pinError}
+                </div>
+            )}
+
             {/* Logo */}
             <div style={{ padding: '16px 12px 8px' }}>
                 <div
@@ -109,6 +132,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
             </div>
 
             {/* Search */}
+            {!isGuest && (
             <div style={{ padding: '8px 12px' }}>
                 <input
                     type="text"
@@ -118,9 +142,10 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                     style={{ width: '100%', padding: '6px 10px', border: '0.5px solid #e0e0e0', borderRadius: '8px', background: 'white', fontSize: '13px', boxSizing: 'border-box' as const, outline: 'none' }}
                 />
             </div>
+            )}
 
             {/* Pinned */}
-            {pinned.length > 0 && (
+            {!isGuest && pinned.length > 0 && (
                 <div style={{ padding: '4px 12px' }}>
                     <div style={{ fontSize: '11px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Pinned</div>
                     {pinned.map(session => (
@@ -134,14 +159,19 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                                 setContextMenu({ sessionId: session.id, x: e.clientX, y: e.clientY })
                             }}
                             isPinned
+                            renaming={renaming}
+                            onRenameChange={t => setRenaming(prev => prev ? { ...prev, title: t } : null)}
+                            onRenameSubmit={submitRename}
+                            onRenameCancel={() => setRenaming(null)}
                         />
                     ))}
                 </div>
             )}
 
-            {pinned.length > 0 && <div style={{ height: '0.5px', background: '#e0e0e0', margin: '4px 12px' }} />}
+            {!isGuest && pinned.length > 0 && <div style={{ height: '0.5px', background: '#e0e0e0', margin: '4px 12px' }} />}
 
             {/* Recent */}
+            {!isGuest ? (
             <div style={{ padding: '4px 12px', flex: 1, overflowY: 'auto' as const }}>
                 <div style={{ fontSize: '11px', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Recent</div>
                 {filtered.map(session => (
@@ -154,9 +184,19 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                             e.stopPropagation()
                             setContextMenu({ sessionId: session.id, x: e.clientX, y: e.clientY })
                         }}
+                        renaming={renaming}
+                        onRenameChange={t => setRenaming(prev => prev ? { ...prev, title: t } : null)}
+                        onRenameSubmit={submitRename}
+                        onRenameCancel={() => setRenaming(null)}
                     />
                 ))}
             </div>
+            ) : (
+                <div style={{ padding: '16px 12px', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '13px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>💬</div>
+                    Sign up to save your chats
+                </div>
+            )}
 
             {/* Context Menu */}
             {contextMenu && (
@@ -186,6 +226,27 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
 
             {/* Profile */}
             <div style={{ padding: '12px', borderTop: '0.5px solid #e0e0e0' }}>
+                {isGuest ? (
+                    <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px' }}>
+                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#EEEDFE', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', flexShrink: 0 }}>
+                                👤
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '13px', fontWeight: 500, color: '#26215C' }}>Guest</div>
+                                <div style={{ fontSize: '11px', color: '#aaa' }}>
+                                    {guestMessagesLeft} messages left
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => navigate('/register')}
+                            style={{ width: '100%', marginTop: '4px', padding: '8px', background: '#7F77DD', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', cursor: 'pointer' }}
+                        >
+                            Sign up for free →
+                        </button>
+                    </>
+                ) : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}
                      onClick={() => navigate('/profile')}
                 >
@@ -197,27 +258,52 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger }: 
                             {user ? `${user.first_name} ${user.last_name}` : ''}
                         </div>
                         <div style={{ fontSize: '11px', color: '#aaa' }}>
-                            {user?.subscription_tier === 'PAID' ? 'Pro · Unlimited searches' : 'Free plan'}
+                            {user?.subscription_tier === 'paid'
+                                ? 'Pro'
+                                : `Free tier · ${Math.max(0, 3 - (user?.monthly_searches_used || 0))}/3 searches left`}
                         </div>
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>
                 </div>
+                )}
             </div>
         </div>
     )
 }
 
-// ChatItem component
 interface ChatItemProps {
     session: ChatSession
     isActive: boolean
     onSelect: () => void
     onContextMenu: (e: React.MouseEvent) => void
     isPinned?: boolean
+    renaming?: { sessionId: string, title: string } | null
+    onRenameChange?: (title: string) => void
+    onRenameSubmit?: () => void
+    onRenameCancel?: () => void
 }
 
-function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: ChatItemProps) {
+function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned, renaming, onRenameChange, onRenameSubmit, onRenameCancel }: ChatItemProps) {
     const [hovered, setHovered] = useState(false)
+    const [displayTitle, setDisplayTitle] = useState(session.title)
+    const prevTitleRef = useRef(session.title)
+
+    useEffect(() => {
+        if (prevTitleRef.current === 'New chat' && session.title !== 'New chat') {
+            let i = 0
+            const full = session.title
+            setDisplayTitle('')
+            const interval = setInterval(() => {
+                i = Math.min(i + 1, full.length)
+                setDisplayTitle(full.slice(0, i))
+                if (i >= full.length) clearInterval(interval)
+            }, 45)
+            prevTitleRef.current = session.title
+            return () => clearInterval(interval)
+        }
+        setDisplayTitle(session.title)
+        prevTitleRef.current = session.title
+    }, [session.title])
 
     return (
         <div
@@ -237,7 +323,24 @@ function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: Chat
                 : <span style={{ fontSize: '13px', color: '#aaa' }}></span>
             }
             <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {session.title}
+                {renaming?.sessionId === session.id ? (
+                    <input
+                        autoFocus
+                        value={renaming.title}
+                        onChange={e => onRenameChange?.(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') onRenameSubmit?.()
+                            if (e.key === 'Escape') onRenameCancel?.()
+                        }}
+                        onBlur={() => onRenameSubmit?.()}
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                            width: '100%', border: 'none', outline: 'none',
+                            background: 'transparent', fontSize: '13px',
+                            color: '#26215C', fontFamily: 'inherit', padding: 0
+                        }}
+                    />
+                ) : displayTitle}
             </span>
             {hovered && (
                 <span

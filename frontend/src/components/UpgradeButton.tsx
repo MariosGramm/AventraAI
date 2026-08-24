@@ -21,6 +21,12 @@ function UpgradeButton({
     const navigate = useNavigate()
 
     const handleUpgrade = async () => {
+        const token = localStorage.getItem('token')
+        if (!token) {
+            localStorage.setItem('post_login_redirect', 'upgrade')
+            navigate('/login')
+            return
+        }
         setLoading(true)
         try {
             const response = await client.post('/payments/create-checkout-session')

@@ -16,7 +16,7 @@ function LoggingOutPage() {
         }, 150)
 
         const doneTimer = setTimeout(() => setDone(true), 1600)
-        const redirectTimer = setTimeout(() => navigate('/'), 3000)
+        const redirectTimer = setTimeout(() => navigate('/', { replace: true }), 3000)
 
         return () => {
             clearInterval(progressTimer)

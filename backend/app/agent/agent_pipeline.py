@@ -466,3 +466,19 @@ class TravelAgentPipeline:
             else:
                 messages.append(AIMessage(content=msg.content))
         return messages
+
+    def generate_title(self, first_message: str) -> str:
+        """Generate a short chat session title from the user's first message."""
+        llm = ChatOpenAI(
+            model=self.config.contextualize_model,
+            temperature=0,
+            max_tokens=20,
+        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system",
+             "Generate a concise chat title (max 6 words) that captures the topic. "
+             "Return ONLY the title, no quotes, no punctuation at the end."),
+            ("human", "{message}"),
+        ])
+        chain = prompt | llm | StrOutputParser()
+        return chain.invoke({"message": first_message}).strip()[:100]

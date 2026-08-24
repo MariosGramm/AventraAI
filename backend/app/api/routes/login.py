@@ -83,7 +83,7 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
 
     crud.update_user(
         session=session, 
-        db_user = user, 
+        user=user, 
         user_update_data=user_to_update
     )
 

@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import Sidebar from '../components/Sidebar'
 import ChatMessages from '../components/ChatMessages'
 import ChatInput from '../components/ChatInput'
 import WelcomeScreen from '../components/WelcomeScreen'
 import client from '../services/client'
+import { useAuthContext } from '../context/AuthContext'
 
 interface Message {
     role: 'user' | 'assistant'
@@ -14,24 +16,34 @@ interface Message {
 
 function ChatPage() {
     const navigate = useNavigate()
+    const { user } = useAuthContext()
+
+    const userInitials = user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : 'U'
+
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string | null>(null)
     const [refreshTrigger, setRefreshTrigger] = useState(0)
+    const [streamingText, setStreamingText] = useState<string | null>(null)
+    const streamRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+    useEffect(() => () => {
+        if (streamRef.current) clearInterval(streamRef.current)
+    }, [])
 
     const handleNewChat = () => {
+        if (streamRef.current) { clearInterval(streamRef.current); streamRef.current = null }
+        setStreamingText(null)
         setMessages([])
         setSessionId(null)
         setRefreshTrigger(prev => prev + 1)
     }
 
-    // Redirect αν δεν είναι logged in
     useEffect(() => {
         const token = localStorage.getItem('token')
-        if (!token) navigate('/login')
+        if (!token) navigate('/login', { replace: true })
     }, [])
 
-    // Δημιούργησε νέο chat session
     const createSession = async (): Promise<string> => {
         const response = await client.post('/chat/session', {
             title: 'New chat'
@@ -42,47 +54,94 @@ function ChatPage() {
 
 
 
+    const stopStreaming = () => {
+        if (streamRef.current) {
+            clearInterval(streamRef.current)
+            streamRef.current = null
+        }
+        if (streamingText !== null) {
+            const partial = streamingText
+            setStreamingText(null)
+            if (partial) {
+                setMessages(prev => [...prev, {
+                    role: 'assistant' as const,
+                    content: partial,
+                    created_at: new Date().toISOString()
+                }])
+            }
+        }
+    }
+
+    const handleEdit = (index: number, newContent: string) => {
+        if (!newContent.trim()) return
+        setMessages(prev => prev.slice(0, index))
+        handleSend(newContent)
+    }
+
     const handleSend = async (message: string) => {
         setLoading(true)
 
-        // Πρόσθεσε user message αμέσως
-        const userMessage: Message = {
-            role: 'user',
-            content: message,
-            created_at: new Date().toISOString()
-        }
-        setMessages(prev => [...prev, userMessage])
+        setMessages(prev => [...prev, {
+            role: 'user' as const, content: message, created_at: new Date().toISOString()
+        }])
 
         try {
-            // Δημιούργησε session αν δεν υπάρχει
+            let fullContent: string
+            let createdAt: string
+
             let currentSessionId = sessionId
+            let isFirstMessage = false
             if (!currentSessionId) {
                 currentSessionId = await createSession()
                 setSessionId(currentSessionId)
+                isFirstMessage = true
             }
 
-            // Στείλε μήνυμα στον agent
             const response = await client.post(
                 `/chat/session/${currentSessionId}/send_message`,
                 { content: message }
             )
+            fullContent = response.data.content
+            createdAt = response.data.created_at
 
-            // Πρόσθεσε agent response
-            const agentMessage: Message = {
-                role: 'assistant',
-                content: response.data.content,
-                created_at: response.data.created_at
+            if (isFirstMessage) {
+                client.post(`/chat/session/${currentSessionId}/generate_title`)
+                    .then(() => setRefreshTrigger(prev => prev + 1))
+                    .catch(() => {})
             }
-            setMessages(prev => [...prev, agentMessage])
+
+            setLoading(false)
+
+            let i = 0
+            setStreamingText('')
+            streamRef.current = setInterval(() => {
+                i = Math.min(i + 1, fullContent.length)
+                setStreamingText(fullContent.slice(0, i))
+                if (i >= fullContent.length) {
+                    clearInterval(streamRef.current!)
+                    streamRef.current = null
+                    setStreamingText(null)
+                    setMessages(prev => [...prev, {
+                        role: 'assistant',
+                        content: fullContent,
+                        created_at: createdAt
+                    }])
+                }
+            }, 18)
 
         } catch (err) {
+            setLoading(false)
+            const backendMessage = axios.isAxiosError(err)
+                ? (err.response?.data?.detail ?? err.response?.data?.message)
+                : null
+
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: 'Sorry, something went wrong. Please try again.',
+                content: typeof backendMessage === 'string' && backendMessage.trim().length > 0
+                    ? backendMessage
+                    : 'Sorry, something went wrong. Please try again.',
                 created_at: new Date().toISOString()
             }])
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -99,11 +158,11 @@ function ChatPage() {
                 flex: 1, display: 'flex', flexDirection: 'column',
                 background: 'white', overflow: 'hidden'
             }}>
-                {messages.length === 0
+                {messages.length === 0 && streamingText === null
                     ? <WelcomeScreen onSuggestion={handleSend} />
-                    : <ChatMessages messages={messages} loading={loading} />
+                    : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} onEdit={handleEdit} userInitials={userInitials} />
                 }
-                <ChatInput onSend={handleSend} loading={loading} />
+                <ChatInput onSend={handleSend} loading={loading || streamingText !== null} isStreaming={streamingText !== null} onStop={stopStreaming} />
             </div>
         </div>
     )

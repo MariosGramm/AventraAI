@@ -6,7 +6,8 @@ interface User {
     email: string
     first_name: string
     last_name: string
-    subscription_tier: 'FREE' | 'PAID'
+    subscription_tier: 'free' | 'paid'
+    monthly_searches_used: number
 }
 
 interface AuthContextType {

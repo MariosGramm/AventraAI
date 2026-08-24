@@ -3,9 +3,11 @@ import { useState } from "react"
 interface ChatInputProps {
     onSend: (message: string) => void
     loading: boolean
+    isStreaming?: boolean
+    onStop?: () => void
 }
 
-function ChatInput({ onSend, loading }: ChatInputProps) {
+function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
     const [message, setMessage] = useState('')
 
     const handleSend = () => {
@@ -22,12 +24,12 @@ function ChatInput({ onSend, loading }: ChatInputProps) {
     }
 
     return (
-        <div style={{ padding: '12px 0 16px', background: 'white', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ padding: '6px 0 12px', background: 'white', display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: '100%', maxWidth: '680px', padding: '0 16px' }}>
                 <div style={{
-                    display: 'flex', alignItems: 'flex-end', gap: '8px',
-                    background: 'white', border: '0.5px solid #e0e0e0',
-                    borderRadius: '12px', padding: '8px 12px'
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    background: '#f8f8ff', border: '1px solid #e8e6f0',
+                    borderRadius: '24px', padding: '3px 3px 3px 16px'
                 }}>
                     <textarea
                         rows={1}
@@ -39,22 +41,26 @@ function ChatInput({ onSend, loading }: ChatInputProps) {
                         style={{
                             flex: 1, border: 'none', background: 'transparent',
                             fontSize: '14px', resize: 'none', outline: 'none',
-                            maxHeight: '120px', lineHeight: '1.5', fontFamily: 'inherit'
+                            maxHeight: '120px', lineHeight: '1.5', fontFamily: 'inherit',
+                            padding: '2px 0', margin: 0
                         }}
                     />
                     <button
-                        onClick={handleSend}
-                        disabled={!message.trim() || loading}
-                        aria-label="Send message"
+                        onClick={isStreaming ? onStop : handleSend}
+                        disabled={!isStreaming && (!message.trim() || loading)}
+                        aria-label={isStreaming ? 'Stop generating' : 'Send message'}
                         style={{
-                            width: '32px', height: '32px', borderRadius: '8px',
-                            background: message.trim() && !loading ? '#7F77DD' : '#e0e0e0',
-                            border: 'none', cursor: message.trim() ? 'pointer' : 'default',
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            background: isStreaming ? '#6c757d'
+                                : message.trim() && !loading ? '#7F77DD' : '#e0e0e0',
+                            border: 'none', cursor: isStreaming || message.trim() ? 'pointer' : 'default',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             flexShrink: 0, transition: 'background 0.2s'
                         }}
                     >
-                        <span style={{ color: 'white', fontSize: '16px' }}>↑</span>
+                        <span style={{ color: 'white', fontSize: isStreaming ? '12px' : '16px' }}>
+                            {isStreaming ? '■' : '↑'}
+                        </span>
                     </button>
                 </div>
             </div>

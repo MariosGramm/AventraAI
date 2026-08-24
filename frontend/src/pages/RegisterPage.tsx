@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import GoogleLoginButton from "../components/GoogleLoginButton.tsx";
+import PasswordInput from "../components/PasswordInput.tsx";
+import AuthLogo from "../components/AuthLogo.tsx";
 import {useAuth} from "../hooks/useAuth.ts";
 
 function RegisterPage() {
@@ -37,9 +39,7 @@ function RegisterPage() {
                     padding: '2rem',
                     textAlign: 'center'
                 }}>
-                    <div style={{ color: '#7F77DD', fontWeight: 500, marginBottom: '1rem' }}>
-                        AventraAI
-                    </div>
+                    <AuthLogo />
                     <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#26215C', margin: '0 0 4px' }}>
                         Create account
                     </h1>
@@ -107,14 +107,7 @@ function RegisterPage() {
 
                         <Form.Group className="mb-3">
                             <Form.Label style={{ fontSize: '13px', color: '#6c757d' }}>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                required
-                                minLength={8}
-                            />
+                            <PasswordInput value={password} onChange={setPassword} required minLength={8} />
                         </Form.Group>
 
                         <Button
