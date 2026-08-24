@@ -40,6 +40,10 @@ class UserCreateDTO(UserBase):
     Inherits from UserBase and adds a password field.
     """
     password: str = Field(min_length=8, description="The password for the user account.")
+    subscription_tier: SubscriptionTier = Field(
+        default=SubscriptionTier.FREE,
+        description="The initial subscription tier for the user."
+    )
 
 class UserCreateSignupDTO(SQLModel):
     """
@@ -50,6 +54,10 @@ class UserCreateSignupDTO(SQLModel):
     last_name: str = Field(max_length=50, description="The last name of the user.")
     email : EmailStr = Field(max_length=100, description="The email address of the user.")
     password: str = Field(min_length=8, description="The password for the user account.")
+    subscription_tier: SubscriptionTier = Field(
+        default=SubscriptionTier.FREE,
+        description="The initial subscription tier for the user."
+    )
     
 # User update DTOs
 class UserUpdateDTO(SQLModel):

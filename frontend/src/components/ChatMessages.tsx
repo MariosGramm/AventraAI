@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 interface Message {
     role: 'user' | 'assistant'
     content: string
@@ -7,9 +9,16 @@ interface Message {
 interface ChatMessagesProps {
     messages: Message[]
     loading: boolean
+    streamingText: string | null
 }
 
-function ChatMessages({ messages, loading }: ChatMessagesProps) {
+function ChatMessages({ messages, loading, streamingText }: ChatMessagesProps) {
+    const endRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [messages, streamingText])
+
     return (
         <div style={{
             flex: 1, overflowY: 'auto' as const,
@@ -56,6 +65,28 @@ function ChatMessages({ messages, loading }: ChatMessagesProps) {
                     </div>
                 ))}
 
+                {/* Streaming response */}
+                {streamingText !== null && (
+                    <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-start', maxWidth: '75%' }}>
+                        <div style={{
+                            width: '28px', height: '28px', borderRadius: '50%',
+                            background: '#EEEDFE', display: 'flex',
+                            alignItems: 'center', justifyContent: 'center', fontSize: '12px',
+                            flexShrink: 0
+                        }}>
+                            🤖
+                        </div>
+                        <div style={{
+                            padding: '10px 14px', borderRadius: '12px',
+                            background: 'white', border: '0.5px solid #e0e0e0',
+                            fontSize: '14px', lineHeight: 1.6, color: '#26215C',
+                            whiteSpace: 'pre-wrap'
+                        }}>
+                            {streamingText}<span style={{ color: '#7F77DD', fontWeight: 'bold' }}>▍</span>
+                        </div>
+                    </div>
+                )}
+
                 {/* Loading indicator */}
                 {loading && (
                     <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-start' }}>
@@ -75,6 +106,7 @@ function ChatMessages({ messages, loading }: ChatMessagesProps) {
                         </div>
                     </div>
                 )}
+                <div ref={endRef} />
             </div>
         </div>
     )

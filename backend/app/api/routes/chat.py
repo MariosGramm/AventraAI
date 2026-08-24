@@ -1,4 +1,5 @@
 
+import logging
 from typing import Any
 import uuid
 
@@ -12,6 +13,7 @@ from sqlmodel import Session, col, select
 
 
 router = APIRouter(tags=["chat"])
+logger = logging.getLogger(__name__)
 
 MAX_PINNED_CHAT_SESSIONS = 3
 
@@ -35,7 +37,7 @@ def get_chats(session:SessionDep, current_user:CurrentUserDep) -> Any:
 
     return ChatSessionsPublicDTO(chat_sessions=chat_sessions, count=len(chat_sessions))
 
-@router.get("session/{chat_session_id}/messages", response_model=ChatMessagesPublicDTO)
+@router.get("/session/{chat_session_id}/messages", response_model=ChatMessagesPublicDTO)
 def get_chat_session_messages(session:SessionDep, chat_session_id:uuid.UUID, current_user:CurrentUserDep) -> Any:
     """
     Method for retrieving messages of a chat session.
@@ -79,7 +81,11 @@ def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCr
         agent_pipeline = TravelAgentPipeline()
         agent_chat_response = agent_pipeline.run_chat(chat_message.content, chat_history, current_user)
     except Exception as e:
-        raise HTTPException(500, f"Agent pipeline failed:{e}")
+        logger.exception("Agent pipeline failed for chat session %s", chat_session_id)
+        agent_chat_response = (
+            "I'm having trouble processing your request right now. "
+            "Please try again in a moment."
+        )
 
     agent_message = crud.create_chat_message(session=session, chat_creation_data=ChatMessageCreateDTO(content=agent_chat_response), role=ChatRole.ASSISTANT, chat_session_id=chat_session_id)
 
@@ -116,7 +122,44 @@ def pin_chat_session(
     session.add(chat_session)
     session.commit()
     session.refresh(chat_session)
-    return chat_session 
+    return chat_session
+
+
+@router.post("/session/{chat_session_id}/generate_title", response_model=ChatSessionPublicDTO)
+def generate_chat_title(
+    session: SessionDep,
+    chat_session_id: uuid.UUID,
+    current_user: CurrentUserDep,
+) -> Any:
+    """Auto-generate a chat session title from the first user message."""
+    chat_session = session.get(ChatSession, chat_session_id)
+    if not chat_session:
+        raise HTTPException(404, "Chat session not found")
+    if chat_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+
+    first_message = session.exec(
+        select(ChatMessage)
+        .where(ChatMessage.chat_session_id == chat_session_id)
+        .where(ChatMessage.role == ChatRole.USER)
+        .order_by(ChatMessage.created_at)
+    ).first()
+
+    if not first_message:
+        raise HTTPException(400, "No user messages in this session")
+
+    try:
+        pipeline = TravelAgentPipeline()
+        title = pipeline.generate_title(first_message.content)
+    except Exception:
+        logger.exception("Title generation failed for session %s", chat_session_id)
+        title = first_message.content[:50]
+
+    chat_session.title = title
+    session.add(chat_session)
+    session.commit()
+    session.refresh(chat_session)
+    return chat_session
 
 
     

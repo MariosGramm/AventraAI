@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 import client from '../services/client'
@@ -218,6 +218,25 @@ interface ChatItemProps {
 
 function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: ChatItemProps) {
     const [hovered, setHovered] = useState(false)
+    const [displayTitle, setDisplayTitle] = useState(session.title)
+    const prevTitleRef = useRef(session.title)
+
+    useEffect(() => {
+        if (prevTitleRef.current === 'New chat' && session.title !== 'New chat') {
+            let i = 0
+            const full = session.title
+            setDisplayTitle('')
+            const interval = setInterval(() => {
+                i = Math.min(i + 1, full.length)
+                setDisplayTitle(full.slice(0, i))
+                if (i >= full.length) clearInterval(interval)
+            }, 45)
+            prevTitleRef.current = session.title
+            return () => clearInterval(interval)
+        }
+        setDisplayTitle(session.title)
+        prevTitleRef.current = session.title
+    }, [session.title])
 
     return (
         <div
@@ -237,7 +256,7 @@ function ChatItem({ session, isActive, onSelect, onContextMenu, isPinned }: Chat
                 : <span style={{ fontSize: '13px', color: '#aaa' }}></span>
             }
             <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {session.title}
+                {displayTitle}
             </span>
             {hovered && (
                 <span

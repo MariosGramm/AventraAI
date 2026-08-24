@@ -1,7 +1,7 @@
 import uuid
 
 from app.core.security import get_password_hash, verify_password
-from app.enums import AgentStep, AuthProvider, ChatRole, SearchSessionStatus
+from app.enums import AgentStep, AuthProvider, ChatRole, SearchSessionStatus, SubscriptionTier
 from app.models import ChatMessage, ChatMessageCreateDTO, ChatSession, ChatSessionCreateDTO, SearchHistory, SearchSession, SearchSessionCreateDTO, User, UserCreateDTO, UserCreateSignupDTO, UserUpdateDTO, UserUpdateSelfDTO
 from sqlmodel import Session, select
 
@@ -51,20 +51,26 @@ def get_or_create_google_user(
     session.refresh(user)
     return user
 
-def create_user(*, session:Session, user_creation_data:UserCreateDTO | UserCreateSignupDTO) -> User:
-    """
-    CRUD method for user creation.
-    Called by superusers using UserCreateDTO as a parameter.
-    Called by regular users using UserCreateSignupDTO as a parameter. 
-    """
-    db_obj = User.model_validate(
-        user_creation_data, update = {"hashed_password": get_password_hash(user_creation_data.password)}
-    )
+def create_user(*, session: Session, user_creation_data: UserCreateDTO | UserCreateSignupDTO) -> User:
+    if isinstance(user_creation_data, UserCreateSignupDTO):
+        resolved_subscription_tier = SubscriptionTier.FREE
+    else:
+        resolved_subscription_tier = (
+            SubscriptionTier.PAID
+            if user_creation_data.is_superuser
+            else user_creation_data.subscription_tier
+        )
 
+    db_obj = User.model_validate(
+        user_creation_data, 
+        update={
+            "hashed_password": get_password_hash(user_creation_data.password),
+            "subscription_tier": resolved_subscription_tier,
+}
+    )
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
-
     return db_obj
 
 def update_user(*, session:Session, user_update_data:UserUpdateDTO | UserUpdateSelfDTO, user:User) -> User:

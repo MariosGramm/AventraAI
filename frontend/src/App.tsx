@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import TermsPage from "./pages/TermsPage.tsx";
@@ -11,17 +11,23 @@ import LoggingOutPage from "./pages/LoggingOutPage.tsx";
 import ChatPage from "./pages/ChatPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 
+// Redirects authenticated users to /chat
+function GuestRoute({ children }: { children: React.ReactNode }) {
+    const token = localStorage.getItem('token')
+    if (token) return <Navigate to="/chat" replace />
+    return <>{children}</>
+}
 
 function App() {
 
     return(<>
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LandingPage />} />
+                <Route path="/" element={<GuestRoute><LandingPage /></GuestRoute>} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/terms" element={<TermsPage />}/>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+                <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
                 <Route path ="/register-success" element={<RegisterSuccessPage />} />
                 <Route path="/dashboard" element={<UpgradeSuccessPage />} />
                 <Route path="/already-subscribed" element={<AlreadySubscribedPage />} />
