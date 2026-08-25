@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useSpeechRecognition } from "../hooks/useSpeechRecognition"
 
 interface ChatInputProps {
     onSend: (message: string) => void
@@ -9,6 +10,10 @@ interface ChatInputProps {
 
 function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
     const [message, setMessage] = useState('')
+
+    const { isRecording, isSupported, toggleRecording } = useSpeechRecognition(
+        (text) => setMessage(prev => prev.trim() ? `${prev.trim()} ${text}` : text)
+    )
 
     const handleSend = () => {
         if (!message.trim() || loading) return
@@ -45,6 +50,31 @@ function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
                             padding: '2px 0', margin: 0
                         }}
                     />
+                    {isSupported && (
+                        <button
+                            type="button"
+                            onClick={toggleRecording}
+                            disabled={loading}
+                            aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+                            title={isRecording ? 'Stop recording' : 'Start voice input'}
+                            style={{
+                                width: '32px', height: '32px', borderRadius: '50%',
+                                background: isRecording ? '#ff4d4f' : 'transparent',
+                                border: 'none', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                flexShrink: 0, transition: 'background 0.2s'
+                            }}
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke={isRecording ? 'white' : '#6c757d'} strokeWidth="1.5"
+                                strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                <line x1="12" y1="19" x2="12" y2="23" />
+                                <line x1="8" y1="23" x2="16" y2="23" />
+                            </svg>
+                        </button>
+                    )}
                     <button
                         onClick={isStreaming ? onStop : handleSend}
                         disabled={!isStreaming && (!message.trim() || loading)}
