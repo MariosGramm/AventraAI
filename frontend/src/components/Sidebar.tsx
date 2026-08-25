@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
+import PlaneIcon from './PlaneIcon'
 import client from '../services/client'
 
 interface ChatSession {
@@ -126,7 +127,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                     onClick={() => navigate('/')}
                     style={{ fontSize: '14px', fontWeight: 500, color: '#7F77DD', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', cursor: 'pointer' }}
                 >
-                    ✈️ AventraAI
+                    <PlaneIcon size={16} /> AventraAI
                 </div>
 
                 <button

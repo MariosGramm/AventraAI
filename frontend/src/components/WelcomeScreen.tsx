@@ -1,3 +1,5 @@
+import PlaneIcon from './PlaneIcon'
+
 interface WelcomeScreenProps {
     onSuggestion: (text: string) => void
 }
@@ -15,7 +17,7 @@ function WelcomeScreen({ onSuggestion }: WelcomeScreenProps) {
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             justifyContent: 'center', flex: 1, padding: '40px 20px', textAlign: 'center'
         }}>
-            <div style={{ fontSize: '36px', marginBottom: '16px' }}>✈️</div>
+            <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}><PlaneIcon size={36} /></div>
             <h2 style={{ fontSize: '22px', fontWeight: 500, color: '#26215C', margin: '0 0 8px' }}>
                 Where do you want to go?
             </h2>

@@ -1,4 +1,5 @@
 import StartPlanningButton from '../components/StartPlanningButton.tsx'
+import PlaneIcon from '../components/PlaneIcon'
 
 function RegisterSuccessPage() {
 
@@ -20,7 +21,7 @@ function RegisterSuccessPage() {
                 textAlign: 'center',
                 boxShadow: '0 4px 24px rgba(127, 119, 221, 0.15)'
             }}>
-                <div style={{ fontSize: '48px', marginBottom: '1rem' }}>✈️</div>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}><PlaneIcon size={48} /></div>
 
                 <h1 style={{ fontSize: '24px', fontWeight: 500, color: '#26215C', marginBottom: '0.5rem' }}>
                     Welcome to AventraAI!
