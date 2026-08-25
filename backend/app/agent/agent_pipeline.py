@@ -33,6 +33,7 @@ from .infrastructure.places import PlacesService, get_place_details_tool, get_pl
 from .infrastructure.weather import WeatherService, get_weather_tool
 from .prompts import (
     CONTEXTUALIZE_PROMPT,
+    HARMFUL_CONTENT_REFUSAL_MESSAGE,
     TOPIC_GUARD_PROMPT,
     TRAVEL_CHAT_SYSTEM_PROMPT,
     TRAVEL_SEARCH_SYSTEM_PROMPT,
@@ -219,7 +220,7 @@ class TravelAgentPipeline:
         Returns:
             A plain-text string containing the agent's travel advice response.
         """
-        off_topic_reply = self._check_off_topic(message, history)
+        off_topic_reply = self._check_off_topic(message, history, user)
         if off_topic_reply:
             return off_topic_reply
 
@@ -281,7 +282,7 @@ class TravelAgentPipeline:
 
         return ChatOpenAI(model=model, temperature=temp, max_tokens=tokens)
 
-    def _check_off_topic(self, message: str, history: list[ChatMessage]) -> str | None:
+    def _check_off_topic(self, message: str, history: list[ChatMessage], user: User) -> str | None:
         """
         Cheap gatekeeper that filters out non-travel messages before the
         (more expensive) RAG retrieval + ReAct tool-calling agent runs.
@@ -293,11 +294,14 @@ class TravelAgentPipeline:
         Args:
             message: The latest user message.
             history: List of previous ChatMessage objects for this session.
+            user:    The authenticated user — used only for logging when a
+                     harmful request is blocked.
 
         Returns:
             None if the message is travel-related (caller should proceed
-            with the normal chat pipeline). Otherwise, a ready-to-send,
-            friendly redirect string to return to the user as-is.
+            with the normal chat pipeline). Otherwise, a ready-to-send
+            string to return to the user as-is (a friendly redirect for
+            off-topic messages, or a fixed refusal for harmful ones).
         """
         llm = ChatOpenAI(
             model=self.config.contextualize_model,
@@ -319,7 +323,12 @@ class TravelAgentPipeline:
             )
         }).strip()
 
-        return None if verdict == "TRAVEL_OK" else verdict
+        if verdict == "TRAVEL_OK":
+            return None
+        if verdict == "HARMFUL":
+            logger.warning("Blocked harmful chat message from user %s", user.id)
+            return HARMFUL_CONTENT_REFUSAL_MESSAGE
+        return verdict
 
     def _contextualize(self, message: str, history: list[ChatMessage]) -> str:
         """
