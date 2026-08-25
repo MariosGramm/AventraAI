@@ -37,7 +37,12 @@ function AlreadySubscribedPage() {
                 textAlign: 'center',
                 boxShadow: '0 4px 24px rgba(127, 119, 221, 0.15)'
             }}>
-                <div style={{ fontSize: '48px', marginBottom: '1rem' }}>✅</div>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M8 12.5l2.5 2.5L16 9.5" />
+                    </svg>
+                </div>
 
                 <h1 style={{ fontSize: '24px', fontWeight: 500, color: '#26215C', marginBottom: '0.5rem' }}>
                     You're already on Pro

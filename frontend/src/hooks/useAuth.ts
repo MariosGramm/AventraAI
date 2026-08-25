@@ -23,8 +23,10 @@ export function useAuth() {
             const pendingRedirect = localStorage.getItem('post_login_redirect')
             if (pendingRedirect === 'upgrade') {
                 localStorage.removeItem('post_login_redirect')
+                const returnTo = localStorage.getItem('upgrade_return_to') || '/'
+                localStorage.removeItem('upgrade_return_to')
                 try {
-                    const checkoutRes = await client.post('/payments/create-checkout-session')
+                    const checkoutRes = await client.post('/payments/create-checkout-session', { return_to: returnTo })
                     window.location.href = checkoutRes.data.checkout_url
                     return
                 } catch (checkoutErr) {

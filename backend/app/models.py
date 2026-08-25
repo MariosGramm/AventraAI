@@ -107,6 +107,12 @@ class User(UserBase, AuditableBase, table=True):
     monthly_searches_used: int = Field(default=0, description="The number of searches used by the user in the current month.")
     searches_reset_date: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="The date when the user's monthly searches will reset.")
 
+    #Stripe subscription tracking
+    stripe_customer_id: str | None = Field(default=None, max_length=255, description="The Stripe customer ID for this user.")
+    stripe_subscription_id: str | None = Field(default=None, max_length=255, description="The Stripe subscription ID for this user's active Pro subscription.")
+    subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is set to cancel at the end of the current billing period.")
+    subscription_current_period_end: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="When the current Pro billing period ends.")
+
     #Google sign in fields
     google_id: str | None = Field(default=None, max_length=255, description="The unique identifier for the user from Google sign-in.")
     auth_provider: AuthProvider = Field(default=AuthProvider.EMAIL, description="The authentication provider for the user (Google or Email).")
@@ -123,6 +129,8 @@ class UserPublicDTO(UserBase):
     id: uuid.UUID = Field(description="The unique identifier for the user.")
     subscription_tier: SubscriptionTier = Field(description="The subscription tier for the user.")
     monthly_searches_used: int = Field(default=0, description="The number of searches used this month.")
+    subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is scheduled to cancel at period end.")
+    subscription_current_period_end: datetime | None = Field(default=None, description="When the current Pro billing period ends.")
     created_at: datetime | None = Field(description="The timestamp when the user was created.")
 
 class UsersPublicDTO(SQLModel):

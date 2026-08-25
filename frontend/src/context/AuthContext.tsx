@@ -8,6 +8,8 @@ interface User {
     last_name: string
     subscription_tier: 'free' | 'paid'
     monthly_searches_used: number
+    subscription_cancel_at_period_end: boolean
+    subscription_current_period_end: string | null
 }
 
 interface AuthContextType {

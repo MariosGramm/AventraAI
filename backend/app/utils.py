@@ -167,6 +167,49 @@ def generate_subscription_email(email_to: str) -> EmailData:
     """
     return EmailData(html_content=html_content, subject=subject)
 
+def generate_subscription_cancellation_email(email_to: str, current_period_end: datetime | None) -> EmailData:
+    """
+    Method for subscription cancellation confirmation email generation.
+    """
+    project_name = settings.PROJECT_NAME
+    subject = f"Your {project_name} subscription has been cancelled"
+    access_until = current_period_end.strftime("%B %d, %Y") if current_period_end else "the end of your current billing period"
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #7F77DD;">{project_name}</h1>
+        </div>
+        <h2 style="color: #26215C;">Your subscription has been cancelled</h2>
+        <p style="color: #6c757d; line-height: 1.8;">
+            We're sorry to see you go. Your Pro subscription for <strong>{email_to}</strong>
+            has been cancelled and you will not be charged again.
+        </p>
+        <div style="background: #EEEDFE; border-radius: 12px; padding: 20px; margin: 20px 0;">
+            <p style="color: #534AB7; margin: 0;">
+                You'll keep full Pro access until <strong>{access_until}</strong>.
+            </p>
+        </div>
+        <p style="color: #6c757d; line-height: 1.8;">
+            Changed your mind? You can resubscribe at any time from your profile.
+        </p>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{settings.FRONTEND_HOST}/profile"
+               style="background: #7F77DD; color: white; padding: 12px 32px;
+                      border-radius: 8px; text-decoration: none; font-weight: 500;">
+                Go to profile
+            </a>
+        </div>
+        <p style="color: #6c757d; font-size: 12px; margin-top: 30px; text-align: center;">
+            © 2026 {project_name} ·
+            <a href="{settings.FRONTEND_HOST}/privacy" style="color: #7F77DD;">Privacy</a> ·
+            <a href="{settings.FRONTEND_HOST}/terms" style="color: #7F77DD;">Terms</a>
+        </p>
+    </body>
+    </html>
+    """
+    return EmailData(html_content=html_content, subject=subject)
+
 def send_email(*, email_to: str, subject: str = "", html_content: str = "") -> None:
     """
     Method for sending emails via Resend.

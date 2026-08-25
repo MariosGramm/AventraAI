@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form, Modal } from 'react-bootstrap'
 import { useAuthContext } from '../context/AuthContext'
 import UpgradeButton from '../components/UpgradeButton'
 import client from '../services/client'
@@ -18,6 +18,16 @@ function ProfilePage() {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState('')
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        if (user) {
+            setFirstName(user.first_name || '')
+            setLastName(user.last_name || '')
+        }
+    }, [user])
+    const [cancelLoading, setCancelLoading] = useState(false)
+    const [cancelError, setCancelError] = useState('')
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false)
 
     const getInitials = () => {
         if (!user) return '?'
@@ -44,6 +54,26 @@ function ProfilePage() {
 
     const handleLogout = () => {
         navigate('/logging-out')
+    }
+
+    const handleCancelSubscription = async () => {
+        setCancelLoading(true)
+        setCancelError('')
+        try {
+            const response = await client.post('/payments/cancel-subscription')
+            setUser({
+                ...user!,
+                subscription_cancel_at_period_end: true,
+                subscription_current_period_end: response.data.current_period_end,
+            })
+            setShowCancelConfirm(false)
+        } catch (err: any) {
+            const detail = err?.response?.data?.detail
+            setCancelError(typeof detail === 'string' ? detail : 'Failed to cancel subscription. Please try again.')
+            setShowCancelConfirm(false)
+        } finally {
+            setCancelLoading(false)
+        }
     }
 
     return (
@@ -166,8 +196,34 @@ function ProfilePage() {
                         </span>
                     </div>
 
+                    {user?.subscription_tier === 'paid' && user.subscription_cancel_at_period_end && (
+                        <div style={{ background: '#fff8e6', border: '0.5px solid #ffe4a3', borderRadius: '8px', padding: '10px 14px', fontSize: '13px', color: '#8a6300', marginBottom: '1rem' }}>
+                            Your Pro plan is canceled and will remain active until{' '}
+                            {user.subscription_current_period_end
+                                ? new Date(user.subscription_current_period_end).toLocaleDateString()
+                                : 'the end of the billing period'}.
+                        </div>
+                    )}
+
+                    {cancelError && (
+                        <div style={{ background: '#fff0f0', border: '0.5px solid #ffcccc', borderRadius: '8px', padding: '10px 14px', fontSize: '13px', color: '#cc0000', marginBottom: '1rem' }}>
+                            {cancelError}
+                        </div>
+                    )}
+
                     {user?.subscription_tier !== 'paid' && (
                         <UpgradeButton style={{ width: '100%' }} />
+                    )}
+
+                    {user?.subscription_tier === 'paid' && !user.subscription_cancel_at_period_end && (
+                        <Button
+                            variant="outline-danger"
+                            style={{ width: '100%' }}
+                            onClick={() => setShowCancelConfirm(true)}
+                            disabled={cancelLoading}
+                        >
+                            {cancelLoading ? 'Canceling...' : 'Cancel Pro subscription'}
+                        </Button>
                     )}
                 </div>
 
@@ -183,6 +239,23 @@ function ProfilePage() {
                 </div>
 
             </div>
+
+            <Modal show={showCancelConfirm} onHide={() => setShowCancelConfirm(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{ fontSize: '18px', color: '#26215C' }}>Cancel subscription</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ color: '#6c757d', fontSize: '14px', lineHeight: 1.6 }}>
+                    Are you sure you want to cancel your subscription? You'll keep Pro access until the end of your current billing period, and won't be charged again.
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-secondary" onClick={() => setShowCancelConfirm(false)} disabled={cancelLoading}>
+                        Keep subscription
+                    </Button>
+                    <Button variant="danger" onClick={handleCancelSubscription} disabled={cancelLoading}>
+                        {cancelLoading ? 'Canceling...' : 'Yes, cancel'}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

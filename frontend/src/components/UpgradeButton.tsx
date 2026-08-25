@@ -24,12 +24,15 @@ function UpgradeButton({
         const token = localStorage.getItem('token')
         if (!token) {
             localStorage.setItem('post_login_redirect', 'upgrade')
+            localStorage.setItem('upgrade_return_to', window.location.pathname)
             navigate('/login')
             return
         }
         setLoading(true)
         try {
-            const response = await client.post('/payments/create-checkout-session')
+            const response = await client.post('/payments/create-checkout-session', {
+                return_to: window.location.pathname
+            })
             window.location.href = response.data.checkout_url
         } catch (err) {
             if (axios.isAxiosError(err) && err.response?.status === 400) {

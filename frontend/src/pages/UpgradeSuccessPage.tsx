@@ -1,6 +1,23 @@
+import { useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import StartPlanningButton from '../components/StartPlanningButton.tsx'
+import { useAuthContext } from '../context/AuthContext'
+import client from '../services/client'
 
 function UpgradeSuccessPage() {
+    const { setUser } = useAuthContext()
+    const [searchParams] = useSearchParams()
+    const sessionId = searchParams.get('session_id')
+
+    useEffect(() => {
+        if (sessionId) {
+            client.post('/payments/confirm-checkout-session', { session_id: sessionId })
+                .then(res => setUser(res.data))
+                .catch(() => client.get('/users/me').then(res => setUser(res.data)).catch(() => {}))
+        } else {
+            client.get('/users/me').then(res => setUser(res.data)).catch(() => {})
+        }
+    }, [sessionId])
 
     return (
         <div style={{
