@@ -33,8 +33,10 @@ from .infrastructure.places import PlacesService, get_place_details_tool, get_pl
 from .infrastructure.weather import WeatherService, get_weather_tool
 from .prompts import (
     CONTEXTUALIZE_PROMPT,
+    TOPIC_GUARD_PROMPT,
     TRAVEL_CHAT_SYSTEM_PROMPT,
     TRAVEL_SEARCH_SYSTEM_PROMPT,
+    wrap_untrusted,
 )
 from ..rag.rag_service import RAGService
 
@@ -171,16 +173,20 @@ class TravelAgentPipeline:
         llm   = self._get_llm(user, mode="search")
         chain = prompt | llm | StrOutputParser()
 
+        user_request = (
+            f"Destination: {search_data.destination}\n"
+            f"Dates: {check_in} to {check_out}\n"
+            f"Adults: {search_data.adults}\n"
+            f"Children: {search_data.children}\n"
+            f"Budget: {search_data.budget or 'Not specified'} {search_data.currency.value}\n"
+            f"Trip type: {search_data.trip_type.value if search_data.trip_type else 'Not specified'}\n"
+            f"{budget_instruction}"
+        )
+
         response = chain.invoke({
             "input": (
-                f"Destination: {search_data.destination}\n"
-                f"Dates: {check_in} to {check_out}\n"
-                f"Adults: {search_data.adults}\n"
-                f"Children: {search_data.children}\n"
-                f"Budget: {search_data.budget or 'Not specified'} {search_data.currency.value}\n"
-                f"Trip type: {search_data.trip_type.value if search_data.trip_type else 'Not specified'}\n"
-                f"{budget_instruction}\n\n"
-                f"Context:\n{context}"
+                f"{wrap_untrusted('user_request', user_request)}\n\n"
+                f"{wrap_untrusted('retrieved_context', context)}"
             )
         })
 
@@ -213,6 +219,10 @@ class TravelAgentPipeline:
         Returns:
             A plain-text string containing the agent's travel advice response.
         """
+        off_topic_reply = self._check_off_topic(message, history)
+        if off_topic_reply:
+            return off_topic_reply
+
         standalone_query = (
             self._contextualize(message, history) if history else message
         )
@@ -235,8 +245,8 @@ class TravelAgentPipeline:
                 *formatted_history,
                 HumanMessage(
                     content=(
-                        f"{standalone_query}\n\n"
-                        f"Relevant city guide context:\n{rag_context}"
+                        f"{wrap_untrusted('user_message', standalone_query)}\n\n"
+                        f"{wrap_untrusted('city_guide_context', rag_context)}"
                     )
                 ),
             ]
@@ -271,6 +281,46 @@ class TravelAgentPipeline:
 
         return ChatOpenAI(model=model, temperature=temp, max_tokens=tokens)
 
+    def _check_off_topic(self, message: str, history: list[ChatMessage]) -> str | None:
+        """
+        Cheap gatekeeper that filters out non-travel messages before the
+        (more expensive) RAG retrieval + ReAct tool-calling agent runs.
+
+        Uses the same small, cheap model as the contextualizer with a low
+        token cap, so off-topic messages cost only this single short call
+        instead of a full agent loop with tool calls on a bigger model.
+
+        Args:
+            message: The latest user message.
+            history: List of previous ChatMessage objects for this session.
+
+        Returns:
+            None if the message is travel-related (caller should proceed
+            with the normal chat pipeline). Otherwise, a ready-to-send,
+            friendly redirect string to return to the user as-is.
+        """
+        llm = ChatOpenAI(
+            model=self.config.contextualize_model,
+            temperature=0,
+            max_tokens=80,
+        )
+
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", TOPIC_GUARD_PROMPT),
+            ("human", "{input}"),
+        ])
+
+        chain = prompt | llm | StrOutputParser()
+
+        verdict = chain.invoke({
+            "input": (
+                f"{wrap_untrusted('conversation_history', self._format_history_as_text(history[-4:]))}\n\n"
+                f"{wrap_untrusted('user_message', message)}"
+            )
+        }).strip()
+
+        return None if verdict == "TRAVEL_OK" else verdict
+
     def _contextualize(self, message: str, history: list[ChatMessage]) -> str:
         """
         Reformulate a follow-up user message into a standalone question
@@ -303,8 +353,8 @@ class TravelAgentPipeline:
 
         return chain.invoke({
             "input": (
-                f"Chat history:\n{self._format_history_as_text(history)}\n\n"
-                f"Latest message: {message}"
+                f"{wrap_untrusted('conversation_history', self._format_history_as_text(history))}\n\n"
+                f"{wrap_untrusted('user_message', message)}"
             )
         })
 
