@@ -31,13 +31,32 @@ CITY_IATA_CODES.update({
     "washington": "WAS",
 })
 
+COUNTRY_IATA_CODES = {
+    "albania": "TIA", "argentina": "EZE", "australia": "SYD", "austria": "VIE",
+    "belgium": "BRU", "brazil": "GIG", "canada": "YYZ", "chile": "SCL",
+    "china": "PEK", "colombia": "BOG", "croatia": "ZAG", "czech republic": "PRG",
+    "czechia": "PRG", "denmark": "CPH", "ecuador": "UIO", "egypt": "CAI",
+    "england": "LON", "eritrea": "ASM", "finland": "HEL", "france": "PAR",
+    "germany": "BER", "greece": "ATH", "hong kong": "HKG", "hungary": "BUD",
+    "iceland": "KEF", "india": "DEL", "indonesia": "CGK", "ireland": "DUB",
+    "israel": "TLV", "italy": "FCO", "japan": "TYO", "kenya": "NBO",
+    "malaysia": "KUL", "mexico": "MEX", "morocco": "CMN", "netherlands": "AMS",
+    "new zealand": "AKL", "nigeria": "LOS", "norway": "OSL", "peru": "LIM",
+    "philippines": "MNL", "poland": "WAW", "portugal": "LIS", "romania": "OTP",
+    "russia": "MOW", "saudi arabia": "RUH", "scotland": "EDI", "singapore": "SIN",
+    "south africa": "JNB", "south korea": "ICN", "spain": "MAD", "sweden": "STO",
+    "switzerland": "ZRH", "thailand": "BKK", "turkey": "IST", "uae": "DXB",
+    "uk": "LON", "united kingdom": "LON", "united states": "JFK", "usa": "JFK",
+    "vietnam": "SGN",
+}
+
 
 def resolve_city_iata(city: str | None) -> str | None:
-    """Return the metropolitan IATA code for a supported city name."""
+    """Return the IATA code for a city or country (falls back to main airport)."""
     if not city:
         return None
 
     normalized_city = unicodedata.normalize("NFKD", city)
     normalized_city = "".join(char for char in normalized_city if not unicodedata.combining(char))
     normalized_city = re.sub(r"[^a-z0-9]+", " ", normalized_city.lower()).strip()
-    return CITY_IATA_CODES.get(normalized_city)
+    return CITY_IATA_CODES.get(normalized_city) or COUNTRY_IATA_CODES.get(normalized_city)
