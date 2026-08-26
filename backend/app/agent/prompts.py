@@ -112,7 +112,7 @@ Use this exact structure:
             "currency": "EUR",
             "transportation": "string",
             "weather_summary": "string or null",
-            "travel_tips": ["tip1", "tip2", "tip3"],
+            "travel_tips": ["tip1", "tip2"],
             "itinerary": [
                 {{
                     "day_number": int,
