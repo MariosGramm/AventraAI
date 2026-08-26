@@ -83,7 +83,8 @@ If no budget is specified, create a standard package.
 The transportation value must describe only local transportation within the
 destination, such as public transit, walking, taxis, or car rental.
 
-The package must include a realistic day-by-day itinerary,
+The package must include a day-by-day itinerary with EXACTLY one entry
+per day of the trip (matching the number of days between the given dates),
 accommodation suggestions with booking URLs, activities, restaurants,
 transportation info, weather summary, travel tips, and estimated costs.
 If the provided context does not contain enough information about the
