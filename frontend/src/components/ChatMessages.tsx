@@ -4,7 +4,7 @@ import TravelPackageCard from './TravelPackageCard'
 
 const AgentIcon = () => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#534AB7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        <rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><path d="M9 17c1 1 5 1 6 0"/><path d="M12 1v3"/><path d="M1 12h3"/><path d="M20 12h3"/>
     </svg>
 )
 
