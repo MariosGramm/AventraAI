@@ -1,95 +1,95 @@
-"""IATA codes for the cities supported by the travel guides."""
+"""
+IATA airport code resolver.
+Uses OpenFlights airports.dat for ~5600 cities worldwide,
+with manual overrides for major multi-airport cities.
+"""
 
+import csv
 import re
 import unicodedata
+from functools import lru_cache
+from pathlib import Path
 
+AIRPORTS_FILE = Path(__file__).parent / "airports.dat"
 
-CITY_IATA_CODES = {
-    "abuja": "ABV", "amsterdam": "AMS", "asmara": "ASM", "athens": "ATH",
-    "auckland": "AKL", "bangkok": "BKK", "barcelona": "BCN", "beijing": "PEK",
-    "berlin": "BER", "bogota": "BOG", "brisbane": "BNE", "brussels": "BRU",
-    "budapest": "BUD", "buenos aires": "EZE", "cairo": "CAI", "cape town": "CPT",
-    "copenhagen": "CPH", "cusco": "CUZ", "dubai": "DXB", "dublin": "DUB",
-    "edinburgh": "EDI", "florence": "FLR", "helsinki": "HEL", "hong kong": "HKG",
-    "istanbul": "IST", "kyoto": "KIX", "lagos": "LOS", "las vegas": "LAS",
-    "lima": "LIM", "lisbon": "LIS", "london": "LON", "los angeles": "LAX",
-    "madrid": "MAD", "marrakesh": "RAK", "marseille": "MRS", "medellin": "MDE",
-    "melbourne": "MEL", "mexico city": "MEX", "miami": "MIA", "montreal": "YUL",
-    "moscow": "MOW", "nairobi": "NBO", "new delhi": "DEL", "new york city": "NYC",
-    "nice": "NCE", "oslo": "OSL", "paris": "PAR", "porto": "OPO", "prague": "PRG",
-    "reykjavik": "REK", "rio de janeiro": "RIO", "rome": "ROM", "santiago": "SCL",
-    "san francisco": "SFO", "seoul": "SEL", "seville": "SVQ", "singapore": "SIN",
-    "stockholm": "STO", "sydney": "SYD", "tirana": "TIA", "tokyo": "TYO",
-    "toronto": "YTO", "valencia": "VLC", "vancouver": "YVR", "venice": "VCE",
-    "vienna": "VIE", "warsaw": "WAW", "washington dc": "WAS", "wellington": "WLG",
+# Override for cities with multiple airports — prefer the main international one
+MAJOR_CITY_OVERRIDES = {
+    "paris": "CDG", "london": "LHR", "new york": "JFK", "new york city": "JFK",
+    "tokyo": "NRT", "osaka": "KIX", "milan": "MXP", "rome": "FCO",
+    "moscow": "SVO", "chicago": "ORD", "los angeles": "LAX",
+    "san francisco": "SFO", "washington": "IAD", "washington dc": "IAD",
+    "toronto": "YYZ", "montreal": "YUL", "buenos aires": "EZE",
+    "rio de janeiro": "GIG", "sao paulo": "GRU", "istanbul": "IST",
+    "seoul": "ICN", "beijing": "PEK", "shanghai": "PVG",
+    "bangkok": "BKK", "singapore": "SIN", "sydney": "SYD",
+    "melbourne": "MEL", "stockholm": "ARN", "copenhagen": "CPH",
+    "berlin": "BER", "munich": "MUC", "amsterdam": "AMS",
+    "dubai": "DXB", "hong kong": "HKG", "kuala lumpur": "KUL",
+    "ho chi minh city": "SGN", "delhi": "DEL", "new delhi": "DEL",
+    "mumbai": "BOM", "rio": "GIG", "kyoto": "KIX", "bali": "DPS",
+    "corfu": "CFU", "rhodes": "RHO", "santorini": "JTR",
+    "crete": "HER", "heraklion": "HER",
 }
 
-CITY_IATA_CODES.update({
-    "delhi": "DEL",
-    "new york": "NYC",
-    "rio": "RIO",
-    "washington": "WAS",
-    "munich": "MUC",
-    "zurich": "ZRH",
-    "dubrovnik": "DBV",
-    "santorini": "JTR",
-    "milan": "MXP",
-    "krakow": "KRK",
-    "bruges": "BRU",
-    "split": "SPU",
-    "tallinn": "TLL",
-    "riga": "RIX",
-    "bali": "DPS",
-    "hanoi": "HAN",
-    "ho chi minh city": "SGN",
-    "kuala lumpur": "KUL",
-    "taipei": "TPE",
-    "mumbai": "BOM",
-    "jaipur": "JAI",
-    "osaka": "KIX",
-    "chicago": "ORD",
-    "new orleans": "MSY",
-    "havana": "HAV",
-    "zanzibar": "ZNZ",
-    "accra": "ACC",
-    "tel aviv": "TLV",
-    "amman": "AMM",
-    "muscat": "MCT",
-    "gothenburg": "GOT",
-    "lyon": "LYS",
-    "granada": "GRX",
-    "bath": "BRS",
-    "salzburg": "SZG",
-})
-
-COUNTRY_IATA_CODES = {
+COUNTRY_OVERRIDES = {
     "albania": "TIA", "argentina": "EZE", "australia": "SYD", "austria": "VIE",
     "belgium": "BRU", "brazil": "GIG", "canada": "YYZ", "chile": "SCL",
     "china": "PEK", "colombia": "BOG", "croatia": "ZAG", "czech republic": "PRG",
     "czechia": "PRG", "denmark": "CPH", "ecuador": "UIO", "egypt": "CAI",
-    "england": "LON", "eritrea": "ASM", "finland": "HEL", "france": "PAR",
-    "germany": "BER", "greece": "ATH", "hong kong": "HKG", "hungary": "BUD",
+    "england": "LHR", "eritrea": "ASM", "finland": "HEL", "france": "CDG",
+    "germany": "BER", "greece": "ATH", "hungary": "BUD",
     "iceland": "KEF", "india": "DEL", "indonesia": "CGK", "ireland": "DUB",
-    "israel": "TLV", "italy": "FCO", "japan": "TYO", "kenya": "NBO",
+    "israel": "TLV", "italy": "FCO", "japan": "NRT", "kenya": "NBO",
     "malaysia": "KUL", "mexico": "MEX", "morocco": "CMN", "netherlands": "AMS",
     "new zealand": "AKL", "nigeria": "LOS", "norway": "OSL", "peru": "LIM",
     "philippines": "MNL", "poland": "WAW", "portugal": "LIS", "romania": "OTP",
-    "russia": "MOW", "saudi arabia": "RUH", "scotland": "EDI", "singapore": "SIN",
-    "south africa": "JNB", "south korea": "ICN", "spain": "MAD", "sweden": "STO",
+    "russia": "SVO", "saudi arabia": "RUH", "scotland": "EDI", "singapore": "SIN",
+    "south africa": "JNB", "south korea": "ICN", "spain": "MAD", "sweden": "ARN",
     "switzerland": "ZRH", "thailand": "BKK", "turkey": "IST", "uae": "DXB",
-    "uk": "LON", "united kingdom": "LON", "united states": "JFK", "usa": "JFK",
+    "uk": "LHR", "united kingdom": "LHR", "united states": "JFK", "usa": "JFK",
     "vietnam": "SGN", "estonia": "TLL", "latvia": "RIX", "taiwan": "TPE",
     "cuba": "HAV", "tanzania": "DAR", "ghana": "ACC", "jordan": "AMM",
     "oman": "MCT",
 }
 
 
+@lru_cache(maxsize=1)
+def _load_airports() -> dict[str, str]:
+    """Load city→IATA mapping from airports.dat (cached singleton)."""
+    mapping: dict[str, str] = {}
+    if not AIRPORTS_FILE.exists():
+        return mapping
+    with open(AIRPORTS_FILE, encoding="utf-8") as f:
+        for row in csv.reader(f):
+            if len(row) < 6:
+                continue
+            city, iata = row[2].strip(), row[4].strip()
+            if not iata or iata == "\\N" or len(iata) != 3 or not city:
+                continue
+            city_lower = city.lower()
+            if city_lower not in mapping:
+                mapping[city_lower] = iata
+    return mapping
+
+
+def _normalize(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", text)
+    normalized = "".join(c for c in normalized if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", " ", normalized.lower()).strip()
+
+
 def resolve_city_iata(city: str | None) -> str | None:
-    """Return the IATA code for a city or country (falls back to main airport)."""
+    """Resolve a city or country name to its main IATA airport code."""
     if not city:
         return None
 
-    normalized_city = unicodedata.normalize("NFKD", city)
-    normalized_city = "".join(char for char in normalized_city if not unicodedata.combining(char))
-    normalized_city = re.sub(r"[^a-z0-9]+", " ", normalized_city.lower()).strip()
-    return CITY_IATA_CODES.get(normalized_city) or COUNTRY_IATA_CODES.get(normalized_city)
+    key = _normalize(city)
+
+    if key in MAJOR_CITY_OVERRIDES:
+        return MAJOR_CITY_OVERRIDES[key]
+
+    if key in COUNTRY_OVERRIDES:
+        return COUNTRY_OVERRIDES[key]
+
+    airports = _load_airports()
+    return airports.get(key)
