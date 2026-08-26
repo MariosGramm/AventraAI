@@ -87,6 +87,13 @@ The package must include a day-by-day itinerary with EXACTLY one entry
 per day of the trip (matching the number of days between the given dates),
 accommodation suggestions with booking URLs, activities, restaurants,
 transportation info, weather summary, travel tips, and estimated costs.
+
+Each day MUST have exactly 4 activities spread realistically across the day:
+- 1 morning activity (e.g. sightseeing, nature walk, museum visit)
+- 1-2 afternoon activities (e.g. exploration, shopping, guided tour)
+- 1 evening activity (e.g. dinner at local restaurant, nightlife, sunset viewing)
+Activities should feel like a natural daily schedule, not isolated items.
+
 If the provided context does not contain enough information about the
 requested destination, state it clearly instead of fabricating details.
 
@@ -105,7 +112,7 @@ Use this exact structure:
             "currency": "EUR",
             "transportation": "string",
             "weather_summary": "string or null",
-            "travel_tips": ["tip1", "tip2"],
+            "travel_tips": ["tip1", "tip2", "tip3"],
             "itinerary": [
                 {{
                     "day_number": int,
