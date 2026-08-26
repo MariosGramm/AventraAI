@@ -67,9 +67,13 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
             itinerary_data      = pac_data.pop("itinerary", [])
             accommodations_data = pac_data.pop("accommodations", [])
 
+            tier_raw = pac_data.get("tier", "standard").lower()
+            tier_map = {"mid": "standard", "budget": "budget", "standard": "standard", "luxury": "luxury"}
+            tier = enums.TravelPackageTier(tier_map.get(tier_raw, "standard"))
+
             package = TravelPackage(
                 session_id=search_session.id,
-                tier=enums.TravelPackageTier(pac_data.get("tier", "standard").lower()),
+                tier=tier,
                 estimated_cost_min=pac_data.get("estimated_cost_min"),
                 estimated_cost_max=pac_data.get("estimated_cost_max"),
                 currency=enums.Currency(pac_data.get("currency", "EUR").upper()),
@@ -136,7 +140,9 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
         search_session.error_message = str(e)
         session.add(search_session)
         session.commit()
-        raise HTTPException(status_code=500, detail=f"Agent pipeline failed: {str(e)}")
+        import logging
+        logging.getLogger(__name__).exception("Search pipeline failed for session %s", search_session.id)
+        raise HTTPException(status_code=500, detail="Something went wrong while generating your travel package. Please try again.")
 
     return search_session
 
@@ -192,10 +198,7 @@ def download_search_pdf(
     if search_session.owner_id != current_user.id:
         raise HTTPException(403, "Not enough privileges")
 
-    html = _build_pdf_html(search_session)
-
-    from weasyprint import HTML
-    pdf_bytes = HTML(string=html).write_pdf()
+    pdf_bytes = _build_pdf(search_session)
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
@@ -204,64 +207,128 @@ def download_search_pdf(
     )
 
 
-def _build_pdf_html(search_session: SearchSession) -> str:
+def _build_pdf(search_session: SearchSession) -> bytes:
+    from fpdf import FPDF
+
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=20)
+    pdf.add_page()
+
+    # Header
+    pdf.set_font("Helvetica", "B", 20)
+    pdf.set_text_color(127, 119, 221)
+    pdf.cell(0, 10, "AventraAI", align="C", new_x="LMARGIN", new_y="NEXT")
+
+    pdf.set_font("Helvetica", "", 11)
+    pdf.set_text_color(150, 150, 150)
+    pdf.cell(0, 6, f"Travel Package - {search_session.destination}", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 6, f"{search_session.date_from.strftime('%b %d, %Y')} - {search_session.date_to.strftime('%b %d, %Y')} | {search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.ln(8)
+    pdf.set_draw_color(200, 200, 200)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(6)
+
     packages = search_session.travel_packages or []
-    sections = []
-
     for pkg in packages:
-        days_html = ""
+        # Package header
+        pdf.set_font("Helvetica", "B", 16)
+        pdf.set_text_color(38, 33, 92)
+        pdf.cell(0, 9, f"{search_session.destination} - {pkg.tier.value.capitalize()} Budget", new_x="LMARGIN", new_y="NEXT")
+
+        pdf.set_font("Helvetica", "", 12)
+        pdf.set_text_color(83, 74, 183)
+        pdf.cell(0, 7, f"Estimated cost: {pkg.estimated_cost_min}-{pkg.estimated_cost_max} {pkg.currency.value}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(4)
+
+        # Weather
+        if pkg.weather_summary:
+            pdf.set_font("Helvetica", "I", 10)
+            pdf.set_text_color(100, 100, 100)
+            pdf.multi_cell(0, 5, f"Weather: {pkg.weather_summary}")
+            pdf.ln(3)
+
+        # Itinerary
+        pdf.set_font("Helvetica", "B", 13)
+        pdf.set_text_color(38, 33, 92)
+        pdf.cell(0, 8, "Itinerary", new_x="LMARGIN", new_y="NEXT")
+
         for day in sorted(pkg.itinerary, key=lambda d: d.day_number):
-            activities_html = "".join(
-                f"<li><strong>{a.part_of_day.capitalize()}</strong>: {a.title}"
-                f"{f' ({a.estimated_cost} {pkg.currency.value})' if a.estimated_cost else ''}</li>"
-                for a in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value))
-            )
-            days_html += f"""
-            <div style="margin-bottom:12px;padding-left:12px;border-left:3px solid #d4d0f8">
-                <h3 style="color:#534AB7;margin:0 0 4px">Day {day.day_number}</h3>
-                <p style="color:#666;margin:0 0 4px">{day.description}</p>
-                <ul style="margin:0;padding-left:18px">{activities_html}</ul>
-            </div>"""
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_text_color(83, 74, 183)
+            pdf.cell(0, 7, f"Day {day.day_number}", new_x="LMARGIN", new_y="NEXT")
 
-        accom_html = ""
-        for acc in pkg.accommodations:
-            accom_html += f"<li>{acc.name} ({acc.type.value}){f', {acc.area}' if acc.area else ''}{f' — {acc.cost_per_night} {pkg.currency.value}/night' if acc.cost_per_night else ''}{f' ★ {acc.rating}' if acc.rating else ''}</li>"
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(80, 80, 80)
+            pdf.set_x(10)
+            pdf.multi_cell(0, 5, day.description, align="L")
 
-        tips_html = "".join(f"<li>{t}</li>" for t in (pkg.travel_tips or []))
+            for act in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value)):
+                pdf.set_font("Helvetica", "", 9)
+                pdf.set_text_color(60, 60, 60)
+                cost_str = f" ({act.estimated_cost} {pkg.currency.value})" if act.estimated_cost else ""
+                pdf.set_x(10)
+                pdf.multi_cell(0, 5, f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}", align="L")
+            pdf.ln(2)
 
-        sections.append(f"""
-        <div style="margin-bottom:24px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                <h2 style="margin:0;color:#26215C">{search_session.destination} — {pkg.tier.value.capitalize()}</h2>
-                <span style="color:#534AB7;font-size:18px;font-weight:600">{pkg.estimated_cost_min}–{pkg.estimated_cost_max} {pkg.currency.value}</span>
-            </div>
-            {f'<p style="background:#f8f8ff;padding:8px 12px;border-radius:8px;color:#534AB7">☀ {pkg.weather_summary}</p>' if pkg.weather_summary else ''}
-            <h3 style="color:#26215C">Itinerary</h3>
-            {days_html}
-            {f'<h3 style="color:#26215C">Accommodation</h3><ul>{accom_html}</ul>' if accom_html else ''}
-            {f'<p><strong>Transportation:</strong> {pkg.transportation}</p>' if pkg.transportation else ''}
-            {f'<p>{pkg.flight_info}</p>' if pkg.flight_info else ''}
-            {f'<h3 style="color:#26215C">Tips</h3><ul>{tips_html}</ul>' if tips_html else ''}
-        </div>
-        """)
+        # Accommodations
+        if pkg.accommodations:
+            pdf.set_font("Helvetica", "B", 13)
+            pdf.set_text_color(38, 33, 92)
+            pdf.cell(0, 8, "Accommodation", new_x="LMARGIN", new_y="NEXT")
+            for acc in pkg.accommodations:
+                pdf.set_font("Helvetica", "", 10)
+                pdf.set_text_color(60, 60, 60)
+                info = f"{acc.name} ({acc.type.value})"
+                if acc.area:
+                    info += f", {acc.area}"
+                if acc.cost_per_night:
+                    info += f" - {acc.cost_per_night} {pkg.currency.value}/night"
+                if acc.rating:
+                    info += f" | Rating: {acc.rating}"
+                pdf.set_x(10)
+                pdf.multi_cell(0, 5, f"  {info}", align="L")
+            pdf.ln(3)
 
-    return f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8">
-<style>
-    body {{ font-family: 'Helvetica Neue', Arial, sans-serif; color: #26215C; padding: 32px; font-size: 13px; line-height: 1.6; }}
-    h2 {{ font-size: 20px; }} h3 {{ font-size: 14px; margin: 12px 0 6px; }}
-    hr {{ border: none; border-top: 1px solid #e8e6f0; margin: 24px 0; }}
-</style>
-</head><body>
-<div style="text-align:center;margin-bottom:24px">
-    <h1 style="color:#7F77DD;font-size:24px;margin:0">AventraAI</h1>
-    <p style="color:#aaa;margin:4px 0">Travel Package — {search_session.destination}</p>
-    <p style="color:#aaa;font-size:12px">{search_session.date_from.strftime('%b %d, %Y')} → {search_session.date_to.strftime('%b %d, %Y')} · {search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}</p>
-</div>
-<hr>
-{'<hr>'.join(sections)}
-<div style="text-align:center;color:#aaa;font-size:11px;margin-top:32px">Generated by AventraAI · aventraai.com</div>
-</body></html>"""
+        # Transportation
+        if pkg.transportation:
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_text_color(38, 33, 92)
+            pdf.cell(0, 6, "Transportation", new_x="LMARGIN", new_y="NEXT")
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(80, 80, 80)
+            pdf.set_x(10)
+            pdf.multi_cell(0, 5, pkg.transportation, align="L")
+            pdf.ln(2)
+
+        if pkg.flight_info:
+            pdf.set_font("Helvetica", "", 9)
+            pdf.set_text_color(100, 100, 100)
+            pdf.set_x(10)
+            pdf.multi_cell(0, 5, pkg.flight_info, align="L")
+            pdf.ln(2)
+
+        # Tips
+        if pkg.travel_tips:
+            pdf.set_font("Helvetica", "B", 13)
+            pdf.set_text_color(38, 33, 92)
+            pdf.cell(0, 8, "Tips", new_x="LMARGIN", new_y="NEXT")
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(80, 80, 80)
+            for tip in pkg.travel_tips:
+                pdf.set_x(10)
+                pdf.multi_cell(0, 5, f"  * {tip}", align="L")
+            pdf.ln(3)
+
+        pdf.set_draw_color(200, 200, 200)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(6)
+
+    # Footer
+    pdf.set_font("Helvetica", "I", 8)
+    pdf.set_text_color(170, 170, 170)
+    pdf.cell(0, 5, "Generated by AventraAI", align="C")
+
+    return pdf.output()
 
 
 
