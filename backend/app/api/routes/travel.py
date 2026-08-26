@@ -1,6 +1,7 @@
 
 from datetime import UTC, datetime
 import json
+import io
 
 from app import enums
 from typing import Any
@@ -8,6 +9,7 @@ import uuid
 from app import crud
 from app.agent.agent_pipeline import TravelAgentPipeline
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from app.models import Accommodation, Activity, Itinerary, SearchSession, SearchSessionCreateDTO, SearchSessionPublicDTO, SearchSessionsPublicDTO, TravelPackage
 from app.api.deps import CurrentUserDep, SessionDep
 from dateutil.relativedelta import relativedelta
@@ -170,6 +172,96 @@ def get_search(
         raise HTTPException(status_code=403, detail="Not enough privileges")
 
     return search_session
+
+
+@router.get("/searches/{search_session_id}/pdf")
+def download_search_pdf(
+    session: SessionDep,
+    search_session_id: uuid.UUID,
+    current_user: CurrentUserDep,
+) -> StreamingResponse:
+    """Generate and download a PDF for a search session's travel packages."""
+    search_session = session.exec(
+        select(SearchSession)
+        .where(SearchSession.id == search_session_id)
+        .options(selectinload(SearchSession.travel_packages))
+    ).first()
+
+    if not search_session:
+        raise HTTPException(404, "Search session not found")
+    if search_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+
+    html = _build_pdf_html(search_session)
+
+    from weasyprint import HTML
+    pdf_bytes = HTML(string=html).write_pdf()
+
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={search_session.destination.replace(' ', '_')}_itinerary.pdf"}
+    )
+
+
+def _build_pdf_html(search_session: SearchSession) -> str:
+    packages = search_session.travel_packages or []
+    sections = []
+
+    for pkg in packages:
+        days_html = ""
+        for day in sorted(pkg.itinerary, key=lambda d: d.day_number):
+            activities_html = "".join(
+                f"<li><strong>{a.part_of_day.capitalize()}</strong>: {a.title}"
+                f"{f' ({a.estimated_cost} {pkg.currency.value})' if a.estimated_cost else ''}</li>"
+                for a in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value))
+            )
+            days_html += f"""
+            <div style="margin-bottom:12px;padding-left:12px;border-left:3px solid #d4d0f8">
+                <h3 style="color:#534AB7;margin:0 0 4px">Day {day.day_number}</h3>
+                <p style="color:#666;margin:0 0 4px">{day.description}</p>
+                <ul style="margin:0;padding-left:18px">{activities_html}</ul>
+            </div>"""
+
+        accom_html = ""
+        for acc in pkg.accommodations:
+            accom_html += f"<li>{acc.name} ({acc.type.value}){f', {acc.area}' if acc.area else ''}{f' — {acc.cost_per_night} {pkg.currency.value}/night' if acc.cost_per_night else ''}{f' ★ {acc.rating}' if acc.rating else ''}</li>"
+
+        tips_html = "".join(f"<li>{t}</li>" for t in (pkg.travel_tips or []))
+
+        sections.append(f"""
+        <div style="margin-bottom:24px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h2 style="margin:0;color:#26215C">{search_session.destination} — {pkg.tier.value.capitalize()}</h2>
+                <span style="color:#534AB7;font-size:18px;font-weight:600">{pkg.estimated_cost_min}–{pkg.estimated_cost_max} {pkg.currency.value}</span>
+            </div>
+            {f'<p style="background:#f8f8ff;padding:8px 12px;border-radius:8px;color:#534AB7">☀ {pkg.weather_summary}</p>' if pkg.weather_summary else ''}
+            <h3 style="color:#26215C">Itinerary</h3>
+            {days_html}
+            {f'<h3 style="color:#26215C">Accommodation</h3><ul>{accom_html}</ul>' if accom_html else ''}
+            {f'<p><strong>Transportation:</strong> {pkg.transportation}</p>' if pkg.transportation else ''}
+            {f'<p>{pkg.flight_info}</p>' if pkg.flight_info else ''}
+            {f'<h3 style="color:#26215C">Tips</h3><ul>{tips_html}</ul>' if tips_html else ''}
+        </div>
+        """)
+
+    return f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+    body {{ font-family: 'Helvetica Neue', Arial, sans-serif; color: #26215C; padding: 32px; font-size: 13px; line-height: 1.6; }}
+    h2 {{ font-size: 20px; }} h3 {{ font-size: 14px; margin: 12px 0 6px; }}
+    hr {{ border: none; border-top: 1px solid #e8e6f0; margin: 24px 0; }}
+</style>
+</head><body>
+<div style="text-align:center;margin-bottom:24px">
+    <h1 style="color:#7F77DD;font-size:24px;margin:0">AventraAI</h1>
+    <p style="color:#aaa;margin:4px 0">Travel Package — {search_session.destination}</p>
+    <p style="color:#aaa;font-size:12px">{search_session.date_from.strftime('%b %d, %Y')} → {search_session.date_to.strftime('%b %d, %Y')} · {search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}</p>
+</div>
+<hr>
+{'<hr>'.join(sections)}
+<div style="text-align:center;color:#aaa;font-size:11px;margin-top:32px">Generated by AventraAI · aventraai.com</div>
+</body></html>"""
 
 
 
