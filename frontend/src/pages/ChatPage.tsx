@@ -4,6 +4,8 @@ import axios from 'axios'
 import Sidebar from '../components/Sidebar'
 import ChatMessages from '../components/ChatMessages'
 import ChatInput from '../components/ChatInput'
+import SearchForm from '../components/SearchForm'
+import type { SearchFormData } from '../components/SearchForm'
 import WelcomeScreen from '../components/WelcomeScreen'
 import client from '../services/client'
 import { useAuthContext } from '../context/AuthContext'
@@ -26,6 +28,8 @@ function ChatPage() {
     const [refreshTrigger, setRefreshTrigger] = useState(0)
     const [streamingText, setStreamingText] = useState<string | null>(null)
     const streamRef = useRef<ReturnType<typeof setInterval> | null>(null)
+    const [showSearchForm, setShowSearchForm] = useState(false)
+    const [searchLoading, setSearchLoading] = useState(false)
 
     useEffect(() => () => {
         if (streamRef.current) clearInterval(streamRef.current)
@@ -145,6 +149,43 @@ function ChatPage() {
         }
     }
 
+    const handleSearch = async (data: SearchFormData) => {
+        setSearchLoading(true)
+        setShowSearchForm(false)
+
+        setMessages(prev => [...prev, {
+            role: 'user' as const,
+            content: `Generate a travel package for ${data.destination} (${data.date_from.slice(0, 10)} → ${data.date_to.slice(0, 10)}, ${data.adults} adults${data.children ? `, ${data.children} children` : ''}${data.budget ? `, budget: ${data.budget} ${data.currency}` : ''})`,
+            created_at: new Date().toISOString()
+        }])
+
+        setLoading(true)
+
+        try {
+            const response = await client.post('/travel/searches', data)
+            setLoading(false)
+
+            const packages = response.data.travel_packages || []
+            const searchSessionId = response.data.id
+
+            setMessages(prev => [...prev, {
+                role: 'assistant' as const,
+                content: `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination })}`,
+                created_at: new Date().toISOString()
+            }])
+        } catch (err) {
+            setLoading(false)
+            const detail = axios.isAxiosError(err) ? err.response?.data?.detail : null
+            setMessages(prev => [...prev, {
+                role: 'assistant' as const,
+                content: typeof detail === 'string' ? detail : 'Failed to generate travel package. Please try again.',
+                created_at: new Date().toISOString()
+            }])
+        } finally {
+            setSearchLoading(false)
+        }
+    }
+
     return (
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
             <Sidebar
@@ -158,11 +199,19 @@ function ChatPage() {
                 flex: 1, display: 'flex', flexDirection: 'column',
                 background: 'white', overflow: 'hidden'
             }}>
-                {messages.length === 0 && streamingText === null
-                    ? <WelcomeScreen onSuggestion={handleSend} />
-                    : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} onEdit={handleEdit} userInitials={userInitials} />
-                }
-                <ChatInput onSend={handleSend} loading={loading || streamingText !== null} isStreaming={streamingText !== null} onStop={stopStreaming} />
+                {showSearchForm ? (
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', overflow: 'auto' }}>
+                        <SearchForm onSubmit={handleSearch} onClose={() => setShowSearchForm(false)} loading={searchLoading} />
+                    </div>
+                ) : (
+                    <>
+                        {messages.length === 0 && streamingText === null
+                            ? <WelcomeScreen onSuggestion={handleSend} />
+                            : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} onEdit={handleEdit} userInitials={userInitials} />
+                        }
+                    </>
+                )}
+                <ChatInput onSend={handleSend} loading={loading || streamingText !== null} isStreaming={streamingText !== null} onStop={stopStreaming} onSearchToggle={() => setShowSearchForm(prev => !prev)} />
             </div>
         </div>
     )

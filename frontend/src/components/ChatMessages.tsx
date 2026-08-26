@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import React from 'react'
+import TravelPackageCard from './TravelPackageCard'
+
+const AgentIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#534AB7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+    </svg>
+)
 
 function formatMarkdown(text: string): React.ReactNode[] {
     return text.split(/(\*\*.*?\*\*)/g).map((part, i) =>
@@ -54,7 +61,7 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             alignItems: 'center', justifyContent: 'center', fontSize: '12px',
                             flexShrink: 0
                         }}>
-                            🤖
+                            <AgentIcon />
                         </div>
                         <div style={{
                             padding: '10px 14px', borderRadius: '12px',
@@ -75,7 +82,7 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             background: '#EEEDFE', display: 'flex',
                             alignItems: 'center', justifyContent: 'center', fontSize: '12px'
                         }}>
-                            🤖
+                            <AgentIcon />
                         </div>
                         <div style={{
                             padding: '10px 14px', borderRadius: '12px',
@@ -130,7 +137,7 @@ function MessageBubble({ msg, index, onEdit, userInitials }: { msg: Message, ind
                 background: msg.role === 'user' ? '#534AB7' : '#EEEDFE',
                 color: msg.role === 'user' ? 'white' : '#534AB7'
             }}>
-                {msg.role === 'user' ? userInitials : '🤖'}
+                {msg.role === 'user' ? userInitials : <AgentIcon />}
             </div>
 
             {editing ? (
@@ -164,7 +171,18 @@ function MessageBubble({ msg, index, onEdit, userInitials }: { msg: Message, ind
                         }}>Send</button>
                     </div>
                 </div>
-            ) : (
+            ) : msg.role === 'assistant' && msg.content.startsWith('__PACKAGE__') ? (() => {
+                try {
+                    const data = JSON.parse(msg.content.slice('__PACKAGE__'.length))
+                    return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {data.packages.map((pkg: any) => (
+                                <TravelPackageCard key={pkg.id} pkg={pkg} searchSessionId={data.searchSessionId} destination={data.destination} />
+                            ))}
+                        </div>
+                    )
+                } catch { return <div style={{ color: '#cc0000', fontSize: '13px' }}>Failed to display package</div> }
+            })() : (
                 <div style={{
                     padding: '10px 14px', borderRadius: '12px',
                     fontSize: '14px', lineHeight: 1.6,

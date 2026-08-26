@@ -6,9 +6,10 @@ interface ChatInputProps {
     loading: boolean
     isStreaming?: boolean
     onStop?: () => void
+    onSearchToggle?: () => void
 }
 
-function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
+function ChatInput({ onSend, loading, isStreaming, onStop, onSearchToggle }: ChatInputProps) {
     const [message, setMessage] = useState('')
 
     const { isRecording, isSupported, toggleRecording } = useSpeechRecognition(
@@ -34,8 +35,28 @@ function ChatInput({ onSend, loading, isStreaming, onStop }: ChatInputProps) {
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
                     background: '#f8f8ff', border: '1px solid #e8e6f0',
-                    borderRadius: '24px', padding: '3px 3px 3px 16px'
+                    borderRadius: '24px', padding: '3px 3px 3px 6px'
                 }}>
+                    {onSearchToggle && (
+                        <button
+                            type="button"
+                            onClick={onSearchToggle}
+                            disabled={loading}
+                            title="Generate travel package"
+                            style={{
+                                width: '32px', height: '32px', borderRadius: '50%',
+                                background: 'transparent', border: 'none', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                flexShrink: 0, transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#EEEDFE'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                            </svg>
+                        </button>
+                    )}
                     <textarea
                         rows={1}
                         placeholder="Ask me anything about your trip..."
