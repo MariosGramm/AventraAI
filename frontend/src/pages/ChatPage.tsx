@@ -170,7 +170,7 @@ function ChatPage() {
 
             setMessages(prev => [...prev, {
                 role: 'assistant' as const,
-                content: `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination })}`,
+                content: `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination, dateFrom: data.date_from, dateTo: data.date_to })}`,
                 created_at: new Date().toISOString()
             }])
         } catch (err) {

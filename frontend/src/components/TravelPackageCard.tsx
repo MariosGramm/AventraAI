@@ -38,9 +38,11 @@ interface TravelPackageCardProps {
     pkg: TravelPackage
     searchSessionId: string
     destination: string
+    dateFrom?: string
+    dateTo?: string
 }
 
-function TravelPackageCard({ pkg, searchSessionId, destination }: TravelPackageCardProps) {
+function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo }: TravelPackageCardProps) {
     const tierColors: Record<string, string> = {
         budget: '#28a745',
         standard: '#7F77DD',
@@ -83,6 +85,11 @@ function TravelPackageCard({ pkg, searchSessionId, destination }: TravelPackageC
                     <div style={{ fontSize: '14px', fontWeight: 600, color: '#26215C', marginTop: '4px' }}>
                         {destination}
                     </div>
+                    {dateFrom && dateTo && (
+                        <div style={{ fontSize: '11px', color: '#6c757d', marginTop: '2px' }}>
+                            {new Date(dateFrom).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} → {new Date(dateTo).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </div>
+                    )}
                 </div>
                 <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '18px', fontWeight: 600, color: '#26215C' }}>
@@ -127,7 +134,7 @@ function TravelPackageCard({ pkg, searchSessionId, destination }: TravelPackageC
                         <div key={acc.id} style={{ fontSize: '12px', color: '#26215C', padding: '4px 0', display: 'flex', justifyContent: 'space-between' }}>
                             <span>
                                 <a
-                                    href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(acc.name)}`}
+                                    href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(acc.name)}${dateFrom ? `&checkin=${dateFrom.slice(0, 10)}` : ''}${dateTo ? `&checkout=${dateTo.slice(0, 10)}` : ''}`}
                                     target="_blank" rel="noopener noreferrer"
                                     style={{ color: '#534AB7', textDecoration: 'none', fontWeight: 500 }}
                                     onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}

@@ -222,7 +222,14 @@ def _build_pdf(search_session: SearchSession) -> bytes:
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(150, 150, 150)
     pdf.cell(0, 6, f"Travel Package - {search_session.destination}", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6, f"{search_session.date_from.strftime('%b %d, %Y')} - {search_session.date_to.strftime('%b %d, %Y')} | {search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}", align="C", new_x="LMARGIN", new_y="NEXT")
+
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.set_text_color(83, 74, 183)
+    pdf.cell(0, 7, f"{search_session.date_from.strftime('%b %d, %Y')}  -  {search_session.date_to.strftime('%b %d, %Y')}", align="C", new_x="LMARGIN", new_y="NEXT")
+
+    pdf.set_font("Helvetica", "", 10)
+    pdf.set_text_color(150, 150, 150)
+    pdf.cell(0, 6, f"{search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}", align="C", new_x="LMARGIN", new_y="NEXT")
     pdf.ln(8)
     pdf.set_draw_color(200, 200, 200)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())

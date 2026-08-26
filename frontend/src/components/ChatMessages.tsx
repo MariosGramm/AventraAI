@@ -177,7 +177,7 @@ function MessageBubble({ msg, index, onEdit, userInitials }: { msg: Message, ind
                     return (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {data.packages.map((pkg: any) => (
-                                <TravelPackageCard key={pkg.id} pkg={pkg} searchSessionId={data.searchSessionId} destination={data.destination} />
+                                <TravelPackageCard key={pkg.id} pkg={pkg} searchSessionId={data.searchSessionId} destination={data.destination} dateFrom={data.dateFrom} dateTo={data.dateTo} />
                             ))}
                         </div>
                     )
