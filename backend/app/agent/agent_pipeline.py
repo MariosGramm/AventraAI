@@ -101,8 +101,12 @@ class TravelAgentPipeline:
             Returns an empty dict if the LLM response cannot be parsed.
         """
 
+        from .infrastructure.city_guide_fetcher import city_file_exists, fetch_and_index_city
+        if not city_file_exists(search_data.destination):
+            fetch_and_index_city(search_data.destination)
+
         rag_chunks = self.rag_pipeline.retrieve(
-            query=f"travel guide attractions food accommodation tips {search_data.destination}",
+            query=f"travel guide attractions food tips {search_data.destination}",
             k=5,
         )
 

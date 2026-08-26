@@ -9,6 +9,10 @@ Usage (from backend/scripts/):
 
 Output:
     backend/app/rag/data/<city_name>.md
+
+Attention:
+    Check /data directory for existing files before running this script.
+    Documents are also updated automatically by city_guide_fetcher.py when a user requests a city that is not yet indexed.
 """
 
 import re
