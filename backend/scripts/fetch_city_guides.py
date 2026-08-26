@@ -31,20 +31,29 @@ CITIES = [
     "Budapest", "Dublin", "Stockholm", "Copenhagen", "Warsaw", "Moscow",
     "Edinburgh", "Florence", "Brussels", "Oslo", "Helsinki", "Reykjavik",
     "Madrid", "Seville", "Valencia", "Porto", "Marseille", "Nice", "Tirana",
+    "Munich", "Zurich", "Dubrovnik", "Santorini", "Milan", "Krakow",
+    "Bruges", "Split", "Tallinn", "Riga",
     # Asia
     "Tokyo", "Kyoto", "Seoul", "Bangkok", "Singapore",
     "Dubai", "Beijing", "Hong Kong", "Istanbul", "New Delhi",
+    "Bali", "Hanoi", "Ho Chi Minh City", "Kuala Lumpur", "Taipei",
+    "Mumbai", "Jaipur", "Osaka",
     # North America
     "New York City", "Los Angeles", "San Francisco", "Las Vegas",
     "Toronto", "Vancouver", "Montreal", "Miami", "Washington, D.C.", "Mexico City",
+    "Chicago", "New Orleans", "Havana",
     # South America
     "Rio de Janeiro", "Buenos Aires", "Lima", "Santiago",
     "Medellín", "Cusco", "Bogotá",
     # Africa
     "Cairo", "Cape Town", "Nairobi", "Marrakesh",
-    "Abuja", "Lagos", "Asmara",
+    "Abuja", "Lagos", "Asmara", "Zanzibar", "Accra",
     # Oceania
     "Sydney", "Melbourne", "Auckland", "Wellington", "Brisbane",
+    # Middle East
+    "Tel Aviv", "Amman", "Muscat",
+    # Extra
+    "Gothenburg", "Lyon", "Granada", "Bath", "Salzburg",
 ]
 
 WIKIVOYAGE_API = "https://en.wikivoyage.org/w/api.php"
