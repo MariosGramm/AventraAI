@@ -209,6 +209,11 @@ def download_search_pdf(
 
 def _build_pdf(search_session: SearchSession) -> bytes:
     from fpdf import FPDF
+    import unicodedata
+
+    def _safe(text: str) -> str:
+        normalized = unicodedata.normalize('NFKD', text)
+        return normalized.encode('latin-1', 'ignore').decode('latin-1')
 
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=20)
@@ -221,11 +226,13 @@ def _build_pdf(search_session: SearchSession) -> bytes:
 
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(150, 150, 150)
-    pdf.cell(0, 6, f"Travel Package - {search_session.destination}", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 6, _safe(f"Travel Package - {search_session.destination}"), align="C", new_x="LMARGIN", new_y="NEXT")
 
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_text_color(83, 74, 183)
-    pdf.cell(0, 7, f"{search_session.date_from.strftime('%b %d, %Y')}  -  {search_session.date_to.strftime('%b %d, %Y')}", align="C", new_x="LMARGIN", new_y="NEXT")
+    date_from_str = f"{search_session.date_from.day:02d}/{search_session.date_from.month:02d}/{search_session.date_from.year}"
+    date_to_str = f"{search_session.date_to.day:02d}/{search_session.date_to.month:02d}/{search_session.date_to.year}"
+    pdf.cell(0, 7, f"{date_from_str}  -  {date_to_str}", align="C", new_x="LMARGIN", new_y="NEXT")
 
     pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(150, 150, 150)
@@ -240,7 +247,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
         # Package header
         pdf.set_font("Helvetica", "B", 16)
         pdf.set_text_color(38, 33, 92)
-        pdf.cell(0, 9, f"{search_session.destination} - {pkg.tier.value.capitalize()} Budget", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 9, _safe(f"{search_session.destination} - {pkg.tier.value.capitalize()} Budget"), new_x="LMARGIN", new_y="NEXT")
 
         pdf.set_font("Helvetica", "", 12)
         pdf.set_text_color(83, 74, 183)
@@ -251,7 +258,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
         if pkg.weather_summary:
             pdf.set_font("Helvetica", "I", 10)
             pdf.set_text_color(100, 100, 100)
-            pdf.multi_cell(0, 5, f"Weather: {pkg.weather_summary}")
+            pdf.multi_cell(0, 5, _safe(f"Weather: {pkg.weather_summary}"))
             pdf.ln(3)
 
         # Itinerary
@@ -267,14 +274,14 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             pdf.set_font("Helvetica", "", 10)
             pdf.set_text_color(80, 80, 80)
             pdf.set_x(10)
-            pdf.multi_cell(0, 5, day.description, align="L")
+            pdf.multi_cell(0, 5, _safe(day.description), align="L")
 
             for act in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value)):
                 pdf.set_font("Helvetica", "", 9)
                 pdf.set_text_color(60, 60, 60)
                 cost_str = f" ({act.estimated_cost} {pkg.currency.value})" if act.estimated_cost else ""
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}", align="L")
+                pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}"), align="L")
             pdf.ln(2)
 
         # Accommodations
@@ -293,7 +300,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
                 if acc.rating:
                     info += f" | Rating: {acc.rating}"
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, f"  {info}", align="L")
+                pdf.multi_cell(0, 5, _safe(f"  {info}"), align="L")
             pdf.ln(3)
 
         # Transportation
@@ -304,14 +311,14 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             pdf.set_font("Helvetica", "", 10)
             pdf.set_text_color(80, 80, 80)
             pdf.set_x(10)
-            pdf.multi_cell(0, 5, pkg.transportation, align="L")
+            pdf.multi_cell(0, 5, _safe(pkg.transportation), align="L")
             pdf.ln(2)
 
         if pkg.flight_info:
             pdf.set_font("Helvetica", "", 9)
             pdf.set_text_color(100, 100, 100)
             pdf.set_x(10)
-            pdf.multi_cell(0, 5, pkg.flight_info, align="L")
+            pdf.multi_cell(0, 5, _safe(pkg.flight_info), align="L")
             pdf.ln(2)
 
         # Tips
@@ -323,7 +330,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             pdf.set_text_color(80, 80, 80)
             for tip in pkg.travel_tips:
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, f"  * {tip}", align="L")
+                pdf.multi_cell(0, 5, _safe(f"  * {tip}"), align="L")
             pdf.ln(3)
 
         pdf.set_draw_color(200, 200, 200)
