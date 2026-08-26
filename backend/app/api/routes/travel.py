@@ -98,10 +98,13 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
                 session.flush()
 
                 for activity_data in activities_data:
+                    activity_type_raw = activity_data.get("type", "sightseeing").lower()
+                    activity_type_map = {"sightseeing": "sightseeing", "food": "food", "adventure": "adventure"}
+                    activity_type = enums.ActivityType(activity_type_map.get(activity_type_raw, "sightseeing"))
                     activity = Activity(
                         itinerary_id=itinerary.id,
                         title=activity_data.get("title"),
-                        type=enums.ActivityType(activity_data.get("type", "sightseeing").lower()),
+                        type=activity_type,
                         estimated_cost=activity_data.get("estimated_cost"),
                         average_duration_hours=activity_data.get("average_duration_hours"),
                         part_of_day=enums.PartOfDay(activity_data.get("part_of_day", "morning").lower()),
@@ -237,7 +240,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
         # Package header
         pdf.set_font("Helvetica", "B", 16)
         pdf.set_text_color(38, 33, 92)
-        pdf.cell(0, 9, _safe(f"{search_session.destination} - {pkg.tier.value.capitalize()} Budget"), new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 9, _safe(f"{search_session.destination} - {pkg.tier.value.capitalize()}"), new_x="LMARGIN", new_y="NEXT")
 
         pdf.set_font("Helvetica", "", 12)
         pdf.set_text_color(83, 74, 183)

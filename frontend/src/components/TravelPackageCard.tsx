@@ -80,7 +80,7 @@ function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo
                         background: `${tierColors[pkg.tier] || '#7F77DD'}15`,
                         color: tierColors[pkg.tier] || '#7F77DD'
                     }}>
-                        {pkg.tier} budget
+                        {pkg.tier}
                     </span>
                     <div style={{ fontSize: '14px', fontWeight: 600, color: '#26215C', marginTop: '4px' }}>
                         {destination}

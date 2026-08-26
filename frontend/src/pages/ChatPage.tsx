@@ -18,7 +18,7 @@ interface Message {
 
 function ChatPage() {
     const navigate = useNavigate()
-    const { user } = useAuthContext()
+    const { user, setUser } = useAuthContext()
 
     const userInitials = user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : 'U'
 
@@ -173,6 +173,8 @@ function ChatPage() {
                 content: `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination, dateFrom: data.date_from, dateTo: data.date_to })}`,
                 created_at: new Date().toISOString()
             }])
+
+            client.get('/users/me').then(res => setUser(res.data)).catch(() => {})
         } catch (err) {
             setLoading(false)
             const detail = axios.isAxiosError(err) ? err.response?.data?.detail : null
