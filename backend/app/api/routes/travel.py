@@ -251,7 +251,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
 
         pdf.set_font("Helvetica", "", 12)
         pdf.set_text_color(83, 74, 183)
-        pdf.cell(0, 7, f"Estimated cost: {pkg.estimated_cost_min}-{pkg.estimated_cost_max} {pkg.currency.value}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 7, f"Estimated cost: {int(pkg.estimated_cost_min)}-{int(pkg.estimated_cost_max)} {pkg.currency.value}", new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
         # Weather
@@ -279,7 +279,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             for act in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value)):
                 pdf.set_font("Helvetica", "", 9)
                 pdf.set_text_color(60, 60, 60)
-                cost_str = f" ({act.estimated_cost} {pkg.currency.value})" if act.estimated_cost else ""
+                cost_str = f" ({int(act.estimated_cost)} {pkg.currency.value})" if act.estimated_cost else ""
                 pdf.set_x(10)
                 pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}"), align="L")
             pdf.ln(2)
@@ -296,7 +296,7 @@ def _build_pdf(search_session: SearchSession) -> bytes:
                 if acc.area:
                     info += f", {acc.area}"
                 if acc.cost_per_night:
-                    info += f" - {acc.cost_per_night} {pkg.currency.value}/night"
+                    info += f" - {int(acc.cost_per_night)} {pkg.currency.value}/night"
                 if acc.rating:
                     info += f" | Rating: {acc.rating}"
                 pdf.set_x(10)
