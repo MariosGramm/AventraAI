@@ -78,7 +78,9 @@ COUNTRY_IATA_CODES = {
     "south africa": "JNB", "south korea": "ICN", "spain": "MAD", "sweden": "STO",
     "switzerland": "ZRH", "thailand": "BKK", "turkey": "IST", "uae": "DXB",
     "uk": "LON", "united kingdom": "LON", "united states": "JFK", "usa": "JFK",
-    "vietnam": "SGN",
+    "vietnam": "SGN", "estonia": "TLL", "latvia": "RIX", "taiwan": "TPE",
+    "cuba": "HAV", "tanzania": "DAR", "ghana": "ACC", "jordan": "AMM",
+    "oman": "MCT",
 }
 
 
