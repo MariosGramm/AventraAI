@@ -85,8 +85,8 @@ destination, such as public transit, walking, taxis, or car rental.
 
 The package must include a day-by-day itinerary with EXACTLY one entry
 per day of the trip (matching the number of days between the given dates),
-accommodation suggestions with booking URLs, activities, restaurants,
-transportation info, weather summary, travel tips, and estimated costs.
+activities, restaurants, transportation info, weather summary, travel tips,
+and estimated costs. Do NOT include accommodation suggestions.
 
 Each day MUST have exactly 4 activities spread realistically across the day:
 - 1 morning activity (e.g. sightseeing, nature walk, museum visit)
@@ -130,15 +130,6 @@ Use this exact structure:
                             "part_of_day": "morning" | "afternoon" | "evening"
                         }}
                     ]
-                }}
-            ],
-            "accommodations": [
-                {{
-                    "name": "string",
-                    "type": "hotel" | "hostel" | "airbnb",
-                    "area": "string",
-                    "cost_per_night": float,
-                    "rating": float
                 }}
             ]
         }}

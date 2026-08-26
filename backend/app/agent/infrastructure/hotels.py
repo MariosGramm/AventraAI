@@ -85,7 +85,7 @@ class HotelsService:
             parsed = [self._parse_hotel(h, currency) for h in hotels]
             dest_lower = destination.lower()
             filtered = [h for h in parsed if self._is_relevant(h, dest_lower)]
-            return filtered if filtered else parsed[:2]
+            return filtered
 
         except requests.RequestException as e:
             logger.error(f"Hotel search error for {destination}: {e}")

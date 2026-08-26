@@ -126,30 +126,19 @@ function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo
                 ))}
             </div>
 
-            {/* Accommodations */}
-            {pkg.accommodations.length > 0 && (
-                <div style={{ marginBottom: '14px' }}>
-                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#26215C', marginBottom: '8px' }}>Accommodation</div>
-                    {pkg.accommodations.map(acc => (
-                        <div key={acc.id} style={{ fontSize: '12px', color: '#26215C', padding: '4px 0', display: 'flex', justifyContent: 'space-between' }}>
-                            <span>
-                                <a
-                                    href={`https://www.booking.com/searchresults.html?ss=${encodeURIComponent(acc.name)}${dateFrom ? `&checkin=${dateFrom.slice(0, 10)}` : ''}${dateTo ? `&checkout=${dateTo.slice(0, 10)}` : ''}`}
-                                    target="_blank" rel="noopener noreferrer"
-                                    style={{ color: '#534AB7', textDecoration: 'none', fontWeight: 500 }}
-                                    onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
-                                    onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
-                                >{acc.name}</a>
-                                {' '}<span style={{ color: '#aaa' }}>({acc.type}{acc.area ? `, ${acc.area}` : ''})</span>
-                            </span>
-                            <span style={{ color: '#534AB7', fontWeight: 500 }}>
-                                {acc.cost_per_night != null ? `${acc.cost_per_night} ${pkg.currency}/night` : ''}
-                                {acc.rating != null ? ` · ★ ${acc.rating}` : ''}
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            )}
+            {/* Accommodation link */}
+            {pkg.booking_info && (() => {
+                const url = pkg.booking_info.match(/https?:\/\/[^\s]+/)?.[0]
+                return url ? (
+                    <div style={{ fontSize: '12px', marginBottom: '8px' }}>
+                        <a href={url} target="_blank" rel="noopener noreferrer"
+                           style={{ color: '#534AB7', textDecoration: 'none', fontWeight: 500 }}
+                           onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                           onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                        >Browse available hotels →</a>
+                    </div>
+                ) : null
+            })()}
 
             {/* Transportation */}
             {pkg.transportation && (
@@ -159,18 +148,18 @@ function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo
             )}
 
             {/* Flight info */}
-            {pkg.flight_info && (
-                <div style={{ fontSize: '12px', color: '#6c757d', marginBottom: '8px' }}>
-                    {pkg.flight_info.split(/(https?:\/\/[^\s]+)/g).map((part, i) =>
-                        part.match(/^https?:\/\//) ? (
-                            <a key={i} href={part} target="_blank" rel="noopener noreferrer"
-                               style={{ color: '#534AB7', textDecoration: 'underline', wordBreak: 'break-all' }}>
-                                {part}
-                            </a>
-                        ) : <span key={i}>{part}</span>
-                    )}
-                </div>
-            )}
+            {pkg.flight_info && (() => {
+                const url = pkg.flight_info.match(/https?:\/\/[^\s]+/)?.[0]
+                return url ? (
+                    <div style={{ fontSize: '12px', marginBottom: '8px' }}>
+                        <a href={url} target="_blank" rel="noopener noreferrer"
+                           style={{ color: '#534AB7', textDecoration: 'none', fontWeight: 500 }}
+                           onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                           onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                        >Browse available flights →</a>
+                    </div>
+                ) : null
+            })()}
 
             {/* Tips */}
             {pkg.travel_tips && pkg.travel_tips.length > 0 && (

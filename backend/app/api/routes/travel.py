@@ -65,7 +65,7 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
 
         for pac_data in packages_data:
             itinerary_data      = pac_data.pop("itinerary", [])
-            accommodations_data = pac_data.pop("accommodations", [])
+            pac_data.pop("accommodations", [])
 
             tier_raw = pac_data.get("tier", "standard").lower()
             tier_map = {"mid": "standard", "budget": "budget", "standard": "standard", "luxury": "luxury"}
@@ -79,6 +79,7 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
                 currency=enums.Currency(pac_data.get("currency", "EUR").upper()),
                 transportation=pac_data.get("transportation"),
                 flight_info=pac_data.get("flight_info"),
+                booking_info=pac_data.get("booking_info"),
                 weather_summary=pac_data.get("weather_summary"),
                 travel_tips=pac_data.get("travel_tips", []),
             )
@@ -106,17 +107,6 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
                         part_of_day=enums.PartOfDay(activity_data.get("part_of_day", "morning").lower()),
                     )
                     session.add(activity)
-
-            for acc_data in accommodations_data:
-                accommodation = Accommodation(
-                    package_id=package.id,
-                    name=acc_data.get("name"),
-                    type=enums.AccommodationType(acc_data.get("type", "hotel").lower()),
-                    area=acc_data.get("area"),
-                    cost_per_night=acc_data.get("cost_per_night"),
-                    rating=acc_data.get("rating"),
-                )
-                session.add(accommodation)
 
         search_session.status = enums.SearchSessionStatus.COMPLETED
         session.add(search_session)
@@ -284,24 +274,15 @@ def _build_pdf(search_session: SearchSession) -> bytes:
                 pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}"), align="L")
             pdf.ln(2)
 
-        # Accommodations
-        if pkg.accommodations:
-            pdf.set_font("Helvetica", "B", 13)
-            pdf.set_text_color(38, 33, 92)
-            pdf.cell(0, 8, "Accommodation", new_x="LMARGIN", new_y="NEXT")
-            for acc in pkg.accommodations:
-                pdf.set_font("Helvetica", "", 10)
-                pdf.set_text_color(60, 60, 60)
-                info = f"{acc.name} ({acc.type.value})"
-                if acc.area:
-                    info += f", {acc.area}"
-                if acc.cost_per_night:
-                    info += f" - {int(acc.cost_per_night)} {pkg.currency.value}/night"
-                if acc.rating:
-                    info += f" | Rating: {acc.rating}"
-                pdf.set_x(10)
-                pdf.multi_cell(0, 5, _safe(f"  {info}"), align="L")
-            pdf.ln(3)
+        # Accommodation link
+        if pkg.booking_info:
+            import re as _re
+            booking_url = (_re.search(r'https?://\S+', pkg.booking_info) or None)
+            if booking_url:
+                pdf.set_font("Helvetica", "U", 10)
+                pdf.set_text_color(83, 74, 183)
+                pdf.cell(0, 6, "Browse available hotels", new_x="LMARGIN", new_y="NEXT", link=booking_url.group())
+                pdf.ln(2)
 
         # Transportation
         if pkg.transportation:
@@ -315,11 +296,13 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             pdf.ln(2)
 
         if pkg.flight_info:
-            pdf.set_font("Helvetica", "", 9)
-            pdf.set_text_color(100, 100, 100)
-            pdf.set_x(10)
-            pdf.multi_cell(0, 5, _safe(pkg.flight_info), align="L")
-            pdf.ln(2)
+            import re as _re
+            flight_url = (_re.search(r'https?://\S+', pkg.flight_info) or None)
+            if flight_url:
+                pdf.set_font("Helvetica", "U", 10)
+                pdf.set_text_color(83, 74, 183)
+                pdf.cell(0, 6, "Browse available flights", new_x="LMARGIN", new_y="NEXT", link=flight_url.group())
+                pdf.ln(2)
 
         # Tips
         if pkg.travel_tips:

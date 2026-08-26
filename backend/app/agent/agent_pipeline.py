@@ -68,7 +68,6 @@ class TravelAgentPipeline:
         """
         self.config          = get_agent_config()
         self.weather_service = WeatherService()
-        self.hotels_service  = HotelsService()
         self.places_service  = PlacesService()
         self.rag_pipeline    = RAGService()
 
@@ -76,8 +75,6 @@ class TravelAgentPipeline:
             get_weather_tool,
             get_places_tool,
             get_place_details_tool,
-            get_hotels_tool,
-            get_price_compare_tool,
         ]
 
     def run_search(
@@ -113,13 +110,6 @@ class TravelAgentPipeline:
         check_out = search_data.date_to.strftime("%Y-%m-%d")
 
         weather     = self.weather_service.get_weather(search_data.destination, check_in, check_out)
-        hotels      = self.hotels_service.get_hotels(
-            destination=search_data.destination,
-            check_in=check_in,
-            check_out=check_out,
-            adults=search_data.adults,
-            currency=search_data.currency.value,
-        )
 
         flight_info = None
         origin_iata = search_data.origin_iata or resolve_city_iata(search_data.origin)
@@ -130,13 +120,23 @@ class TravelAgentPipeline:
             origin_iata = origin_iata.lower()
             destination_iata = destination_iata.lower()
             flight_info = (
-                f"You can check the available flights here: "
+                f"You can check available flights here: "
                 f"https://www.skyscanner.net/transport/flights/"
                 f"{origin_iata}/{destination_iata}/"
                 f"{search_data.date_from.strftime('%y%m%d')}/"
                 f"{search_data.date_to.strftime('%y%m%d')}/"
                 f"?adultsv2={search_data.adults}&currency={search_data.currency.value}"
             )
+
+        # Construct Booking.com URL
+        booking_info = (
+            f"You can browse available hotels here: "
+            f"https://www.booking.com/searchresults.html"
+            f"?ss={search_data.destination.replace(' ', '+')}"
+            f"&checkin={check_in}&checkout={check_out}"
+            f"&group_adults={search_data.adults}"
+            f"&group_children={search_data.children}"
+        )
 
         attractions = self.places_service.get_places(search_data.destination, "attractions")
         restaurants = self.places_service.get_places(search_data.destination, "restaurants")
@@ -145,7 +145,6 @@ class TravelAgentPipeline:
             destination=search_data.destination,
             rag_chunks=rag_chunks,
             weather=weather,
-            hotels=hotels,
             attractions=attractions,
             restaurants=restaurants,
         )
@@ -194,6 +193,7 @@ class TravelAgentPipeline:
         result = self._parse_search_response(response)
         for package in result.get("packages", []):
             package["flight_info"] = flight_info
+            package["booking_info"] = booking_info
 
         return result
 
@@ -372,28 +372,12 @@ class TravelAgentPipeline:
         destination: str,
         rag_chunks:  list,
         weather:     dict | None,
-        hotels:      list,
         attractions: list,
         restaurants: list,
     ) -> str:
         """
         Aggregate data from all sources into a single formatted string
         that will be injected into the LLM prompt as context.
-
-        Logs a warning for each source that returned no data, so gaps
-        in context are visible in application logs.
-
-        Args:
-            destination: City name used in warning log messages.
-            rag_chunks:  List of LangChain Document objects from RAG retrieval.
-            weather:     Weather summary dict from WeatherService, or None.
-            hotels:      List of hotel dicts from HotelsService.
-            attractions: List of attraction dicts from PlacesService.
-            restaurants: List of restaurant dicts from PlacesService.
-
-        Returns:
-            A multi-section plain-text string with headings for each data source,
-            ready to be embedded in the LLM prompt.
         """
         parts = []
 
@@ -416,22 +400,6 @@ class TravelAgentPipeline:
             )
         else:
             logger.warning(f"No context received from Weather API for {destination}")
-
-        if hotels:
-            hotel_lines = []
-            for h in hotels[:5]:
-                price_info = h.get("price") or {}
-                per_night = price_info.get("per_night")
-                hotel_lines.append(
-                    f"- {h.get('name')}: "
-                    f"rating={h.get('rating')}, "
-                    f"price={per_night} EUR/night, "
-                    f"platform={h.get('platform')}, "
-                    f"url={h.get('booking_url')}"
-                )
-            parts.append(f"=== HOTELS ===\n" + "\n".join(hotel_lines))
-        else:
-            logger.warning(f"No context received from Hotels API for {destination}")
 
         if attractions:
             attr_lines = [
