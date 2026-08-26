@@ -269,9 +269,8 @@ def _build_pdf(search_session: SearchSession) -> bytes:
             for act in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value)):
                 pdf.set_font("Helvetica", "", 9)
                 pdf.set_text_color(60, 60, 60)
-                cost_str = f" ({int(act.estimated_cost)} {pkg.currency.value})" if act.estimated_cost else ""
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}{cost_str}"), align="L")
+                pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}"), align="L")
             pdf.ln(2)
 
         # Accommodation link
