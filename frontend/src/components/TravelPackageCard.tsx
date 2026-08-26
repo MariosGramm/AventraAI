@@ -119,7 +119,6 @@ function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo
                                     {act.part_of_day === 'morning' ? '🌅' : act.part_of_day === 'afternoon' ? '☀️' : '🌙'}
                                 </span>
                                 {act.title}
-                                {act.estimated_cost != null && <span style={{ color: '#aaa' }}>· {act.estimated_cost} {pkg.currency}</span>}
                             </div>
                         ))}
                     </div>

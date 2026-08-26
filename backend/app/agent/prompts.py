@@ -120,12 +120,10 @@ Use this exact structure:
                     "morning": "string",
                     "afternoon": "string",
                     "evening": "string",
-                    "estimated_daily_cost": float,
                     "activities": [
                         {{
                             "title": "string",
                             "type": "sightseeing" | "food" | "adventure",
-                            "estimated_cost": float,
                             "average_duration_hours": int,
                             "part_of_day": "morning" | "afternoon" | "evening"
                         }}
