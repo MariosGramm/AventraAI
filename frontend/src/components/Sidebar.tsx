@@ -266,8 +266,8 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
                         </div>
                         <div style={{ fontSize: '11px', color: '#aaa' }}>
                             {user?.subscription_tier === 'paid'
-                                ? 'Pro'
-                                : `Free tier · ${Math.max(0, 3 - (user?.monthly_searches_used || 0))}/3 searches left`}
+                                ? `Pro · ${Math.max(0, 20 - (user?.monthly_searches_used || 0))}/20 itineraries left`
+                                : `Free tier · ${Math.max(0, 3 - (user?.monthly_searches_used || 0))}/3 itineraries left`}
                         </div>
                     </div>
                     <span style={{ fontSize: '13px', color: '#aaa' }}>→</span>

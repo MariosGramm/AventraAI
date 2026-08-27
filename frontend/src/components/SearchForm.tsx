@@ -86,10 +86,10 @@ function SearchForm({ onSubmit, onClose, loading }: SearchFormProps) {
                 </div>
                 <div>
                     <label style={labelStyle}>To *</label>
-                    <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} min={dateFrom || new Date().toISOString().slice(0, 10)} max={dateFrom ? new Date(new Date(dateFrom).getTime() + 19 * 86400000).toISOString().slice(0, 10) : undefined} style={inputStyle} />
+                    <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} min={dateFrom || new Date().toISOString().slice(0, 10)} max={dateFrom ? new Date(new Date(dateFrom).getTime() + 14 * 86400000).toISOString().slice(0, 10) : undefined} style={inputStyle} />
                 </div>
                 <div style={{ gridColumn: '1 / -1', fontSize: '11px', color: '#aaa', fontStyle: 'italic', marginTop: '-4px' }}>
-                    * Itineraries can be generated for trips up to 20 days
+                    * Itineraries can be generated for trips up to 15 days
                 </div>
 
                 <div style={{ gridColumn: '1 / -1' }}>

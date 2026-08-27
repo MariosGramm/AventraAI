@@ -182,8 +182,8 @@ function ProfilePage() {
                             </div>
                             <div style={{ fontSize: '13px', color: '#6c757d' }}>
                                 {user?.subscription_tier === 'paid'
-                                    ? 'Unlimited searches'
-                                    : '3 searches / month'
+                                    ? `${Math.max(0, 20 - (user?.monthly_searches_used || 0))}/20 itineraries left · ${Math.max(0, 500 - (user?.monthly_messages_used || 0))}/500 messages left`
+                                    : `${Math.max(0, 3 - (user?.monthly_searches_used || 0))}/3 itineraries left · ${Math.max(0, 50 - (user?.monthly_messages_used || 0))}/50 messages left`
                                 }
                             </div>
                         </div>

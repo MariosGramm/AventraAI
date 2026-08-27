@@ -105,6 +105,7 @@ class User(UserBase, AuditableBase, table=True):
     #Freemium model: Users can have a free or paid subscription. Paid users have more searches per month.
     subscription_tier: SubscriptionTier = Field(default=SubscriptionTier.FREE, description="The subscription tier for the user.")
     monthly_searches_used: int = Field(default=0, description="The number of searches used by the user in the current month.")
+    monthly_messages_used: int = Field(default=0, description="The number of chat messages used by the user in the current month.")
     searches_reset_date: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="The date when the user's monthly searches will reset.")
 
     #Stripe subscription tracking
@@ -129,6 +130,7 @@ class UserPublicDTO(UserBase):
     id: uuid.UUID = Field(description="The unique identifier for the user.")
     subscription_tier: SubscriptionTier = Field(description="The subscription tier for the user.")
     monthly_searches_used: int = Field(default=0, description="The number of searches used this month.")
+    monthly_messages_used: int = Field(default=0, description="The number of chat messages used this month.")
     subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is scheduled to cancel at period end.")
     subscription_current_period_end: datetime | None = Field(default=None, description="When the current Pro billing period ends.")
     created_at: datetime | None = Field(description="The timestamp when the user was created.")

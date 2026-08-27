@@ -339,7 +339,7 @@ function LandingPage() {
                                 </div>
                                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem' }}>
                                     {[
-                                        '3 travel packages / month',
+                                        '3 itineraries / month',
                                         'AI chat assistant',
                                         'Weather forecasts',
                                         'Hotel suggestions'
@@ -381,7 +381,7 @@ function LandingPage() {
                                 </div>
                                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.5rem' }}>
                                     {[
-                                        'Unlimited packages',
+                                        '20 itineraries / month',
                                         'Better AI Model',
                                         'Priority support',
                                         'Everything in Free'

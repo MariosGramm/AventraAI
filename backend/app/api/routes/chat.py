@@ -13,12 +13,38 @@ from app.enums import ChatRole, SubscriptionTier
 from app.models import ChatMessage, ChatMessageCreateDTO, ChatMessagesPublicDTO, ChatResponseDTO, ChatSession, ChatSessionCreateDTO, ChatSessionPublicDTO, ChatSessionsPublicDTO, User
 from fastapi import APIRouter, HTTPException
 from sqlmodel import Session, col, select
+from dateutil.relativedelta import relativedelta
 
 
 router = APIRouter(tags=["chat"])
 logger = logging.getLogger(__name__)
 
 MAX_PINNED_CHAT_SESSIONS = 3
+FREE_MESSAGE_LIMIT = 50
+PAID_MESSAGE_LIMIT = 500
+
+
+def _check_message_limit(session: SessionDep, current_user: CurrentUserDep) -> None:
+    """Check chat message quota and reset if needed. Raises 429 if limit reached."""
+    if current_user.is_superuser:
+        return
+
+    now = datetime.now(UTC)
+
+    if (current_user.searches_reset_date is None or now >= current_user.searches_reset_date):
+        current_user.monthly_messages_used = 0
+        current_user.monthly_searches_used = 0
+        current_user.searches_reset_date = now + relativedelta(months=1)
+        session.add(current_user)
+        session.commit()
+        session.refresh(current_user)
+
+    if current_user.subscription_tier == SubscriptionTier.FREE:
+        if current_user.monthly_messages_used >= FREE_MESSAGE_LIMIT:
+            raise HTTPException(429, f"Monthly message limit of {FREE_MESSAGE_LIMIT} reached. Upgrade to Pro for more messages.")
+    elif current_user.subscription_tier == SubscriptionTier.PAID:
+        if current_user.monthly_messages_used >= PAID_MESSAGE_LIMIT:
+            raise HTTPException(429, f"Monthly message limit of {PAID_MESSAGE_LIMIT} reached. Your limit resets next month.")
 
 @router.post("/session", response_model=ChatSessionPublicDTO)
 def create_chat(session:SessionDep, current_user:CurrentUserDep, chat_session_create_data:ChatSessionCreateDTO) -> Any:
@@ -74,6 +100,8 @@ def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCr
     if chat_session.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="User is does not have enough enough privileges to send a message in this chat session")
 
+    _check_message_limit(session, current_user)
+
     chat_message = crud.create_chat_message(session=session, chat_creation_data=chat_message_create_data, role=ChatRole.USER, chat_session_id=chat_session_id)
 
     # Load chat history - needed for accurate response from the agent
@@ -91,6 +119,11 @@ def send_chat_message(session:SessionDep, chat_message_create_data:ChatMessageCr
         )
 
     agent_message = crud.create_chat_message(session=session, chat_creation_data=ChatMessageCreateDTO(content=agent_chat_response), role=ChatRole.ASSISTANT, chat_session_id=chat_session_id)
+
+    current_user.monthly_messages_used += 1
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
 
     return ChatResponseDTO(
         session_id=chat_session_id,

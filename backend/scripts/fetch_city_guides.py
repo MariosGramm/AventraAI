@@ -3,6 +3,8 @@ Wikivoyage City Guide Fetcher
 ------------------------------
 Automatically downloads city guides from the Wikivoyage API
 and saves them as markdown files for the RAG pipeline.
+This script is used for bulk pre-fetching city guides, but the RAG pipeline can also fetch and index guides on-demand,
+when a user requests a city that is not yet indexed.
 
 Usage (from backend/scripts/):
     uv run python fetch_city_guides.py

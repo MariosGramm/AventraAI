@@ -18,18 +18,15 @@ from sqlalchemy.orm import selectinload
 
 
 FREE_TIER_LIMIT = 3
+PAID_TIER_LIMIT = 20
 
 router = APIRouter(tags=["travel"])
 
 def _check_and_update_freemium(session: SessionDep, current_user: CurrentUserDep) -> None:
     """Check freemium quota and reset if needed. Raises 429 if limit reached."""
 
-    # Superusers → unlimited searches
     if current_user.is_superuser:
         return
-    
-    if current_user.subscription_tier != enums.SubscriptionTier.FREE:
-        return # user has paid subscription , do nothing
 
     now = datetime.now(UTC)
 
@@ -40,8 +37,12 @@ def _check_and_update_freemium(session: SessionDep, current_user: CurrentUserDep
         session.commit()
         session.refresh(current_user)
 
-    if current_user.monthly_searches_used >= FREE_TIER_LIMIT:
-        raise HTTPException(429, f"Monthly search limit of {FREE_TIER_LIMIT} reached. Upgrade to paid tier for unlimited searches.")
+    if current_user.subscription_tier == enums.SubscriptionTier.FREE:
+        if current_user.monthly_searches_used >= FREE_TIER_LIMIT:
+            raise HTTPException(429, f"Monthly itinerary limit of {FREE_TIER_LIMIT} reached. Upgrade to Pro for more searches.")
+    elif current_user.subscription_tier == enums.SubscriptionTier.PAID:
+        if current_user.monthly_searches_used >= PAID_TIER_LIMIT:
+            raise HTTPException(429, f"Monthly itinerary limit of {PAID_TIER_LIMIT} reached. Your limit resets next month.")
 
 
 
@@ -55,8 +56,8 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
     _check_and_update_freemium(session, current_user)
 
     trip_days = (search_session_create_data.date_to - search_session_create_data.date_from).days
-    if trip_days > 20:
-        raise HTTPException(400, "Trip duration cannot exceed 20 days.")
+    if trip_days > 15:
+        raise HTTPException(400, "Trip duration cannot exceed 15 days.")
     if trip_days < 1:
         raise HTTPException(400, "Trip must be at least 1 day.")
 

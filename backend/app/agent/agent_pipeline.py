@@ -179,13 +179,16 @@ class TravelAgentPipeline:
         llm   = self._get_llm(user, mode="search")
         chain = prompt | llm | StrOutputParser()
 
+        trip_days = (search_data.date_to - search_data.date_from).days
+
         user_request = (
             f"Destination: {destination}\n"
-            f"Dates: {check_in} to {check_out}\n"
+            f"Dates: {check_in} to {check_out} ({trip_days} days)\n"
             f"Adults: {search_data.adults}\n"
             f"Children: {search_data.children}\n"
             f"Budget: {search_data.budget or 'Not specified'} {search_data.currency.value}\n"
             f"Trip type: {search_data.trip_type.value if search_data.trip_type else 'Not specified'}\n"
+            f"IMPORTANT: Generate EXACTLY {trip_days} days in the itinerary. Do NOT skip any days.\n"
             f"{budget_instruction}"
         )
 
