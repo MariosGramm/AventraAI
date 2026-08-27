@@ -1,5 +1,6 @@
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
+from datetime import timedelta
+
+import requests as http_requests
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.api.deps import SessionDep
@@ -13,39 +14,48 @@ router = APIRouter(tags=["auth"])
 class GoogleAuthRequest(BaseModel):
     token: str
 
-@router.post("/google", response_model=Token)
-def google_auth(session: SessionDep, body: GoogleAuthRequest) -> Token:
+class GoogleAuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    is_new_user: bool = False
+
+@router.post("/google", response_model=GoogleAuthResponse)
+def google_auth(session: SessionDep, body: GoogleAuthRequest) -> GoogleAuthResponse:
     """
-    Authenticate with Google OAuth2 ID token.
+    Authenticate with Google OAuth2 access token.
     Creates a new user if not exists, or logs in existing user.
     """
-    try:
-        idinfo = id_token.verify_oauth2_token(
-            body.token,
-            google_requests.Request(),
-            settings.GOOGLE_CLIENT_ID
-        )
-    except ValueError as e:
-        raise HTTPException(401, f"Invalid Google token: {e}")
+    resp = http_requests.get(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        headers={"Authorization": f"Bearer {body.token}"},
+        timeout=10,
+    )
+    if resp.status_code != 200:
+        raise HTTPException(401, "Invalid Google token")
 
-    email     = idinfo.get("email")
-    google_id = idinfo.get("sub")
-    full_name = idinfo.get("name")
+    userinfo = resp.json()
+    email = userinfo.get("email")
+    google_id = userinfo.get("sub")
+    given_name = userinfo.get("given_name", "")
+    family_name = userinfo.get("family_name", "")
 
     if not email or not google_id:
         raise HTTPException(400, "Missing email or google_id from token")
 
-    # Get or create user
-    user = crud.get_or_create_google_user(
+    user, is_new = crud.get_or_create_google_user(
         session=session,
         email=email,
         google_id=google_id,
-        full_name=full_name
+        first_name=given_name,
+        last_name=family_name,
     )
 
     if not user.is_active:
         raise HTTPException(400, "Inactive user")
 
-    access_token = create_access_token(subject=str(user.id)) #authenticated
+    access_token = create_access_token(
+        subject=str(user.id),
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
 
-    return Token(access_token=access_token)
+    return GoogleAuthResponse(access_token=access_token, is_new_user=is_new)

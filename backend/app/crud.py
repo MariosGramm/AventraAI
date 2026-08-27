@@ -16,40 +16,40 @@ def get_or_create_google_user(
     session: Session,
     email: str,
     google_id: str,
-    full_name: str | None
-) -> User:
-    """Get existing user or create new one from Google OAuth."""
+    first_name: str,
+    last_name: str,
+) -> tuple[User, bool]:
+    """Get existing user or create new one from Google OAuth. Returns (user, is_new)."""
     
     user = session.exec(
         select(User).where(User.google_id == google_id)
     ).first()
     
     if user:
-        return user
+        return user, False
     
     user = get_user_by_email(session=session, email=email)
     if user:
-        
         user.google_id     = google_id
         user.auth_provider = AuthProvider.GOOGLE
         session.add(user)
         session.commit()
         session.refresh(user)
-        return user
-    
+        return user, False
     
     user = User(
         email=email,
-        full_name=full_name,
+        first_name=first_name or "User",
+        last_name=last_name or "",
         google_id=google_id,
         auth_provider=AuthProvider.GOOGLE,
         is_active=True,
-        hashed_password=""  # no password , user signs in using google account
+        hashed_password="",
     )
     session.add(user)
     session.commit()
     session.refresh(user)
-    return user
+    return user, True
 
 def create_user(*, session: Session, user_creation_data: UserCreateDTO | UserCreateSignupDTO) -> User:
     if isinstance(user_creation_data, UserCreateSignupDTO):

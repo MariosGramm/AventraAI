@@ -2,6 +2,8 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import client from '../services/client'
+import { useAuthContext } from '../context/AuthContext'
 
 interface GoogleLoginButtonProps {
     onError: (message: string) => void
@@ -9,6 +11,7 @@ interface GoogleLoginButtonProps {
 
 function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
     const navigate = useNavigate()
+    const { setUser } = useAuthContext()
 
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -17,7 +20,17 @@ function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
                     token: tokenResponse.access_token
                 })
                 localStorage.setItem('token', response.data.access_token)
-                navigate('/chat')
+                const userResponse = await client.get('/users/me')
+                setUser(userResponse.data)
+
+                const pendingRedirect = localStorage.getItem('post_login_redirect')
+                if (pendingRedirect === 'upgrade') {
+                    localStorage.removeItem('post_login_redirect')
+                    const checkoutRes = await client.post('/payments/create-checkout-session')
+                    window.location.href = checkoutRes.data.checkout_url
+                } else {
+                    navigate(response.data.is_new_user ? '/register-success' : '/chat')
+                }
             } catch (err) {
                 onError('Google login failed. Please try again.')
             }
