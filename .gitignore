@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# ChromaDB generated data
+backend/app/rag/chroma_db/
+
 # C extensions
 *.so
 
