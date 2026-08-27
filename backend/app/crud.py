@@ -1,7 +1,7 @@
 import uuid
 
 from app.core.security import get_password_hash, verify_password
-from app.enums import AgentStep, AuthProvider, ChatRole, SearchSessionStatus
+from app.enums import AgentStep, AuthProvider, ChatRole, SearchSessionStatus, SubscriptionTier
 from app.models import ChatMessage, ChatMessageCreateDTO, ChatSession, ChatSessionCreateDTO, SearchHistory, SearchSession, SearchSessionCreateDTO, User, UserCreateDTO, UserCreateSignupDTO, UserUpdateDTO, UserUpdateSelfDTO
 from sqlmodel import Session, select
 
@@ -16,55 +16,61 @@ def get_or_create_google_user(
     session: Session,
     email: str,
     google_id: str,
-    full_name: str | None
-) -> User:
-    """Get existing user or create new one from Google OAuth."""
+    first_name: str,
+    last_name: str,
+) -> tuple[User, bool]:
+    """Get existing user or create new one from Google OAuth. Returns (user, is_new)."""
     
     user = session.exec(
         select(User).where(User.google_id == google_id)
     ).first()
     
     if user:
-        return user
+        return user, False
     
     user = get_user_by_email(session=session, email=email)
     if user:
-        
         user.google_id     = google_id
         user.auth_provider = AuthProvider.GOOGLE
         session.add(user)
         session.commit()
         session.refresh(user)
-        return user
-    
+        return user, False
     
     user = User(
         email=email,
-        full_name=full_name,
+        first_name=first_name or "User",
+        last_name=last_name or "",
         google_id=google_id,
         auth_provider=AuthProvider.GOOGLE,
         is_active=True,
-        hashed_password=""  # no password , user signs in using google account
+        hashed_password="",
     )
     session.add(user)
     session.commit()
     session.refresh(user)
-    return user
+    return user, True
 
-def create_user(*, session:Session, user_creation_data:UserCreateDTO | UserCreateSignupDTO) -> User:
-    """
-    CRUD method for user creation.
-    Called by superusers using UserCreateDTO as a parameter.
-    Called by regular users using UserCreateSignupDTO as a parameter. 
-    """
+def create_user(*, session: Session, user_creation_data: UserCreateDTO | UserCreateSignupDTO) -> User:
+    if isinstance(user_creation_data, UserCreateSignupDTO):
+        resolved_subscription_tier = SubscriptionTier.FREE
+    else:
+        resolved_subscription_tier = (
+            SubscriptionTier.PAID
+            if user_creation_data.is_superuser
+            else user_creation_data.subscription_tier
+        )
+
     db_obj = User.model_validate(
-        user_creation_data, update = {"hashed_password": get_password_hash(user_creation_data.password)}
+        user_creation_data, 
+        update={
+            "hashed_password": get_password_hash(user_creation_data.password),
+            "subscription_tier": resolved_subscription_tier,
+}
     )
-
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
-
     return db_obj
 
 def update_user(*, session:Session, user_update_data:UserUpdateDTO | UserUpdateSelfDTO, user:User) -> User:
@@ -188,6 +194,13 @@ def get_chat_messages_by_session(*, session:Session, chat_session_id:uuid.UUID) 
 )
 
     return session.exec(statement).all()
+
+def delete_chat_session(*, session:Session, chat_session:ChatSession) -> None:
+    """
+    CRUD method for permanently deleting a chat session and its messages (cascade).
+    """
+    session.delete(chat_session)
+    session.commit()
 
 #=======================================================================================================
 # SEARCH HISTORY METHOD

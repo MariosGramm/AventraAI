@@ -40,6 +40,10 @@ class UserCreateDTO(UserBase):
     Inherits from UserBase and adds a password field.
     """
     password: str = Field(min_length=8, description="The password for the user account.")
+    subscription_tier: SubscriptionTier = Field(
+        default=SubscriptionTier.FREE,
+        description="The initial subscription tier for the user."
+    )
 
 class UserCreateSignupDTO(SQLModel):
     """
@@ -50,6 +54,10 @@ class UserCreateSignupDTO(SQLModel):
     last_name: str = Field(max_length=50, description="The last name of the user.")
     email : EmailStr = Field(max_length=100, description="The email address of the user.")
     password: str = Field(min_length=8, description="The password for the user account.")
+    subscription_tier: SubscriptionTier = Field(
+        default=SubscriptionTier.FREE,
+        description="The initial subscription tier for the user."
+    )
     
 # User update DTOs
 class UserUpdateDTO(SQLModel):
@@ -97,7 +105,14 @@ class User(UserBase, AuditableBase, table=True):
     #Freemium model: Users can have a free or paid subscription. Paid users have more searches per month.
     subscription_tier: SubscriptionTier = Field(default=SubscriptionTier.FREE, description="The subscription tier for the user.")
     monthly_searches_used: int = Field(default=0, description="The number of searches used by the user in the current month.")
+    monthly_messages_used: int = Field(default=0, description="The number of chat messages used by the user in the current month.")
     searches_reset_date: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="The date when the user's monthly searches will reset.")
+
+    #Stripe subscription tracking
+    stripe_customer_id: str | None = Field(default=None, max_length=255, description="The Stripe customer ID for this user.")
+    stripe_subscription_id: str | None = Field(default=None, max_length=255, description="The Stripe subscription ID for this user's active Pro subscription.")
+    subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is set to cancel at the end of the current billing period.")
+    subscription_current_period_end: datetime | None = Field(default=None, sa_column=Column(DateTime(timezone=True)), description="When the current Pro billing period ends.")
 
     #Google sign in fields
     google_id: str | None = Field(default=None, max_length=255, description="The unique identifier for the user from Google sign-in.")
@@ -113,6 +128,11 @@ class UserPublicDTO(UserBase):
     Used for API responses to avoid exposing sensitive information.
     """
     id: uuid.UUID = Field(description="The unique identifier for the user.")
+    subscription_tier: SubscriptionTier = Field(description="The subscription tier for the user.")
+    monthly_searches_used: int = Field(default=0, description="The number of searches used this month.")
+    monthly_messages_used: int = Field(default=0, description="The number of chat messages used this month.")
+    subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is scheduled to cancel at period end.")
+    subscription_current_period_end: datetime | None = Field(default=None, description="When the current Pro billing period ends.")
     created_at: datetime | None = Field(description="The timestamp when the user was created.")
 
 class UsersPublicDTO(SQLModel):
@@ -140,6 +160,7 @@ class ChatSession(AuditableBase, table=True):
     title: str | None = Field(default=None, max_length=100, description="The title of the chat session")
     owner: "User" = Relationship(back_populates="chat_sessions")
     messages : list["ChatMessage"] = Relationship(back_populates="session", cascade_delete=True)
+    is_pinned: bool = Field(default=False)
 
 # Public chat session DTOs for API responses
 class ChatSessionPublicDTO(SQLModel):
@@ -150,6 +171,7 @@ class ChatSessionPublicDTO(SQLModel):
     id: uuid.UUID
     owner_id: uuid.UUID
     title: str | None
+    is_pinned: bool
     created_at: datetime | None
     updated_at: datetime | None
 
@@ -365,7 +387,9 @@ class TravelPackage(SQLModel, table=True):
 
     transportation: str | None = Field(default=None, description="Local transportation within the destination.")
     flight_info: str | None = Field(default=None, description="Available flight information for traveling to the destination.")
+    booking_info: str | None = Field(default=None, description="Booking.com search URL for accommodation.")
     travel_tips: list[str] | None = Field(default_factory=list, sa_column=Column(ARRAY(String)), description="Extra information for the visitors in the form of tips")
+    destination_photos: list[str] | None = Field(default_factory=list, sa_column=Column(ARRAY(String)), description="Photo URLs of the destination")
 
     # Weather summary might be unavailable if the travel date is outside the available forecast range.
     weather_summary: str | None = Field(default=None, description="Weather summary for the period which the visitors will visit the place")
@@ -388,7 +412,9 @@ class TravelPackagePublicDTO(SQLModel):
     currency: Currency
     transportation: str | None
     flight_info: str | None
+    booking_info: str | None
     travel_tips: list[str] | None
+    destination_photos: list[str] | None
     weather_summary: str | None
     itinerary: list["ItineraryPublicDTO"]
     accommodations: list["AccommodationPublicDTO"]

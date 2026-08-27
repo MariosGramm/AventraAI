@@ -58,6 +58,8 @@ class Settings(BaseSettings):
         GOOGLE_CLIENT_ID (str): Identifies the application to Google.  
         GOOGLE_CLIENT_SECRET (str): A secret associated with the application, used to authenticate the application to Google.
         SENTRY_DSN (HttpUrl | None): The DSN for Sentry error tracking.
+        STRIPE_PRICE_ID: The unique ID of a specific product price in Stripe. It tells Stripe which price/plan the customer should be charged for.
+        STRIPE_SECRET_KEY: A private API key used to securely connect your application to Stripe and perform actions such as creating payments or managing customers.
     """
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
@@ -106,8 +108,15 @@ class Settings(BaseSettings):
             path = self.POSTGRES_DB
         ))
 
+    # Google
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
+
+    # Stripe
+    STRIPE_PRICE_ID: str = ""
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
+
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False
     SMTP_PORT: int = 587
@@ -129,7 +138,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def emails_enabled(self) -> bool:
-        return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
+        return bool(self.RESEND_API_KEY and self.EMAILS_FROM_EMAIL)
     
     EMAIL_TEST_USER: EmailStr = "test@example.com"
     FIRST_SUPERUSER: EmailStr

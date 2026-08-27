@@ -3,12 +3,18 @@ Wikivoyage City Guide Fetcher
 ------------------------------
 Automatically downloads city guides from the Wikivoyage API
 and saves them as markdown files for the RAG pipeline.
+This script is used for bulk pre-fetching city guides, but the RAG pipeline can also fetch and index guides on-demand,
+when a user requests a city that is not yet indexed.
 
 Usage (from backend/scripts/):
     uv run python fetch_city_guides.py
 
 Output:
     backend/app/rag/data/<city_name>.md
+
+Attention:
+    Check /data directory for existing files before running this script.
+    Documents are also updated automatically by city_guide_fetcher.py when a user requests a city that is not yet indexed.
 """
 
 import re
@@ -31,20 +37,29 @@ CITIES = [
     "Budapest", "Dublin", "Stockholm", "Copenhagen", "Warsaw", "Moscow",
     "Edinburgh", "Florence", "Brussels", "Oslo", "Helsinki", "Reykjavik",
     "Madrid", "Seville", "Valencia", "Porto", "Marseille", "Nice", "Tirana",
+    "Munich", "Zurich", "Dubrovnik", "Santorini", "Milan", "Krakow",
+    "Bruges", "Split", "Tallinn", "Riga",
     # Asia
     "Tokyo", "Kyoto", "Seoul", "Bangkok", "Singapore",
     "Dubai", "Beijing", "Hong Kong", "Istanbul", "New Delhi",
+    "Bali", "Hanoi", "Ho Chi Minh City", "Kuala Lumpur", "Taipei",
+    "Mumbai", "Jaipur", "Osaka",
     # North America
     "New York City", "Los Angeles", "San Francisco", "Las Vegas",
     "Toronto", "Vancouver", "Montreal", "Miami", "Washington, D.C.", "Mexico City",
+    "Chicago", "New Orleans", "Havana",
     # South America
     "Rio de Janeiro", "Buenos Aires", "Lima", "Santiago",
     "Medellín", "Cusco", "Bogotá",
     # Africa
     "Cairo", "Cape Town", "Nairobi", "Marrakesh",
-    "Abuja", "Lagos", "Asmara",
+    "Abuja", "Lagos", "Asmara", "Zanzibar", "Accra",
     # Oceania
     "Sydney", "Melbourne", "Auckland", "Wellington", "Brisbane",
+    # Middle East
+    "Tel Aviv", "Amman", "Muscat",
+    # Extra
+    "Gothenburg", "Lyon", "Granada", "Bath", "Salzburg",
 ]
 
 WIKIVOYAGE_API = "https://en.wikivoyage.org/w/api.php"

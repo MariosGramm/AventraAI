@@ -2,9 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%237F77DD' d='M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z'/%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>AventraAI</title>
+      <style>
+          @keyframes fly {
+              from { left: -60px; top: 40px; }
+              to { left: 110%; top: 20px; }
+          }
+          @keyframes float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-14px); }
+          }
+          @keyframes pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.06); }
+          }
+      </style>
   </head>
   <body>
     <div id="root"></div>

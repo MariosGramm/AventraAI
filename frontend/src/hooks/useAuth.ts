@@ -1,0 +1,80 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { login, register } from '../services/authService'
+import { useAuthContext } from "../context/AuthContext.tsx"
+import client from "../services/client.ts"
+
+export function useAuth() {
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
+    const { setUser } = useAuthContext()
+
+    const handleLogin = async (email: string, password: string) => {
+        setLoading(true)
+        setError('')
+        try {
+            const data = await login(email, password)
+            localStorage.setItem('token', data.access_token)
+
+            // Resolve any pending post-login redirect before setUser() re-renders
+            // GuestRoute, which would otherwise bounce us to /chat once the token exists.
+            const pendingRedirect = localStorage.getItem('post_login_redirect')
+            if (pendingRedirect === 'upgrade') {
+                localStorage.removeItem('post_login_redirect')
+                const returnTo = localStorage.getItem('upgrade_return_to') || '/'
+                localStorage.removeItem('upgrade_return_to')
+                try {
+                    const checkoutRes = await client.post('/payments/create-checkout-session', { return_to: returnTo })
+                    window.location.href = checkoutRes.data.checkout_url
+                    return
+                } catch (checkoutErr) {
+                    const userResponse = await client.get('/users/me')
+                    setUser(userResponse.data)
+                    if (axios.isAxiosError(checkoutErr) && checkoutErr.response?.status === 400) {
+                        // replace: once logged in, GuestRoute would bounce a back-navigation
+                        // to /login straight to /chat, so drop /login from the history stack.
+                        navigate('/already-subscribed', { replace: true })
+                    } else {
+                        console.error('Failed to start checkout after login', checkoutErr)
+                        navigate('/chat', { replace: true })
+                    }
+                    return
+                }
+            }
+
+            const userResponse = await client.get('/users/me')
+            setUser(userResponse.data)
+            navigate('/chat')
+        } catch (err) {
+            setError('Invalid email or password')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleRegister = async (
+        firstName: string,
+        lastName: string,
+        email: string,
+        password: string
+    ) => {
+        setLoading(true)
+        setError('')
+        try {
+            await register(firstName, lastName, email, password)
+            const data = await login(email, password)
+            localStorage.setItem('token', data.access_token)
+            const userResponse = await client.get('/users/me')
+            setUser(userResponse.data)
+            navigate('/register-success')
+        } catch (err) {
+            setError('Something went wrong. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return { handleLogin, handleRegister, loading, error }
+}

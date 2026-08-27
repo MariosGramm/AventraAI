@@ -12,7 +12,6 @@ Endpoints used:
 
 import logging
 import requests
-from langchain_core.tools import tool
 from ..config import get_agent_config
 
 logger = logging.getLogger(__name__)
@@ -82,7 +81,10 @@ class HotelsService:
             )
             response.raise_for_status()
             hotels = response.json().get("data", [])
-            return [self._parse_hotel(h, currency) for h in hotels]
+            parsed = [self._parse_hotel(h, currency) for h in hotels]
+            dest_lower = destination.lower()
+            filtered = [h for h in parsed if self._is_relevant(h, dest_lower)]
+            return filtered
 
         except requests.RequestException as e:
             logger.error(f"Hotel search error for {destination}: {e}")
@@ -170,6 +172,15 @@ class HotelsService:
             logger.error(f"Reviews error for listing {listing_id}: {e}")
             return None
 
+
+    def _is_relevant(self, hotel: dict, destination_lower: str) -> bool:
+        """Check if hotel location matches the requested destination."""
+        loc = hotel.get("location", {})
+        city = (loc.get("city") or "").lower()
+        address = (loc.get("address") or "").lower()
+        name = (hotel.get("name") or "").lower()
+        dest_parts = destination_lower.split(",")[0].split()
+        return any(part in city or part in address or part in name for part in dest_parts)
 
     def _parse_hotel(self, hotel: dict, currency: str) -> dict:
         """Parse a single hotel from /v1/search response."""
@@ -265,50 +276,3 @@ class HotelsService:
             "google_hotels": f"https://hotels.google.com/entity/{listing_id}",
         }
         return templates.get(platform)
-
-
-
-@tool
-def get_hotels_tool(
-    destination: str,
-    check_in:    str,
-    check_out:   str,
-    adults:      int = 2,
-) -> list[dict]:
-    """
-    Search for available hotels with real-time pricing.
-    Use this when the user asks about hotels, accommodation, or where to stay.
-
-    Args:
-        destination: City name and country (e.g. 'Prague, CZ')
-        check_in:    Check-in date in ISO format (YYYY-MM-DD)
-        check_out:   Check-out date in ISO format (YYYY-MM-DD)
-        adults:      Number of adults (default 2)
-
-    Returns:
-        List of hotels with name, rating, price, amenities, and booking URLs.
-    """
-    return HotelsService().get_hotels(destination, check_in, check_out, adults)
-
-
-@tool
-def get_price_compare_tool(
-    hotel_name: str,
-    location:   str,
-    check_in:   str,
-    check_out:  str,
-) -> dict:
-    """
-    Compare prices for a specific hotel across all booking platforms.
-    Use this when the user wants to find the cheapest price for a specific hotel.
-
-    Args:
-        hotel_name: Exact hotel name (e.g. 'Hotel Aria Prague')
-        location:   City and country (e.g. 'Prague, CZ')
-        check_in:   Check-in date in ISO format (YYYY-MM-DD)
-        check_out:  Check-out date in ISO format (YYYY-MM-DD)
-
-    Returns:
-        Price comparison across OTAs with direct booking URLs.
-    """
-    return HotelsService().get_price_compare(hotel_name, location, check_in, check_out) or {}
