@@ -128,6 +128,32 @@ def pin_chat_session(
     return chat_session
 
 
+class _SaveMessageDTO(BaseModel):
+    role: str
+    content: str
+
+@router.post("/session/{chat_session_id}/save_message")
+def save_chat_message(
+    session: SessionDep,
+    chat_session_id: uuid.UUID,
+    current_user: CurrentUserDep,
+    data: _SaveMessageDTO,
+) -> dict:
+    """Save a message to a chat session without triggering the agent."""
+    chat_session = session.get(ChatSession, chat_session_id)
+    if not chat_session:
+        raise HTTPException(404, "Chat session not found")
+    if chat_session.owner_id != current_user.id:
+        raise HTTPException(403, "Not enough privileges")
+    crud.create_chat_message(
+        session=session,
+        chat_creation_data=ChatMessageCreateDTO(content=data.content),
+        role=ChatRole(data.role),
+        chat_session_id=chat_session_id,
+    )
+    return {"status": "ok"}
+
+
 @router.post("/session/{chat_session_id}/generate_title", response_model=ChatSessionPublicDTO)
 def generate_chat_title(
     session: SessionDep,

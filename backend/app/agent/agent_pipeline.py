@@ -101,23 +101,25 @@ class TravelAgentPipeline:
             Returns an empty dict if the LLM response cannot be parsed.
         """
 
+        destination = self._translate_destination(search_data.destination)
+
         from .infrastructure.city_guide_fetcher import city_file_exists, fetch_and_index_city
-        if not city_file_exists(search_data.destination):
-            fetch_and_index_city(search_data.destination)
+        if not city_file_exists(destination):
+            fetch_and_index_city(destination)
 
         rag_chunks = self.rag_pipeline.retrieve(
-            query=f"travel guide attractions food tips {search_data.destination}",
+            query=f"travel guide attractions food tips {destination}",
             k=5,
         )
 
         check_in  = search_data.date_from.strftime("%Y-%m-%d")
         check_out = search_data.date_to.strftime("%Y-%m-%d")
 
-        weather     = self.weather_service.get_weather(search_data.destination, check_in, check_out)
+        weather     = self.weather_service.get_weather(destination, check_in, check_out)
 
         flight_info = None
         origin_iata = search_data.origin_iata or resolve_city_iata(search_data.origin)
-        destination_iata = search_data.destination_iata or resolve_city_iata(search_data.destination)
+        destination_iata = search_data.destination_iata or resolve_city_iata(destination)
 
         # Construct the Skyscanner URL
         if origin_iata and destination_iata:
@@ -136,17 +138,17 @@ class TravelAgentPipeline:
         booking_info = (
             f"You can browse available hotels here: "
             f"https://www.booking.com/searchresults.html"
-            f"?ss={search_data.destination.replace(' ', '+')}"
+            f"?ss={destination.replace(' ', '+')}"
             f"&checkin={check_in}&checkout={check_out}"
             f"&group_adults={search_data.adults}"
             f"&group_children={search_data.children}"
         )
 
-        attractions = self.places_service.get_places(search_data.destination, "attractions")
-        restaurants = self.places_service.get_places(search_data.destination, "restaurants")
+        attractions = self.places_service.get_places(destination, "attractions")
+        restaurants = self.places_service.get_places(destination, "restaurants")
 
         context = self._build_search_context(
-            destination=search_data.destination,
+            destination=destination,
             rag_chunks=rag_chunks,
             weather=weather,
             attractions=attractions,
@@ -178,7 +180,7 @@ class TravelAgentPipeline:
         chain = prompt | llm | StrOutputParser()
 
         user_request = (
-            f"Destination: {search_data.destination}\n"
+            f"Destination: {destination}\n"
             f"Dates: {check_in} to {check_out}\n"
             f"Adults: {search_data.adults}\n"
             f"Children: {search_data.children}\n"
@@ -195,9 +197,13 @@ class TravelAgentPipeline:
         })
 
         result = self._parse_search_response(response)
+
+        destination_photos = [a.get("photo_url") for a in attractions if a.get("photo_url")][:1]
+
         for package in result.get("packages", []):
             package["flight_info"] = flight_info
             package["booking_info"] = booking_info
+            package["destination_photos"] = destination_photos
 
         return result
 

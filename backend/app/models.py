@@ -387,6 +387,7 @@ class TravelPackage(SQLModel, table=True):
     flight_info: str | None = Field(default=None, description="Available flight information for traveling to the destination.")
     booking_info: str | None = Field(default=None, description="Booking.com search URL for accommodation.")
     travel_tips: list[str] | None = Field(default_factory=list, sa_column=Column(ARRAY(String)), description="Extra information for the visitors in the form of tips")
+    destination_photos: list[str] | None = Field(default_factory=list, sa_column=Column(ARRAY(String)), description="Photo URLs of the destination")
 
     # Weather summary might be unavailable if the travel date is outside the available forecast range.
     weather_summary: str | None = Field(default=None, description="Weather summary for the period which the visitors will visit the place")
@@ -411,6 +412,7 @@ class TravelPackagePublicDTO(SQLModel):
     flight_info: str | None
     booking_info: str | None
     travel_tips: list[str] | None
+    destination_photos: list[str] | None
     weather_summary: str | None
     itinerary: list["ItineraryPublicDTO"]
     accommodations: list["AccommodationPublicDTO"]

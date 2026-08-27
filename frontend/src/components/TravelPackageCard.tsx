@@ -8,7 +8,9 @@ interface TravelPackage {
     currency: string
     transportation: string | null
     flight_info: string | null
+    booking_info: string | null
     travel_tips: string[] | null
+    destination_photos: string[] | null
     weather_summary: string | null
     itinerary: {
         id: string
@@ -71,6 +73,13 @@ function TravelPackageCard({ pkg, searchSessionId, destination, dateFrom, dateTo
             background: 'white', border: '1px solid #e8e6f0', borderRadius: '16px',
             padding: '20px', maxWidth: '620px', width: '100%'
         }}>
+            {/* Destination photo */}
+            {pkg.destination_photos && pkg.destination_photos.length > 0 && (
+                <img src={pkg.destination_photos[0]} alt={destination}
+                    style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '16px' }}
+                />
+            )}
+
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <div>

@@ -48,6 +48,16 @@ function ChatPage() {
         if (!token) navigate('/login', { replace: true })
     }, [])
 
+    useEffect(() => {
+        if (!sessionId) return
+        client.get(`/chat/session/${sessionId}/messages`)
+            .then(res => {
+                const msgs = (res.data.data || []).reverse()
+                setMessages(msgs.map((m: any) => ({ role: m.role, content: m.content, created_at: m.created_at })))
+            })
+            .catch(() => {})
+    }, [sessionId])
+
     const createSession = async (): Promise<string> => {
         const response = await client.post('/chat/session', {
             title: 'New chat'
@@ -153,26 +163,45 @@ function ChatPage() {
         setSearchLoading(true)
         setShowSearchForm(false)
 
+        const userContent = `Generate a travel package for ${data.destination} (${data.date_from.slice(0, 10)} → ${data.date_to.slice(0, 10)}, ${data.adults} adults${data.children ? `, ${data.children} children` : ''}${data.budget ? `, budget: ${data.budget} ${data.currency}` : ''})`
+
         setMessages(prev => [...prev, {
             role: 'user' as const,
-            content: `Generate a travel package for ${data.destination} (${data.date_from.slice(0, 10)} → ${data.date_to.slice(0, 10)}, ${data.adults} adults${data.children ? `, ${data.children} children` : ''}${data.budget ? `, budget: ${data.budget} ${data.currency}` : ''})`,
+            content: userContent,
             created_at: new Date().toISOString()
         }])
 
         setLoading(true)
 
         try {
+            let currentSessionId = sessionId
+            if (!currentSessionId) {
+                currentSessionId = await createSession()
+                setSessionId(currentSessionId)
+            }
+
+            await client.post(`/chat/session/${currentSessionId}/save_message`, { role: 'user', content: userContent })
+
             const response = await client.post('/travel/searches', data)
             setLoading(false)
 
             const packages = response.data.travel_packages || []
             const searchSessionId = response.data.id
+            const packageContent = `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination, dateFrom: data.date_from, dateTo: data.date_to })}`
 
             setMessages(prev => [...prev, {
                 role: 'assistant' as const,
-                content: `__PACKAGE__${JSON.stringify({ packages, searchSessionId, destination: data.destination, dateFrom: data.date_from, dateTo: data.date_to })}`,
+                content: packageContent,
                 created_at: new Date().toISOString()
             }])
+
+            await client.post(`/chat/session/${currentSessionId}/save_message`, { role: 'assistant', content: packageContent })
+
+            if (!sessionId) {
+                client.post(`/chat/session/${currentSessionId}/generate_title`)
+                    .then(() => setRefreshTrigger(prev => prev + 1))
+                    .catch(() => {})
+            }
 
             client.get('/users/me').then(res => setUser(res.data)).catch(() => {})
         } catch (err) {

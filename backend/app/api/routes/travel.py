@@ -54,6 +54,12 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
     """
     _check_and_update_freemium(session, current_user)
 
+    trip_days = (search_session_create_data.date_to - search_session_create_data.date_from).days
+    if trip_days > 20:
+        raise HTTPException(400, "Trip duration cannot exceed 20 days.")
+    if trip_days < 1:
+        raise HTTPException(400, "Trip must be at least 1 day.")
+
     search_session = crud.create_search_session(session=session, owner_id=current_user.id, search_session_creation_data=search_session_create_data)
 
     try:
@@ -82,6 +88,7 @@ def create_search(session: SessionDep, current_user: CurrentUserDep, search_sess
                 booking_info=pac_data.get("booking_info"),
                 weather_summary=pac_data.get("weather_summary"),
                 travel_tips=pac_data.get("travel_tips", []),
+                destination_photos=pac_data.get("destination_photos", []),
             )
             session.add(package)
             session.flush()
@@ -193,41 +200,42 @@ def download_search_pdf(
 
     pdf_bytes = _build_pdf(search_session)
 
+    from urllib.parse import quote
+    safe_filename = quote(search_session.destination.replace(' ', '_'), safe='_')
+
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename={search_session.destination.replace(' ', '_')}_itinerary.pdf"}
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{safe_filename}_itinerary.pdf"}
     )
 
 
 def _build_pdf(search_session: SearchSession) -> bytes:
     from fpdf import FPDF
-    import unicodedata
-
-    def _safe(text: str) -> str:
-        normalized = unicodedata.normalize('NFKD', text)
-        return normalized.encode('latin-1', 'ignore').decode('latin-1')
 
     pdf = FPDF()
+    pdf.add_font('Arial', fname='C:/Windows/Fonts/arial.ttf')
+    pdf.add_font('ArialB', fname='C:/Windows/Fonts/arialbd.ttf')
+    pdf.add_font('ArialI', fname='C:/Windows/Fonts/ariali.ttf')
     pdf.set_auto_page_break(auto=True, margin=20)
     pdf.add_page()
 
     # Header
-    pdf.set_font("Helvetica", "B", 20)
+    pdf.set_font("ArialB", size=20)
     pdf.set_text_color(127, 119, 221)
     pdf.cell(0, 10, "AventraAI", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_font("Helvetica", "", 11)
+    pdf.set_font("Arial", size=11)
     pdf.set_text_color(150, 150, 150)
-    pdf.cell(0, 6, _safe(f"Travel Package - {search_session.destination}"), align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 6, f"Travel Package - {search_session.destination}", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_font("Helvetica", "B", 12)
+    pdf.set_font("ArialB", size=12)
     pdf.set_text_color(83, 74, 183)
     date_from_str = f"{search_session.date_from.day:02d}/{search_session.date_from.month:02d}/{search_session.date_from.year}"
     date_to_str = f"{search_session.date_to.day:02d}/{search_session.date_to.month:02d}/{search_session.date_to.year}"
     pdf.cell(0, 7, f"{date_from_str}  -  {date_to_str}", align="C", new_x="LMARGIN", new_y="NEXT")
 
-    pdf.set_font("Helvetica", "", 10)
+    pdf.set_font("Arial", size=10)
     pdf.set_text_color(150, 150, 150)
     pdf.cell(0, 6, f"{search_session.adults} adults{f', {search_session.children} children' if search_session.children else ''}", align="C", new_x="LMARGIN", new_y="NEXT")
     pdf.ln(8)
@@ -237,93 +245,86 @@ def _build_pdf(search_session: SearchSession) -> bytes:
 
     packages = search_session.travel_packages or []
     for pkg in packages:
-        # Package header
-        pdf.set_font("Helvetica", "B", 16)
+        pdf.set_font("ArialB", size=16)
         pdf.set_text_color(38, 33, 92)
-        pdf.cell(0, 9, _safe(f"{search_session.destination} - {pkg.tier.value.capitalize()}"), new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 9, f"{search_session.destination} - {pkg.tier.value.capitalize()}", new_x="LMARGIN", new_y="NEXT")
 
-        pdf.set_font("Helvetica", "", 12)
+        pdf.set_font("Arial", size=12)
         pdf.set_text_color(83, 74, 183)
         pdf.cell(0, 7, f"Estimated cost: {int(pkg.estimated_cost_min)}-{int(pkg.estimated_cost_max)} {pkg.currency.value}", new_x="LMARGIN", new_y="NEXT")
         pdf.ln(4)
 
-        # Weather
         if pkg.weather_summary:
-            pdf.set_font("Helvetica", "I", 10)
+            pdf.set_font("ArialI", size=10)
             pdf.set_text_color(100, 100, 100)
-            pdf.multi_cell(0, 5, _safe(f"Weather: {pkg.weather_summary}"))
+            pdf.multi_cell(0, 5, f"Weather: {pkg.weather_summary}")
             pdf.ln(3)
 
-        # Itinerary
-        pdf.set_font("Helvetica", "B", 13)
+        pdf.set_font("ArialB", size=13)
         pdf.set_text_color(38, 33, 92)
         pdf.cell(0, 8, "Itinerary", new_x="LMARGIN", new_y="NEXT")
 
         for day in sorted(pkg.itinerary, key=lambda d: d.day_number):
-            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_font("ArialB", size=11)
             pdf.set_text_color(83, 74, 183)
             pdf.cell(0, 7, f"Day {day.day_number}", new_x="LMARGIN", new_y="NEXT")
 
-            pdf.set_font("Helvetica", "", 10)
+            pdf.set_font("Arial", size=10)
             pdf.set_text_color(80, 80, 80)
             pdf.set_x(10)
-            pdf.multi_cell(0, 5, _safe(day.description), align="L")
+            pdf.multi_cell(0, 5, day.description, align="L")
 
             for act in sorted(day.activities, key=lambda a: ['morning', 'afternoon', 'evening'].index(a.part_of_day.value)):
-                pdf.set_font("Helvetica", "", 9)
+                pdf.set_font("Arial", size=9)
                 pdf.set_text_color(60, 60, 60)
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, _safe(f"  {act.part_of_day.value.capitalize()}: {act.title}"), align="L")
+                pdf.multi_cell(0, 5, f"  {act.part_of_day.value.capitalize()}: {act.title}", align="L")
             pdf.ln(2)
 
-        # Accommodation link
         if pkg.booking_info:
             import re as _re
             booking_url = (_re.search(r'https?://\S+', pkg.booking_info) or None)
             if booking_url:
-                pdf.set_font("Helvetica", "U", 10)
+                pdf.set_font("Arial", size=10)
                 pdf.set_text_color(83, 74, 183)
                 pdf.cell(0, 6, "Browse available hotels", new_x="LMARGIN", new_y="NEXT", link=booking_url.group())
                 pdf.ln(2)
 
-        # Transportation
         if pkg.transportation:
-            pdf.set_font("Helvetica", "B", 11)
+            pdf.set_font("ArialB", size=11)
             pdf.set_text_color(38, 33, 92)
             pdf.cell(0, 6, "Transportation", new_x="LMARGIN", new_y="NEXT")
-            pdf.set_font("Helvetica", "", 10)
+            pdf.set_font("Arial", size=10)
             pdf.set_text_color(80, 80, 80)
             pdf.set_x(10)
-            pdf.multi_cell(0, 5, _safe(pkg.transportation), align="L")
+            pdf.multi_cell(0, 5, pkg.transportation, align="L")
             pdf.ln(2)
 
         if pkg.flight_info:
             import re as _re
             flight_url = (_re.search(r'https?://\S+', pkg.flight_info) or None)
             if flight_url:
-                pdf.set_font("Helvetica", "U", 10)
+                pdf.set_font("Arial", size=10)
                 pdf.set_text_color(83, 74, 183)
                 pdf.cell(0, 6, "Browse available flights", new_x="LMARGIN", new_y="NEXT", link=flight_url.group())
                 pdf.ln(2)
 
-        # Tips
         if pkg.travel_tips:
-            pdf.set_font("Helvetica", "B", 13)
+            pdf.set_font("ArialB", size=13)
             pdf.set_text_color(38, 33, 92)
             pdf.cell(0, 8, "Tips", new_x="LMARGIN", new_y="NEXT")
-            pdf.set_font("Helvetica", "", 10)
+            pdf.set_font("Arial", size=10)
             pdf.set_text_color(80, 80, 80)
             for tip in pkg.travel_tips:
                 pdf.set_x(10)
-                pdf.multi_cell(0, 5, _safe(f"  * {tip}"), align="L")
+                pdf.multi_cell(0, 5, f"  * {tip}", align="L")
             pdf.ln(3)
 
         pdf.set_draw_color(200, 200, 200)
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
         pdf.ln(6)
 
-    # Footer
-    pdf.set_font("Helvetica", "I", 8)
+    pdf.set_font("ArialI", size=8)
     pdf.set_text_color(170, 170, 170)
     pdf.cell(0, 5, "Generated by AventraAI", align="C")
 
