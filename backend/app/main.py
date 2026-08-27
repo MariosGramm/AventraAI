@@ -8,14 +8,15 @@ import sentry_sdk
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
-sentry_sdk.init(
-    dsn=str(settings.SENTRY_DSN),
-    traces_sample_rate=1.0,  
-    integrations=[
-        FastApiIntegration(),
-        SqlalchemyIntegration(),
-    ]
-)
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=str(settings.SENTRY_DSN),
+        traces_sample_rate=1.0,  
+        integrations=[
+            FastApiIntegration(),
+            SqlalchemyIntegration(),
+        ]
+    )
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.tags[0]} - {route.name}"

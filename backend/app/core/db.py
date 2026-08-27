@@ -19,8 +19,10 @@ def init_db(session: Session) -> None:
         first_superuser = UserCreateDTO(
             email = settings.FIRST_SUPERUSER,
             password = settings.FIRST_SUPERUSER_PASSWORD,
-            is_superuser = True
+            is_superuser = True,
+            first_name = "Admin",
+            last_name = "User",
         )
 
-        user = crud.user.create(session, user_create = first_superuser)
+        user = crud.create_user(session=session, user_creation_data=first_superuser)
 

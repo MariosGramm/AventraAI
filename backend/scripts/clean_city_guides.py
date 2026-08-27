@@ -16,7 +16,7 @@ print(f"Found {len(md_files)} files\n")
 for md_file in md_files:
     content = md_file.read_text(encoding="utf-8")
     
-    # Αφαίρεσε τη γραμμή με το Source
+    # Remove the Source attribution line
     lines = content.split("\n")
     cleaned = [
         line for line in lines

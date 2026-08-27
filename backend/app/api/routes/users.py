@@ -31,9 +31,7 @@ def read_users(session:SessionDep, pagination_skip:int = 0 , pagination_limit:in
 
     users = session.exec(users_query).all()
 
-    usersPublicDTO = [UsersPublicDTO.model_validate(user) for user in users]
-
-    return UsersPublicDTO(data= usersPublicDTO, count= users_count)
+    return UsersPublicDTO(users=users, count=users_count)
 
 @router.post("/create", response_model= UserPublicDTO, dependencies= [Depends(get_current_active_superuser)])
 def create_user(session: SessionDep, user_create_data: UserCreateDTO) -> Any:
@@ -53,7 +51,6 @@ def create_user(session: SessionDep, user_create_data: UserCreateDTO) -> Any:
         email_data = generate_new_account_email(
             email_to= user_created.email,
             username= user_created.email,
-            password= user_create_data.password
         )
 
         send_email(
@@ -76,7 +73,10 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
             raise HTTPException(400, "User with this email already exists")
 
     user_update_data_clean = user_update_data.model_dump(exclude_unset=True)
-    current_user.sqlmodel_update(user_update_data_clean)
+    extra = {}
+    if "password" in user_update_data_clean:
+        extra["hashed_password"] = get_password_hash(user_update_data_clean.pop("password"))
+    current_user.sqlmodel_update(user_update_data_clean, update=extra)
 
     session.add(current_user)
     session.commit()
@@ -84,7 +84,7 @@ def update_user_me(session:SessionDep, user_update_data: UserUpdateSelfDTO, curr
 
     return current_user
 
-@router.patch("me/password", response_model= Message)
+@router.patch("/me/password", response_model= Message)
 def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:CurrentUserDep) -> Any:
     """
     Method for a user updating their own password.
@@ -197,7 +197,7 @@ def update_user(session: SessionDep, user_update_data:UserUpdateDTO, user_id:uui
                 status_code=409, detail="User with this email already exists"
             )
 
-    user = crud.update_user(session=session, db_user=user, user_in=user_update_data)
+    user = crud.update_user(session=session, user=user, user_update_data=user_update_data)
     return user
 
 @router.delete("/{user_id}", response_model= Message, dependencies=[Depends(get_current_active_superuser)])

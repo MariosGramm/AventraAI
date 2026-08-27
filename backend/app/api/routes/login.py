@@ -59,9 +59,9 @@ def recover_password(email:str, session:SessionDep):
             html_content = email_data.html_content
         )
 
-        return Message(
-            message="If that email is registered, we sent a password recovery link"
-        )
+    return Message(
+        message="If that email is registered, we sent a password recovery link"
+    )
 
 @router.post("/reset-password/")
 def reset_password(session: SessionDep, body: NewPassword) -> Message:
@@ -90,17 +90,17 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     return Message(message="Password updated successfully")
 
 @router.post("/password-recovery-html-content/{email}")
-def recover_password_html_content(email:str, session:SessionDep, user:CurrentUserDep):
+def recover_password_html_content(email:str, session:SessionDep, current_user:CurrentUserDep):
     """
     HTML Content for Password Recovery Email
     """
+    if not current_user.is_superuser:
+        raise HTTPException(403, "User does not have sufficient rights for this action")
+
     user = crud.get_user_by_email(session=session, email=email)
 
     if not user:
         raise HTTPException(status_code=404, detail="User with this username does not exist in the system")
-
-    if not user.is_superuser:
-        raise HTTPException(403, "User does not have sufficient rights for this action")
 
     password_reset_token = generate_password_reset_token(email=email)
 

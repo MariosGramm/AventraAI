@@ -1,7 +1,6 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import client from '../services/client'
 import { useAuthContext } from '../context/AuthContext'
 
@@ -16,7 +15,7 @@ function GoogleLoginButton({ onError }: GoogleLoginButtonProps) {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await axios.post('http://localhost:8000/api/v1/auth/google', {
+                const response = await client.post('/auth/google', {
                     token: tokenResponse.access_token
                 })
                 localStorage.setItem('token', response.data.access_token)

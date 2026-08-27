@@ -215,9 +215,15 @@ def _build_pdf(search_session: SearchSession) -> bytes:
     from fpdf import FPDF
 
     pdf = FPDF()
-    pdf.add_font('Arial', fname='C:/Windows/Fonts/arial.ttf')
-    pdf.add_font('ArialB', fname='C:/Windows/Fonts/arialbd.ttf')
-    pdf.add_font('ArialI', fname='C:/Windows/Fonts/ariali.ttf')
+    import platform
+    if platform.system() == 'Windows':
+        pdf.add_font('Arial', fname='C:/Windows/Fonts/arial.ttf')
+        pdf.add_font('ArialB', fname='C:/Windows/Fonts/arialbd.ttf')
+        pdf.add_font('ArialI', fname='C:/Windows/Fonts/ariali.ttf')
+    else:
+        pdf.add_font('Arial', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf')
+        pdf.add_font('ArialB', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf')
+        pdf.add_font('ArialI', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf')
     pdf.set_auto_page_break(auto=True, margin=20)
     pdf.add_page()
 

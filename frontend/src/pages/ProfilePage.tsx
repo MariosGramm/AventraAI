@@ -39,7 +39,7 @@ function ProfilePage() {
         setError('')
         setSuccess('')
         try {
-            const response = await client.patch('/users/me', {
+            const response = await client.post('/users/update/me', {
                 first_name: firstName,
                 last_name: lastName
             })

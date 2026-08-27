@@ -54,7 +54,7 @@ class VectorRetriever:
 
         # Reinitialize the vector store after deletion
         self.vector_store = Chroma(
-            collection_name = "documents",
+            collection_name = "city_guides",
             embedding_function = self.embeddings,
             persist_directory = str(config.chroma_db_path)
         )

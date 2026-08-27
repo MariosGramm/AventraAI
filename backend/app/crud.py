@@ -177,7 +177,7 @@ def get_chat_sessions_by_user(*, session:Session, owner_id:uuid.UUID) -> list[Ch
     """
     statement = (
                 select(ChatSession)
-                .where(owner_id == owner_id)
+                .where(ChatSession.owner_id == owner_id)
                 .order_by(ChatSession.created_at)
                 )
     
