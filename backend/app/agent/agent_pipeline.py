@@ -28,7 +28,6 @@ from ..models import ChatMessage, ChatRole, SubscriptionTier, User
 from ..models import SearchSessionCreateDTO
 from .config import get_agent_config
 from .infrastructure.airport_codes import resolve_city_iata
-from .infrastructure.hotels import HotelsService, get_hotels_tool, get_price_compare_tool
 from .infrastructure.places import PlacesService, get_place_details_tool, get_places_tool
 from .infrastructure.weather import WeatherService, get_weather_tool
 from .prompts import (
@@ -118,7 +117,8 @@ class TravelAgentPipeline:
         weather     = self.weather_service.get_weather(destination, check_in, check_out)
 
         flight_info = None
-        origin_iata = search_data.origin_iata or resolve_city_iata(search_data.origin)
+        origin = self._translate_destination(search_data.origin) if search_data.origin else None
+        origin_iata = search_data.origin_iata or resolve_city_iata(origin)
         destination_iata = search_data.destination_iata or resolve_city_iata(destination)
 
         # Construct the Skyscanner URL
@@ -519,3 +519,23 @@ class TravelAgentPipeline:
         ])
         chain = prompt | llm | StrOutputParser()
         return chain.invoke({"message": first_message}).strip()[:100]
+
+    def _translate_destination(self, destination: str) -> str:
+        """Translate non-English destination names to English for API compatibility."""
+        if destination.isascii():
+            return destination
+        llm = ChatOpenAI(
+            model=self.config.contextualize_model,
+            temperature=0,
+            max_tokens=20,
+        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system",
+             "Translate the given place name to English. "
+             "Return ONLY the English name, nothing else."),
+            ("human", "{destination}"),
+        ])
+        chain = prompt | llm | StrOutputParser()
+        translated = chain.invoke({"destination": destination}).strip()
+        logger.info("Translated destination: %s -> %s", destination, translated)
+        return translated or destination

@@ -12,7 +12,6 @@ Endpoints used:
 
 import logging
 import requests
-from langchain_core.tools import tool
 from ..config import get_agent_config
 
 logger = logging.getLogger(__name__)
@@ -277,50 +276,3 @@ class HotelsService:
             "google_hotels": f"https://hotels.google.com/entity/{listing_id}",
         }
         return templates.get(platform)
-
-
-
-@tool
-def get_hotels_tool(
-    destination: str,
-    check_in:    str,
-    check_out:   str,
-    adults:      int = 2,
-) -> list[dict]:
-    """
-    Search for available hotels with real-time pricing.
-    Use this when the user asks about hotels, accommodation, or where to stay.
-
-    Args:
-        destination: City name and country (e.g. 'Prague, CZ')
-        check_in:    Check-in date in ISO format (YYYY-MM-DD)
-        check_out:   Check-out date in ISO format (YYYY-MM-DD)
-        adults:      Number of adults (default 2)
-
-    Returns:
-        List of hotels with name, rating, price, amenities, and booking URLs.
-    """
-    return HotelsService().get_hotels(destination, check_in, check_out, adults)
-
-
-@tool
-def get_price_compare_tool(
-    hotel_name: str,
-    location:   str,
-    check_in:   str,
-    check_out:  str,
-) -> dict:
-    """
-    Compare prices for a specific hotel across all booking platforms.
-    Use this when the user wants to find the cheapest price for a specific hotel.
-
-    Args:
-        hotel_name: Exact hotel name (e.g. 'Hotel Aria Prague')
-        location:   City and country (e.g. 'Prague, CZ')
-        check_in:   Check-in date in ISO format (YYYY-MM-DD)
-        check_out:  Check-out date in ISO format (YYYY-MM-DD)
-
-    Returns:
-        Price comparison across OTAs with direct booking URLs.
-    """
-    return HotelsService().get_price_compare(hotel_name, location, check_in, check_out) or {}
