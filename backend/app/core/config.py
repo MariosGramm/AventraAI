@@ -70,7 +70,7 @@ class Settings(BaseSettings):
 
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # JWT token expires after 8 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # JWT token expires after 24 hours
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
