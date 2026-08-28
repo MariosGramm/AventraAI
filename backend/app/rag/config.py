@@ -10,7 +10,6 @@ class Config:
 
     # Paths
     base_path: Path = Path(__file__).parent
-    chroma_db_path: Path = None
     data_path: Path = base_path / "data"
 
     # Chunking
@@ -24,17 +23,11 @@ class Config:
     # Embedding
     embedding_model: str = "text-embedding-3-small"
 
-    def __post_init__(self):
-        if self.chroma_db_path is None:
-            self.chroma_db_path = self.base_path / "chroma_db"
+    # Pinecone
+    pinecone_index_name: str = "city-guides"
 
-    # Create directory if it doesn't exist
-        self.chroma_db_path.mkdir(exist_ok=True)
 
 @lru_cache()
 def get_rag_config() -> Config:
     """Get the configuration for the RAG system - Singleton pattern."""
     return Config()
-    
-
-#TODO : Implement sample docs path and sample docs for testing purposes if needed.

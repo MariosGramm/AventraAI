@@ -23,13 +23,6 @@ class DocumentIngestor:
         filename  = Path(file_path).name
         city_name = filename.replace(".md", "").replace("_", " ").title()
 
-        # Duplicate check
-        existing = self.vector_store._collection.get(
-            where={"source": filename}, limit=1
-        )
-        if existing["ids"]:
-            raise ValueError(f"Document **{filename}** already exists in the vector store.")
-
         # Load
         docs = self._load(file_path)
         if not docs:
