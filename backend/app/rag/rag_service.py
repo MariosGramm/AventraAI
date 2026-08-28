@@ -1,7 +1,7 @@
 """
 rag/rag_service.py — RAG Service
 ----------------------------------
-Provides a clean, unified interface for interacting with the ChromaDB
+Provides a clean, unified interface for interacting with the Pinecone
 vector store and the city guide knowledge base.
 
 This is NOT an orchestration layer — it is a service facade that

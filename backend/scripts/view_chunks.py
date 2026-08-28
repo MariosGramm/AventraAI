@@ -1,29 +1,31 @@
 """
-View the first few chunks in the ChromaDB collection for city guides.
+View stats and sample chunks from the Pinecone index.
 
 Usage (from backend/):
     uv run python scripts/view_chunks.py
 """
 
+import sys
 from pathlib import Path
 
-import chromadb
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-SCRIPT_DIR  = Path(__file__).resolve().parent          # scripts/
-BACKEND_DIR = SCRIPT_DIR.parent                         # backend/
-CHROMA_PATH = BACKEND_DIR / "app" / "rag" / "chroma_db"
+from dotenv import load_dotenv
+load_dotenv()
 
-client = chromadb.PersistentClient(path='app/rag/chroma_db')
-collection = client.get_collection('city_guides')
+from app.rag.rag_service import RAGService
 
-print('Total chunks:', collection.count())
+rag = RAGService()
 
+stats = rag.get_stats()
+print(f"Total vectors: {stats.get('total_chunks', 0)}")
+print(f"Namespaces: {stats.get('namespaces', {})}")
 
-results = collection.peek(15)  # Get the first 15 chunks
-for i, (doc, meta) in enumerate(zip(results['documents'], results['metadatas'])):
-    print(f'--- Chunk {i+1} ---')
-    print(f'City:    {meta.get("city")}')
-    print(f'Section: {meta.get("section")}')
-    print(f'Source:  {meta.get("source")}')
-    print(f'Content: {doc[:100]}')
-    print()
+print("\n🔍 Sample query: 'best things to see and do'")
+results = rag.retrieve("best things to see and do", k=5)
+for i, r in enumerate(results, 1):
+    print(f"\n--- Chunk {i} ---")
+    print(f"City:    {r.metadata.get('city', 'Unknown')}")
+    print(f"Section: {r.metadata.get('section', 'Unknown')}")
+    print(f"Source:  {r.metadata.get('source', 'Unknown')}")
+    print(f"Content: {r.page_content[:100]}")

@@ -1,6 +1,6 @@
 """
 On-demand city guide fetcher.
-Fetches a city guide from Wikivoyage and indexes it into ChromaDB
+Fetches a city guide from Wikivoyage and indexes it into Pinecone
 when a user searches for a city not yet in the knowledge base.
 """
 
