@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Annotated, Any
 from app import crud
-from app.core.security import create_access_token
+from app.core.security import create_access_token, verify_password
 from app.utils import generate_password_reset_token, generate_password_reset_email, send_email, verify_password_reset_token
 from app.models import Message, NewPassword, Token, UserPublicDTO, UserUpdateDTO
 from app.api.deps import CurrentUserDep, SessionDep
@@ -78,6 +78,10 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
         raise HTTPException(400, "Invalid token")
     elif not user.is_active:
         raise HTTPException(400, "User is not active")
+
+    is_same, _ = verify_password(body.new_password, user.hashed_password)
+    if is_same:
+        raise HTTPException(400, "New password cannot be the same as the current one")
 
     user_to_update = UserUpdateDTO(password= body.new_password)
 
