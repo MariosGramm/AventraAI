@@ -243,6 +243,6 @@ def get_place_details_tool(place_id: str) -> dict:
         place_id: Google Places ID (e.g. 'ChIJN1t_tDeuEmsRUsoyG83frY4')
 
     Returns:
-        Detailed place dict with hours, reviews, summary, and photo URLs.
+        Detailed place dict with hours, reviews, and summary.
     """
     return PlacesService().get_place_details(place_id)

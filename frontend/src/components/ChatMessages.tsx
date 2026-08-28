@@ -8,24 +8,71 @@ const AgentIcon = () => (
     </svg>
 )
 
+function BrokenImage({ src }: { src: string }) {
+    return (
+        <div style={{
+            maxWidth: '350px', width: '100%', borderRadius: '10px',
+            background: '#f8f8ff', border: '1px solid #e8e6f0',
+            padding: '16px', textAlign: 'center', margin: '6px 0'
+        }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '6px' }}>
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '6px' }}>Photo could not be loaded</div>
+            <a href={src} target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '11px', color: '#534AB7', wordBreak: 'break-all' }}>
+                {src.length > 80 ? src.slice(0, 80) + '...' : src}
+            </a>
+        </div>
+    )
+}
+
+function ChatImage({ src, alt }: { src: string, alt: string }) {
+    const [broken, setBroken] = useState(false)
+    if (broken) return <BrokenImage src={src} />
+    return (
+        <img
+            src={src} alt={alt}
+            onError={() => setBroken(true)}
+            style={{
+                maxWidth: '350px', width: '100%', height: 'auto', maxHeight: '250px',
+                objectFit: 'cover', borderRadius: '10px', margin: '6px 0', display: 'block'
+            }}
+        />
+    )
+}
+
+function cleanStreamingText(text: string): string {
+    return text
+        .replace(/!\[[^\]]*\]?\(?[^)]*\)?/g, '')
+        .replace(/!\[[^\]]*$/g, '')
+        .replace(/https?:\/\/lh3\.googleusercontent\.com\/\S*/g, '')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim()
+}
+
 function formatMarkdown(text: string): React.ReactNode[] {
-    return text.split(/(!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)|\*\*.*?\*\*)/g).map((part, i) => {
-        const imgMatch = part.match(/^!\[(.*?)\]\((.*?)\)$/)
+    let fixed = text.replace(/!\[([^\]]*)\]\(([\s\S]*?)\)/g, (_, alt, url) =>
+        `![${alt}](${url.replace(/\s+/g, '')})`
+    )
+    fixed = fixed.replace(/!\[([^\]]*)\]\(([^)\s]+)\s*$/gm, '![$1]($2)')
+    fixed = fixed.replace(/!\[([^\]]*)\]\(([^)]+)$/g, '![$1]($2)')
+    return fixed.split(/(!\[[^\]]*\]\([^)]*\)|\[.*?\]\(.*?\)|\*\*.*?\*\*)/g).map((part, i) => {
+        const imgMatch = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
         if (imgMatch) {
-            return React.createElement('img', {
-                key: i, src: imgMatch[2], alt: imgMatch[1],
-                style: { maxWidth: '100%', borderRadius: '8px', marginTop: '8px', marginBottom: '8px' }
-            })
+            return <ChatImage key={i} src={imgMatch[2].trim()} alt={imgMatch[1]} />
         }
         const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/)
         if (linkMatch) {
-            return React.createElement('a', {
-                key: i, href: linkMatch[2], target: '_blank', rel: 'noopener noreferrer',
-                style: { color: '#534AB7', textDecoration: 'underline' }
-            }, linkMatch[1])
+            return (
+                <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+                   style={{ color: '#534AB7', textDecoration: 'underline' }}>
+                    {linkMatch[1]}
+                </a>
+            )
         }
         if (part.startsWith('**') && part.endsWith('**')) {
-            return React.createElement('strong', { key: i }, part.slice(2, -2))
+            return <strong key={i}>{part.slice(2, -2)}</strong>
         }
         return part
     })
@@ -82,9 +129,9 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             padding: '10px 14px', borderRadius: '12px',
                             background: 'white', border: '0.5px solid #e0e0e0',
                             fontSize: '14px', lineHeight: 1.6, color: '#26215C',
-                            whiteSpace: 'pre-wrap'
+                            whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word'
                         }}>
-                            {formatMarkdown(streamingText)}
+                            {cleanStreamingText(streamingText)}
                         </div>
                     </div>
                 )}
@@ -204,7 +251,7 @@ function MessageBubble({ msg, index, onEdit, userInitials }: { msg: Message, ind
                     background: msg.role === 'user' ? '#7F77DD' : 'white',
                     color: msg.role === 'user' ? 'white' : '#26215C',
                     border: msg.role === 'assistant' ? '0.5px solid #e0e0e0' : 'none',
-                    whiteSpace: 'pre-wrap'
+                    whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word'
                 }}>
                     {formatMarkdown(msg.content)}
                 </div>
