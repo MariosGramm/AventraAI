@@ -212,7 +212,7 @@ def create_search_history(*,
                         step:AgentStep,
                         input:str,
                         output:str,
-                        duration_ms:str) -> SearchHistory:
+                        duration_ms:float) -> SearchHistory:
     """
     CRUD method for creating a search history.
     """

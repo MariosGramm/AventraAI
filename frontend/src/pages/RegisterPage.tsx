@@ -111,7 +111,7 @@ function RegisterPage() {
                         </Form.Group>
 
                         <Button
-                            type="submit"
+                            type="button"
                             onClick={() => handleRegister(firstName, lastName, email, password)}
                             style={{ width: '100%', backgroundColor: '#7F77DD', border: 'none' }}
                             disabled={loading}

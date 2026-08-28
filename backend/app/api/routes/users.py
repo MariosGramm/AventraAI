@@ -103,7 +103,7 @@ def update_password_me(*, session:SessionDep, data:UpdatePassword, current_user:
     session.add(current_user)
     session.commit()
 
-    return Message("Password updated successfully!")
+    return Message(message="Password updated successfully!")
 
 @router.get("/me", response_model=UserPublicDTO)
 def read_user_me(current_user:CurrentUserDep) -> Any:
@@ -124,7 +124,7 @@ def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
     session.delete(current_user)
     session.commit()
 
-    return Message("User deleted successfully!")     
+    return Message(message="User deleted successfully!")     
 
 @router.post("/signup", response_model=UserPublicDTO)
 def register_user(session:SessionDep, user_register_data:UserCreateSignupDTO) -> Any :

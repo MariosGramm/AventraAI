@@ -32,6 +32,7 @@ def _check_and_update_freemium(session: SessionDep, current_user: CurrentUserDep
 
     if (current_user.searches_reset_date is None or now >= current_user.searches_reset_date):
         current_user.monthly_searches_used = 0
+        current_user.monthly_messages_used = 0
         current_user.searches_reset_date = now + relativedelta(months=1)
         session.add(current_user)
         session.commit()
