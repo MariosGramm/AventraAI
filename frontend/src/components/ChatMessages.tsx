@@ -9,11 +9,26 @@ const AgentIcon = () => (
 )
 
 function formatMarkdown(text: string): React.ReactNode[] {
-    return text.split(/(\*\*.*?\*\*)/g).map((part, i) =>
-        part.startsWith('**') && part.endsWith('**')
-            ? React.createElement('strong', { key: i }, part.slice(2, -2))
-            : part
-    )
+    return text.split(/(!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)|\*\*.*?\*\*)/g).map((part, i) => {
+        const imgMatch = part.match(/^!\[(.*?)\]\((.*?)\)$/)
+        if (imgMatch) {
+            return React.createElement('img', {
+                key: i, src: imgMatch[2], alt: imgMatch[1],
+                style: { maxWidth: '100%', borderRadius: '8px', marginTop: '8px', marginBottom: '8px' }
+            })
+        }
+        const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/)
+        if (linkMatch) {
+            return React.createElement('a', {
+                key: i, href: linkMatch[2], target: '_blank', rel: 'noopener noreferrer',
+                style: { color: '#534AB7', textDecoration: 'underline' }
+            }, linkMatch[1])
+        }
+        if (part.startsWith('**') && part.endsWith('**')) {
+            return React.createElement('strong', { key: i }, part.slice(2, -2))
+        }
+        return part
+    })
 }
 
 interface Message {
