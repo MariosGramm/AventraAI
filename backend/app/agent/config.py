@@ -18,8 +18,7 @@ class Config:
     # Chat mode - Free tier
     chat_llm_model_free: str = "gpt-4o-mini"
     chat_llm_model_paid: str = "gpt-4o"
-    chat_temperature:    float = 0.7       
-    chat_max_tokens:     int   = 2000 
+    chat_temperature:    float = 0.7
 
     #Contextualization mode
     contextualize_model: str = "gpt-4o-mini"

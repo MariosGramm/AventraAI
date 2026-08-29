@@ -288,10 +288,10 @@ class TravelAgentPipeline:
             model  = self.config.search_llm_model_paid if is_paid else self.config.search_llm_model_free
             temp   = self.config.search_temperature
             tokens = self.config.search_max_tokens
-        else:   #chat
+        else:
             model  = self.config.chat_llm_model_paid if is_paid else self.config.chat_llm_model_free
             temp   = self.config.chat_temperature
-            tokens = self.config.chat_max_tokens
+            tokens = None  # let the model stop naturally
 
         return ChatOpenAI(model=model, temperature=temp, max_tokens=tokens)
 
