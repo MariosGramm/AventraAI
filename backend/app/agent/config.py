@@ -12,8 +12,7 @@ class Config:
     #Search mode
     search_llm_model_free: str = "gpt-4o-mini"
     search_llm_model_paid: str = "gpt-4o"
-    search_temperature: float = 0.2      
-    search_max_tokens: int = 16000
+    search_temperature: float = 0.2
 
     # Chat mode - Free tier
     chat_llm_model_free: str = "gpt-4o-mini"

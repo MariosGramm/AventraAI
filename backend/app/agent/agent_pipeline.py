@@ -287,13 +287,11 @@ class TravelAgentPipeline:
         if mode == "search":
             model  = self.config.search_llm_model_paid if is_paid else self.config.search_llm_model_free
             temp   = self.config.search_temperature
-            tokens = self.config.search_max_tokens
         else:
             model  = self.config.chat_llm_model_paid if is_paid else self.config.chat_llm_model_free
             temp   = self.config.chat_temperature
-            tokens = None  # let the model stop naturally
 
-        return ChatOpenAI(model=model, temperature=temp, max_tokens=tokens)
+        return ChatOpenAI(model=model, temperature=temp)
 
     def _check_off_topic(self, message: str, history: list[ChatMessage], user: User) -> str | None:
         """
