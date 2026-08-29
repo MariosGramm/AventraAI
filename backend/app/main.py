@@ -11,7 +11,7 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 if settings.SENTRY_DSN:
     sentry_sdk.init(
         dsn=str(settings.SENTRY_DSN),
-        traces_sample_rate=1.0,  
+        traces_sample_rate=1.0 if settings.ENVIRONMENT == "local" else 0.1,
         integrations=[
             FastApiIntegration(),
             SqlalchemyIntegration(),
