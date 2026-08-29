@@ -12,10 +12,15 @@ Endpoints used:
 
 import requests
 import logging
+from cachetools import TTLCache
 from langchain_core.tools import tool
 from ..config import get_agent_config
 
 logger = logging.getLogger(__name__)
+
+_places_cache  = TTLCache(maxsize=512, ttl=86400)   # 24h — search results
+_details_cache = TTLCache(maxsize=512, ttl=86400)   # 24h — place details
+_photo_cache   = TTLCache(maxsize=2048, ttl=3600)   # 1h  — photo URLs expire quickly
 
 # Level 1 — Search 
 SEARCH_FIELD_MASK = (
@@ -66,17 +71,11 @@ class PlacesService:
         }
 
     def get_places(self, destination: str, category: str) -> list[dict]:
-        """
-        Search for places in a destination by category.
-        Uses Text Search (New) and returns normalized records.
+        cache_key = (destination.lower(), category.lower())
+        if cache_key in _places_cache:
+            logger.debug("Places cache hit: %s", cache_key)
+            return _places_cache[cache_key]
 
-        Args:
-            destination: City or region name (e.g. 'Prague', 'Tokyo')
-            category: Place category such as 'attractions' or 'restaurants'
-
-        Returns:
-            List of place dicts including ID, rating, address, types, and one photo URL.
-        """
         queries = {
             "attractions": f"top tourist attractions in {destination}",
             "restaurants": f"best restaurants in {destination}",
@@ -94,7 +93,9 @@ class PlacesService:
 
         if response.status_code == 200:
             places = response.json().get("places", [])
-            return self._parse_places(places)
+            result = self._parse_places(places)
+            _places_cache[cache_key] = result
+            return result
         else:
             logger.error(f"Places search error: {response.status_code} — {response.text}")
             return []
@@ -122,7 +123,10 @@ class PlacesService:
         return details if details is not None else {}
 
     def _fetch_details(self, place_id: str) -> dict | None:
-        """Raw details fetch. Returns parsed dict or None on failure."""
+        if place_id in _details_cache:
+            logger.debug("Details cache hit: %s", place_id)
+            return _details_cache[place_id]
+
         headers = {**self.headers, "X-Goog-FieldMask": DETAILS_FIELD_MASK}
         response = requests.get(
             f"{PLACE_DETAIL_URL}/{place_id}",
@@ -130,7 +134,9 @@ class PlacesService:
             timeout=10
         )
         if response.status_code == 200:
-            return self._parse_place_details(response.json())
+            result = self._parse_place_details(response.json())
+            _details_cache[place_id] = result
+            return result
         logger.error(f"Place details error: {response.status_code} — {response.text}")
         return None
 
@@ -150,16 +156,9 @@ class PlacesService:
         return None
 
     def _get_photo_url(self, photo_name: str) -> str | None:
-        """
-        Resolve a direct photo URL from a Google Places photo resource name.
-        Uses skipHttpRedirect=true so the API returns photoUri directly.
+        if photo_name in _photo_cache:
+            return _photo_cache[photo_name]
 
-        Args:
-            photo_name: API photo resource name from a place payload.
-
-        Returns:
-            Direct photo URI if available; otherwise None.
-        """
         try:
             response = requests.get(
                 f"{PLACE_PHOTOS_URL}/{photo_name}/media",
@@ -171,7 +170,10 @@ class PlacesService:
                 timeout=10
             )
             if response.status_code == 200:
-                return response.json().get("photoUri")
+                url = response.json().get("photoUri")
+                if url:
+                    _photo_cache[photo_name] = url
+                return url
         except requests.RequestException as e:
             logger.error(f"Photo fetch error: {e}")
         return None
@@ -195,14 +197,16 @@ class PlacesService:
             if photos:
                 photo_url = self._get_photo_url(photos[0].get("name"))
 
+            name = place.get("displayName", {}).get("text", "")
             results.append({
                 "id":          place.get("id"),
-                "name":        place.get("displayName", {}).get("text"),
+                "name":        name,
                 "rating":      place.get("rating"),
                 "address":     place.get("formattedAddress"),
                 "price_level": place.get("priceLevel"),
                 "types":       place.get("types", []),
-                "photo_url":   photo_url,   
+                "photo_url":   photo_url,
+                "photo":       f"![{name}]({photo_url})" if photo_url else None,
             })
         return results
 

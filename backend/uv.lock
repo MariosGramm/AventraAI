@@ -244,6 +244,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },
+    { name = "cachetools" },
     { name = "chromadb" },
     { name = "email-validator" },
     { name = "emails" },
@@ -307,6 +308,7 @@ rag = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.12.1,<2.0.0" },
+    { name = "cachetools", specifier = ">=7.1.4" },
     { name = "chromadb", specifier = ">=1.5.9" },
     { name = "email-validator", specifier = ">=2.1.0.post1,<3.0.0.0" },
     { name = "emails", specifier = ">=0.6,<1.0" },

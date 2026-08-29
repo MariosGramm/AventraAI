@@ -21,6 +21,7 @@ LangSmith traces automatically when LANGCHAIN_TRACING_V2=true in .env.
 
 import logging
 
+from cachetools import TTLCache
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
 
@@ -29,6 +30,8 @@ from .ingestion.ingestor import DocumentIngestor
 from .retrieval.retriever import VectorRetriever
 
 logger = logging.getLogger(__name__)
+
+_rag_cache = TTLCache(maxsize=256, ttl=86400)  # 24h — city guide chunks rarely change
 
 
 class RAGService:
@@ -46,7 +49,14 @@ class RAGService:
         self.retriever = VectorRetriever(self.vector_store, self.embeddings)
 
     def retrieve(self, query: str, k: int = None) -> list:
-        return self.retriever.get_retriever(k=k).invoke(query)
+        cache_key = (query.lower().strip(), k)
+        if cache_key in _rag_cache:
+            logger.debug("RAG cache hit: %s", query)
+            return _rag_cache[cache_key]
+
+        results = self.retriever.get_retriever(k=k).invoke(query)
+        _rag_cache[cache_key] = results
+        return results
 
     def get_stats(self) -> dict:
         return self.retriever.get_stats()
