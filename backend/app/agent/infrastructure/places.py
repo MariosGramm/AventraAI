@@ -99,32 +99,54 @@ class PlacesService:
             logger.error(f"Places search error: {response.status_code} — {response.text}")
             return []
 
-    def get_place_details(self, place_id: str) -> dict:
+    def get_place_details(self, place_id: str, place_name: str | None = None) -> dict:
         """
         Fetch detailed information for a specific place.
-        Used when the user asks for deeper context about a selected place.
-
-        Args:
-            place_id: Google Places ID for the target place.
-
-        Returns:
-            Dict with ratings, opening hours, editorial summary, reviews,
-            accessibility metadata, and up to 3 photo URLs.
+        If the Place ID is stale (404), falls back to a text search
+        using place_name to obtain a fresh ID and retries.
         """
-        headers = {**self.headers, "X-Goog-FieldMask": DETAILS_FIELD_MASK}
+        details = self._fetch_details(place_id)
+        if details is not None:
+            return details
 
+        if not place_name:
+            return {}
+
+        logger.info(f"Place ID expired, re-searching for '{place_name}'")
+        fresh = self._search_fresh_id(place_name)
+        if not fresh:
+            return {}
+
+        details = self._fetch_details(fresh)
+        return details if details is not None else {}
+
+    def _fetch_details(self, place_id: str) -> dict | None:
+        """Raw details fetch. Returns parsed dict or None on failure."""
+        headers = {**self.headers, "X-Goog-FieldMask": DETAILS_FIELD_MASK}
         response = requests.get(
             f"{PLACE_DETAIL_URL}/{place_id}",
             headers=headers,
             timeout=10
         )
-
         if response.status_code == 200:
-            data = response.json()
-            return self._parse_place_details(data)
-        else:
-            logger.error(f"Place details error: {response.status_code} — {response.text}")
-            return {}
+            return self._parse_place_details(response.json())
+        logger.error(f"Place details error: {response.status_code} — {response.text}")
+        return None
+
+    def _search_fresh_id(self, place_name: str) -> str | None:
+        """Text-search for a place by name and return the first Place ID."""
+        headers = {**self.headers, "X-Goog-FieldMask": "places.id"}
+        resp = requests.post(
+            TEXT_SEARCH_URL,
+            json={"textQuery": place_name, "maxResultCount": 1, "languageCode": "en"},
+            headers=headers,
+            timeout=10
+        )
+        if resp.status_code == 200:
+            places = resp.json().get("places", [])
+            if places:
+                return places[0].get("id")
+        return None
 
     def _get_photo_url(self, photo_name: str) -> str | None:
         """
@@ -234,15 +256,16 @@ def get_places_tool(destination: str, category: str) -> list[dict]:
 
 
 @tool
-def get_place_details_tool(place_id: str) -> dict:
+def get_place_details_tool(place_id: str, place_name: str) -> dict:
     """
     Get detailed information about a specific place.
     Use this when the user asks for more details about a specific place.
 
     Args:
         place_id: Google Places ID (e.g. 'ChIJN1t_tDeuEmsRUsoyG83frY4')
+        place_name: Human-readable name of the place (used as fallback if the ID expired)
 
     Returns:
         Detailed place dict with hours, reviews, and summary.
     """
-    return PlacesService().get_place_details(place_id)
+    return PlacesService().get_place_details(place_id, place_name)
