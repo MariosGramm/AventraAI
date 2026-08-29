@@ -99,11 +99,11 @@ class PlacesService:
             logger.error(f"Places search error: {response.status_code} — {response.text}")
             return []
 
-    def get_place_details(self, place_id: str, place_name: str | None = None) -> dict:
+    def get_place_details(self, place_id: str, place_name: str | None = None, location: str | None = None) -> dict:
         """
         Fetch detailed information for a specific place.
         If the Place ID is stale (404), falls back to a text search
-        using place_name to obtain a fresh ID and retries.
+        using place_name + location to obtain a fresh ID and retries.
         """
         details = self._fetch_details(place_id)
         if details is not None:
@@ -112,8 +112,9 @@ class PlacesService:
         if not place_name:
             return {}
 
-        logger.info(f"Place ID expired, re-searching for '{place_name}'")
-        fresh = self._search_fresh_id(place_name)
+        query = f"{place_name} {location}" if location else place_name
+        logger.info(f"Place ID expired, re-searching for '{query}'")
+        fresh = self._search_fresh_id(query)
         if not fresh:
             return {}
 
@@ -256,7 +257,7 @@ def get_places_tool(destination: str, category: str) -> list[dict]:
 
 
 @tool
-def get_place_details_tool(place_id: str, place_name: str) -> dict:
+def get_place_details_tool(place_id: str, place_name: str, location: str) -> dict:
     """
     Get detailed information about a specific place.
     Use this when the user asks for more details about a specific place.
@@ -264,8 +265,9 @@ def get_place_details_tool(place_id: str, place_name: str) -> dict:
     Args:
         place_id: Google Places ID (e.g. 'ChIJN1t_tDeuEmsRUsoyG83frY4')
         place_name: Human-readable name of the place (used as fallback if the ID expired)
+        location: City or area where the place is located (e.g. 'Prague')
 
     Returns:
         Detailed place dict with hours, reviews, and summary.
     """
-    return PlacesService().get_place_details(place_id, place_name)
+    return PlacesService().get_place_details(place_id, place_name, location)
