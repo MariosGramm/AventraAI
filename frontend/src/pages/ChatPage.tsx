@@ -7,6 +7,7 @@ import ChatInput from '../components/ChatInput'
 import SearchForm from '../components/SearchForm'
 import type { SearchFormData } from '../components/SearchForm'
 import WelcomeScreen from '../components/WelcomeScreen'
+import OnboardingTour from '../components/OnboardingTour'
 import client from '../services/client'
 import { useAuthContext } from '../context/AuthContext'
 
@@ -30,6 +31,7 @@ function ChatPage() {
     const streamRef = useRef<ReturnType<typeof setInterval> | null>(null)
     const [showSearchForm, setShowSearchForm] = useState(false)
     const [searchLoading, setSearchLoading] = useState(false)
+    const [showTour, setShowTour] = useState(() => !localStorage.getItem('onboarding_done'))
 
     useEffect(() => () => {
         if (streamRef.current) clearInterval(streamRef.current)
@@ -251,6 +253,13 @@ function ChatPage() {
                 )}
                 <ChatInput onSend={handleSend} loading={loading || streamingText !== null} isStreaming={streamingText !== null} onStop={stopStreaming} onSearchToggle={() => setShowSearchForm(prev => !prev)} />
             </div>
+
+            {showTour && (
+                <OnboardingTour onComplete={() => {
+                    setShowTour(false)
+                    localStorage.setItem('onboarding_done', '1')
+                }} />
+            )}
         </div>
     )
 }

@@ -106,6 +106,7 @@ function Sidebar({ onNewChat, currentSessionId, onSelectChat, refreshTrigger, is
 
     return (
         <div
+            id="sidebar-area"
             style={{ width: '240px', background: '#f8f8ff', borderRight: '0.5px solid #e0e0e0', display: 'flex', flexDirection: 'column', height: '100vh', flexShrink: 0, position: 'relative' }}
             onClick={() => setContextMenu(null)}
         >

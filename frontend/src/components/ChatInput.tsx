@@ -30,7 +30,7 @@ function ChatInput({ onSend, loading, isStreaming, onStop, onSearchToggle }: Cha
     }
 
     return (
-        <div style={{ padding: '6px 0 12px', background: 'white', display: 'flex', justifyContent: 'center' }}>
+        <div id="chat-input-area" style={{ padding: '6px 0 12px', background: 'white', display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: '100%', maxWidth: '680px', padding: '0 16px' }}>
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
@@ -40,6 +40,7 @@ function ChatInput({ onSend, loading, isStreaming, onStop, onSearchToggle }: Cha
                     {onSearchToggle && (
                         <button
                             type="button"
+                            id="search-toggle-btn"
                             onClick={onSearchToggle}
                             disabled={loading}
                             title="Generate travel package"
