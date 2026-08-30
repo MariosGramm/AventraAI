@@ -117,6 +117,7 @@ class User(UserBase, AuditableBase, table=True):
     #Google sign in fields
     google_id: str | None = Field(default=None, max_length=255, description="The unique identifier for the user from Google sign-in.")
     auth_provider: AuthProvider = Field(default=AuthProvider.EMAIL, description="The authentication provider for the user (Google or Email).")
+    has_seen_onboarding: bool = Field(default=False)
 
     chat_sessions: list["ChatSession"] = Relationship(back_populates="owner", cascade_delete=True)
     search_sessions: list["SearchSession"] = Relationship(back_populates="owner", cascade_delete=True)
@@ -133,6 +134,7 @@ class UserPublicDTO(UserBase):
     monthly_messages_used: int = Field(default=0, description="The number of chat messages used this month.")
     subscription_cancel_at_period_end: bool = Field(default=False, description="Whether the Pro subscription is scheduled to cancel at period end.")
     subscription_current_period_end: datetime | None = Field(default=None, description="When the current Pro billing period ends.")
+    has_seen_onboarding: bool = Field(default=False)
     created_at: datetime | None = Field(description="The timestamp when the user was created.")
 
 class UsersPublicDTO(SQLModel):

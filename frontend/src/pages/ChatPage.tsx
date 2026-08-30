@@ -31,7 +31,11 @@ function ChatPage() {
     const streamRef = useRef<ReturnType<typeof setInterval> | null>(null)
     const [showSearchForm, setShowSearchForm] = useState(false)
     const [searchLoading, setSearchLoading] = useState(false)
-    const [showTour, setShowTour] = useState(() => !localStorage.getItem('onboarding_done'))
+    const [showTour, setShowTour] = useState(false)
+
+    useEffect(() => {
+        if (user && !user.has_seen_onboarding) setShowTour(true)
+    }, [user])
 
     useEffect(() => () => {
         if (streamRef.current) clearInterval(streamRef.current)
@@ -257,7 +261,7 @@ function ChatPage() {
             {showTour && (
                 <OnboardingTour onComplete={() => {
                     setShowTour(false)
-                    localStorage.setItem('onboarding_done', '1')
+                    client.post('/users/me/onboarding-complete').catch(() => {})
                 }} />
             )}
         </div>

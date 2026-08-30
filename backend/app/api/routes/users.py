@@ -112,6 +112,13 @@ def read_user_me(current_user:CurrentUserDep) -> Any:
     """
     return current_user
 
+@router.post("/me/onboarding-complete", response_model=Message)
+def mark_onboarding_complete(session: SessionDep, current_user: CurrentUserDep) -> Any:
+    current_user.has_seen_onboarding = True
+    session.add(current_user)
+    session.commit()
+    return Message(message="Onboarding marked as complete")
+
 @router.post("/me", response_model=Message)
 def delete_user_me(session:SessionDep, current_user:CurrentUserDep)-> Any :
     """
