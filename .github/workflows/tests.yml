@@ -1,14 +1,12 @@
 name: Backend Tests
 
 on:
-  workflow_dispatch:  # manual trigger only until production is ready
-  # Uncomment below to auto-run on push/PR:
-  # push:
-  #   branches: [main]
-  #   paths: ['backend/**']
-  # pull_request:
-  #   branches: [main]
-  #   paths: ['backend/**']
+  push:
+    branches: [main]
+    paths: ['backend/**']
+  pull_request:
+    branches: [main]
+    paths: ['backend/**']
 
 jobs:
   test:
