@@ -237,7 +237,7 @@ function ChatPage() {
                     </div>
                 ) : (
                     <>
-                        {messages.length === 0 && streamingText === null
+                        {messages.length === 0 && streamingText === null && !loading
                             ? <WelcomeScreen onSuggestion={handleSend} />
                             : <ChatMessages messages={messages} loading={loading} streamingText={streamingText} onEdit={handleEdit} userInitials={userInitials} />
                         }
