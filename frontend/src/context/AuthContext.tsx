@@ -11,6 +11,7 @@ interface User {
     monthly_messages_used: number
     subscription_cancel_at_period_end: boolean
     subscription_current_period_end: string | null
+    has_seen_onboarding: boolean
 }
 
 interface AuthContextType {
