@@ -90,8 +90,12 @@ class WeatherService:
             logger.warning(f"Could not fetch coordinates for {destination}")
             return None
 
-        if self.is_within_forecast_range(date_from):
+        if self.is_within_forecast_range(date_from) and self.is_within_forecast_range(date_to):
             data = self._get_forecast(coordinates, date_from, date_to)
+        elif self.is_within_forecast_range(date_from):
+            # Start is forecastable but end isn't — cap at 16 days from today
+            capped_end = (date.today() + timedelta(days=16)).isoformat()
+            data = self._get_forecast(coordinates, date_from, capped_end)
         else:
             data = self._get_historical(coordinates, date_from, date_to)
 
