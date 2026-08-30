@@ -189,6 +189,7 @@ class TravelAgentPipeline:
             f"Budget: {search_data.budget or 'Not specified'} {search_data.currency.value}\n"
             f"Trip type: {search_data.trip_type.value if search_data.trip_type else 'Not specified'}\n"
             f"IMPORTANT: Generate EXACTLY {trip_days} days in the itinerary. Do NOT skip any days.\n"
+            f"IMPORTANT: Each day MUST have EXACTLY 4 activities in the activities array ({trip_days * 4} total activities across all days).\n"
             f"{budget_instruction}"
         )
 
