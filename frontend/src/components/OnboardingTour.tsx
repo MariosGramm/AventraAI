@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const STEPS = [
     {
@@ -27,7 +27,19 @@ interface OnboardingTourProps {
 
 function OnboardingTour({ onComplete }: OnboardingTourProps) {
     const [step, setStep] = useState(0)
+    const [ready, setReady] = useState(false)
     const current = STEPS[step]
+
+    useEffect(() => {
+        const timer = setTimeout(() => setReady(true), 300)
+        return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        setReady(false)
+        const timer = setTimeout(() => setReady(true), 50)
+        return () => clearTimeout(timer)
+    }, [step])
 
     const handleNext = () => {
         if (step < STEPS.length - 1) {
@@ -76,6 +88,8 @@ function OnboardingTour({ onComplete }: OnboardingTourProps) {
             transition: 'all 0.3s ease',
         }
     }
+
+    if (!ready) return null
 
     return (
         <>
