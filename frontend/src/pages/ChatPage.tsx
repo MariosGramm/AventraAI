@@ -127,10 +127,9 @@ function ChatPage() {
             setLoading(false)
 
             let i = 0
-            const chunkSize = Math.max(1, Math.ceil(fullContent.length / 200))
             setStreamingText('')
             streamRef.current = setInterval(() => {
-                i = Math.min(i + chunkSize, fullContent.length)
+                i = Math.min(i + 1, fullContent.length)
                 setStreamingText(fullContent.slice(0, i))
                 if (i >= fullContent.length) {
                     clearInterval(streamRef.current!)
