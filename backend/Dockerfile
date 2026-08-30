@@ -12,12 +12,13 @@ RUN apt-get update && \
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Install dependencies (cached layer)
+# Install dependencies (cached layer — skip building the project itself)
 COPY pyproject.toml uv.lock ./
-RUN uv sync --no-dev --frozen
+RUN uv sync --no-dev --frozen --no-install-project
 
 # Copy application code
 COPY . .
+RUN uv sync --no-dev --frozen
 
 # Copy airports data file
 COPY app/agent/infrastructure/airports.dat app/agent/infrastructure/airports.dat
