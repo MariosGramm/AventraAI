@@ -193,6 +193,7 @@ function ChatPage() {
             let currentSessionId = sessionId
             if (!currentSessionId) {
                 currentSessionId = await createSession()
+                skipNextFetch.current = true
                 setSessionId(currentSessionId)
             }
 

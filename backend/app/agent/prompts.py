@@ -93,6 +93,8 @@ Each day MUST have exactly 4 activities spread realistically across the day:
 - 1-2 afternoon activities (e.g. exploration, shopping, guided tour)
 - 1 evening activity (e.g. dinner at local restaurant, nightlife, sunset viewing)
 Activities should feel like a natural daily schedule, not isolated items.
+Even for longer trips (10-15 days), EVERY day must have exactly 4 activities.
+Do NOT reduce the number of activities per day regardless of trip length.
 
 If the provided context does not contain enough information about the
 requested destination, state it clearly instead of fabricating details.
