@@ -48,8 +48,14 @@ function ChatPage() {
         if (!token) navigate('/login', { replace: true })
     }, [])
 
+    const skipNextFetch = useRef(false)
+
     useEffect(() => {
         if (!sessionId) return
+        if (skipNextFetch.current) {
+            skipNextFetch.current = false
+            return
+        }
         client.get(`/chat/session/${sessionId}/messages`)
             .then(res => {
                 const msgs = (res.data.data || []).reverse()
@@ -107,6 +113,7 @@ function ChatPage() {
             let isFirstMessage = false
             if (!currentSessionId) {
                 currentSessionId = await createSession()
+                skipNextFetch.current = true
                 setSessionId(currentSessionId)
                 isFirstMessage = true
             }
