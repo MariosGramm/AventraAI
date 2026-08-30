@@ -35,9 +35,7 @@ dependencies = [
   "google-auth>=2.56.3",
   "stripe>=15.5.0",
   "weasyprint>=69.0",
-  "fpdf2>=2.8.8",
-  "langchain-pinecone>=0.2.13",
-  "pinecone-client>=6.0.0",
+  "fpdf2>=2.8.8"
 ]
 
 [dependency-groups]
