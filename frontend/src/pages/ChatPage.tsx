@@ -34,7 +34,10 @@ function ChatPage() {
     const [showTour, setShowTour] = useState(false)
 
     useEffect(() => {
-        if (user && !user.has_seen_onboarding) setShowTour(true)
+        if (user && !user.has_seen_onboarding) {
+            const timer = setTimeout(() => setShowTour(true), 1500)
+            return () => clearTimeout(timer)
+        }
     }, [user])
 
     useEffect(() => () => {
