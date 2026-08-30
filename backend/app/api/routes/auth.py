@@ -1,4 +1,5 @@
 from datetime import timedelta
+import logging
 
 import requests as http_requests
 from fastapi import APIRouter, HTTPException
@@ -6,10 +7,12 @@ from pydantic import BaseModel
 from app.api.deps import SessionDep
 from app.core.config import settings
 from app.core.security import create_access_token
+from app.utils import generate_new_account_email, send_email
 from app import crud
 from app.models import Token
 
 router = APIRouter(tags=["auth"])
+logger = logging.getLogger(__name__)
 
 class GoogleAuthRequest(BaseModel):
     token: str
@@ -57,5 +60,19 @@ def google_auth(session: SessionDep, body: GoogleAuthRequest) -> GoogleAuthRespo
         subject=str(user.id),
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     )
+
+    if is_new and settings.emails_enabled:
+        try:
+            email_data = generate_new_account_email(
+                email_to=user.email,
+                username=user.first_name or user.email,
+            )
+            send_email(
+                email_to=user.email,
+                subject=email_data.subject,
+                html_content=email_data.html_content,
+            )
+        except Exception:
+            logger.warning("Failed to send welcome email to %s", user.email)
 
     return GoogleAuthResponse(access_token=access_token, is_new_user=is_new)
