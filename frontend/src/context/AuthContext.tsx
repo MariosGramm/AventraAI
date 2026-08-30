@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logout = () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('onboarding_done')
         setUser(null)
     }
 
