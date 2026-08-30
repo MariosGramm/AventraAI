@@ -33,8 +33,8 @@ dependencies = [
   "stripe>=15.5.0",
   "fpdf2>=2.8.8",
   "langchain-pinecone>=0.2.13",
-  "pinecone-client>=6.0.0",
   "cachetools>=7.1.4",
+  "pinecone>=7.3.0",
 ]
 
 [dependency-groups]
