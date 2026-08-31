@@ -57,6 +57,7 @@ For chat, the agent operates in a ReAct loop. It classifies incoming messages wi
 | Email | Resend |
 | Observability | Sentry (FastAPI + SQLAlchemy tracing), LangSmith (optional) |
 | Deployment | Vercel (frontend), Render with Docker (backend), Supabase (database) |
+| CI/CD | GitHub Actions, auto-deploy on push via Render and Vercel |
 | PDF Generation | fpdf2 |
 
 ---
@@ -164,6 +165,8 @@ The frontend is a React 19 single-page application built with TypeScript and Vit
 ## Deployment
 
 The frontend deploys to **Vercel** as a static SPA with a catch-all rewrite for client-side routing. The backend deploys to **Render** using a Docker image based on Python 3.12 slim, with `uv` as the package manager. The container runs Alembic migrations at startup and serves the application through Uvicorn on port 8000. The PostgreSQL database is hosted on **Supabase**, which provides a managed Postgres instance with connection pooling.
+
+Both Render and Vercel are connected to the GitHub repository and trigger a new build automatically on every push to `main`. On the CI side, a GitHub Actions workflow runs the backend test suite on every push and pull request that touches `backend/` -- it spins up a PostgreSQL service container, installs dependencies with `uv`, and executes pytest. This means every commit is validated before the deployment goes live.
 
 ### Environment Variables
 
