@@ -10,9 +10,9 @@ The project runs as a React single-page application served through Vercel, backe
 
 The system is organized into three layers: a React frontend, a FastAPI backend, and a set of external services that provide domain knowledge and infrastructure. The agent operates in two distinct modes, each with its own execution flow.
 
-### Search Mode
+### Search Mode (Itinerary Generation)
 
-When a user fills out the travel search form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary. Non-English destination names are first translated using GPT-4o-mini to ensure compatibility with all downstream APIs.
+When a user fills out the itinerary form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary. Non-English destination names are first translated using GPT-4o-mini to ensure compatibility with all downstream APIs.
 
 <img src="assets/search-mode.gif" alt="Search mode pipeline diagram" width="700">
 
