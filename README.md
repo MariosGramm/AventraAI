@@ -114,6 +114,24 @@ The core intelligence of the application. The `TravelAgentPipeline` class expose
 
 Free-tier users get `gpt-4o-mini` (fast, cost-effective). Paid users get `gpt-4o` (higher quality, better reasoning). Search uses a low temperature (0.2) for consistency; chat uses a higher temperature (0.7) for more natural conversation.
 
+### Prompting Strategy
+
+All prompts follow the PCTF framework (Persona, Context, Task, Format), which gives the model a clear identity, the information it needs, what it should do, and how it should structure its output. This keeps behavior predictable across different models and temperatures.
+
+The system uses five distinct prompts, each with a specific role:
+
+- **Search system prompt** (`TRAVEL_SEARCH_SYSTEM_PROMPT`): The main prompt for itinerary generation. It defines the travel agent persona, tells the model what context sources are available (city guides, weather, places), specifies the exact JSON schema it must return, and enforces structural constraints like one itinerary entry per trip day and exactly four activities per day. It also includes safety rules and instruction isolation directives to prevent prompt injection through user input or RAG content.
+
+- **Chat system prompt** (`TRAVEL_CHAT_SYSTEM_PROMPT`): Governs the conversational agent. Same PCTF structure but with a different task: engage in natural travel conversation, ask one clarifying question at a time, suggest the search feature when the user is ready to plan, and always call the places tool before claiming it has no information. Output format is plain text rather than JSON.
+
+- **Contextualization prompt** (`CONTEXTUALIZE_PROMPT`): A lightweight prompt used to reformulate follow-up messages into standalone queries. Uses few-shot examples to show the model what a good reformulation looks like ("What about the weather there?" with Prague context becomes "What is the weather like in Prague?"). This is necessary because RAG retrieval works best with self-contained queries, and raw follow-ups like "Is it expensive?" are meaningless without conversation context.
+
+- **Topic guard prompt** (`TOPIC_GUARD_PROMPT`): A cheap classifier that runs on `gpt-4o-mini` before the full agent is invoked. It categorizes each message as `TRAVEL_OK`, `HARMFUL`, or off-topic. Travel-related messages pass through; harmful messages trigger a hardcoded refusal; off-topic messages get a short redirect back to travel. Running this on a fast, cheap model avoids wasting a full agent invocation on messages that will be filtered anyway.
+
+- **Harmful content refusal** (`HARMFUL_CONTENT_REFUSAL_MESSAGE`): A hardcoded string, not a generated response. When the topic guard returns `HARMFUL`, this fixed message is returned directly without involving the model. This is intentional: a small guard model should never improvise the wording of a safety refusal, because there is a risk it could echo or engage with the harmful content while refusing it.
+
+All prompts include instruction isolation rules. User input, conversation history, and RAG content are wrapped in XML-style tags (using `wrap_untrusted()`) so the model can distinguish data from instructions. The wrapper also strips any embedded tag markers from the content to prevent breakout attempts where injected text tries to close the tag and inject new instructions.
+
 ### Infrastructure Services (`app/agent/infrastructure/`)
 
 - **Weather**: Uses Open-Meteo for geocoding and forecasts. For trips within 16 days, it uses the forecast API; for trips further out, it pulls historical data from the same dates one year prior. Returns min/max temperatures, precipitation, and weather descriptions.
