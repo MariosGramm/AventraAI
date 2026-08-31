@@ -63,10 +63,10 @@ For chat, the agent operates in a ReAct loop. It classifies incoming messages wi
 | Frontend | Vite dev server (localhost:5173) | Vercel (static SPA) |
 | Backend | Uvicorn with --reload (localhost:8000) | Render (Docker, Uvicorn) |
 | Database | PostgreSQL (local instance) | Supabase (managed PostgreSQL) |
-| Vector Store | Pinecone (city-guides index) | Pinecone (city-guides index) |
+| Vector Store | ChromaDB (city-guides index) | Pinecone (city-guides index) |
 | Embeddings | OpenAI text-embedding-3-small | OpenAI text-embedding-3-small |
 | LLM | OpenAI GPT-4o-mini / GPT-4o | OpenAI GPT-4o-mini / GPT-4o |
-| Observability | LangSmith (optional) | Sentry + LangSmith |
+| Observability | LangSmith | Sentry + LangSmith |
 
 ### Full Stack
 
