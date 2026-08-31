@@ -29,6 +29,7 @@ function ChatPage() {
     const [refreshTrigger, setRefreshTrigger] = useState(0)
     const [streamingText, setStreamingText] = useState<string | null>(null)
     const streamRef = useRef<ReturnType<typeof setInterval> | null>(null)
+    const abortRef = useRef<AbortController | null>(null)
     const [showSearchForm, setShowSearchForm] = useState(false)
     const [searchLoading, setSearchLoading] = useState(false)
     const [showTour, setShowTour] = useState(false)
@@ -103,12 +104,18 @@ function ChatPage() {
 
     const handleEdit = (index: number, newContent: string) => {
         if (!newContent.trim()) return
+        if (abortRef.current) abortRef.current.abort()
+        if (streamRef.current) { clearInterval(streamRef.current); streamRef.current = null }
+        setStreamingText(null)
+        setLoading(false)
         setMessages(prev => prev.slice(0, index))
         handleSend(newContent)
     }
 
     const handleSend = async (message: string) => {
         setLoading(true)
+        const controller = new AbortController()
+        abortRef.current = controller
 
         setMessages(prev => [...prev, {
             role: 'user' as const, content: message, created_at: new Date().toISOString()
@@ -129,7 +136,8 @@ function ChatPage() {
 
             const response = await client.post(
                 `/chat/session/${currentSessionId}/send_message`,
-                { content: message }
+                { content: message },
+                { signal: controller.signal }
             )
             fullContent = response.data.content
             createdAt = response.data.created_at
