@@ -12,41 +12,15 @@ The system is organized into three layers: a React frontend, a FastAPI backend, 
 
 ### Search Mode
 
-When a user fills out the travel search form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary.
+When a user fills out the travel search form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary. Non-English destination names are first translated using GPT-4o-mini to ensure compatibility with all downstream APIs.
 
-```mermaid
-flowchart LR
-    A[User Search Request] --> B[Translate Destination]
-    B --> C{City guide exists?}
-    C -- No --> D[Fetch from Wikivoyage]
-    D --> E[Index into Pinecone]
-    E --> F[Retrieve RAG Context]
-    C -- Yes --> F
-    F --> G[Fetch Weather]
-    G --> H[Resolve Airport Codes]
-    H --> I[Fetch Google Places]
-    I --> J[Assemble Prompt + Context]
-    J --> K[LLM generates JSON itinerary]
-    K --> L[Persist Package in DB]
-    L --> M[Return to Frontend]
-```
+<img src="assets/search-mode.gif" alt="Search mode pipeline diagram" width="700">
 
 ### Chat Mode
 
 In chat, the agent operates as a ReAct loop. It has access to tools and RAG context, and can make multiple reasoning steps before responding. This is what differentiates it from a generic LLM chatbot: every response is grounded in live data from the same APIs and knowledge base used by the search pipeline.
 
-```mermaid
-flowchart LR
-    A[User Message] --> B[Topic Guard]
-    B -- Off-topic/Harmful --> C[Refusal or Redirect]
-    B -- Travel OK --> D[Reformulate with History]
-    D --> E[Retrieve RAG Context]
-    E --> F[ReAct Agent Loop]
-    F --> G{Needs tool call?}
-    G -- Yes --> H[Weather / Places / Details API]
-    H --> F
-    G -- No --> I[Final Response to User]
-```
+<img src="assets/chat-mode.gif" alt="Chat mode pipeline diagram" width="700">
 
 When a user submits a search, the request flows through the agent pipeline: the destination is translated to English if needed, the RAG system is queried for relevant city knowledge, weather is fetched, places are resolved, and all of this context is assembled into a single prompt sent to the LLM. The model returns a structured JSON itinerary that gets persisted in PostgreSQL and rendered on the frontend.
 
