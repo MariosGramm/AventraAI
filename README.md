@@ -137,7 +137,7 @@ The database schema covers users (with Google identity linking and subscription 
 
 ### Entity Diagram
 
-<img src="assets/er-diagram.gif" alt="Database entity relationship diagram" width="750">
+<img src="assets/er-diagram.png" alt="Database entity relationship diagram" width="750">
 
 ---
 
