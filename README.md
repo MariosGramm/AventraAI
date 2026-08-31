@@ -47,7 +47,7 @@ For chat, the agent operates in a ReAct loop. It classifies incoming messages wi
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, TypeScript, Vite, React Bootstrap, React Router, Axios |
-| Backend | Python 3.12, FastAPI, LangChain, SQLModel, Alembic, Pydantic Settings |
+| Backend | Python 3.12, FastAPI, SQLModel, Alembic, Pydantic Settings |
 | Database | PostgreSQL (psycopg), hosted on Supabase in production |
 | AI / LLM | LangChain, LangGraph, OpenAI GPT-4o and GPT-4o-mini |
 | Embeddings | OpenAI text-embedding-3-small |
