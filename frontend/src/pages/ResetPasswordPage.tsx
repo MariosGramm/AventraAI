@@ -78,7 +78,9 @@ function ResetPasswordPage() {
                 <div style={{ padding: '1.5rem' }}>
                     {success ? (
                         <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '36px', marginBottom: '1rem' }}>✅</div>
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#34a853" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem' }}>
+                                <circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/>
+                            </svg>
                             <Link to="/login">
                                 <Button style={{ width: '100%', backgroundColor: '#7F77DD', border: 'none' }}>
                                     Go to sign in
