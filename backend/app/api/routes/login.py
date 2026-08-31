@@ -79,9 +79,10 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     elif not user.is_active:
         raise HTTPException(400, "User is not active")
 
-    is_same, _ = verify_password(body.new_password, user.hashed_password)
-    if is_same:
-        raise HTTPException(400, "New password cannot be the same as the current one")
+    if user.hashed_password:
+        is_same, _ = verify_password(body.new_password, user.hashed_password)
+        if is_same:
+            raise HTTPException(400, "New password cannot be the same as the current one")
 
     user_to_update = UserUpdateDTO(password= body.new_password)
 
