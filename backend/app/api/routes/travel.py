@@ -192,7 +192,11 @@ def download_search_pdf(
     search_session = session.exec(
         select(SearchSession)
         .where(SearchSession.id == search_session_id)
-        .options(selectinload(SearchSession.travel_packages))
+        .options(
+            selectinload(SearchSession.travel_packages)
+            .selectinload(TravelPackage.itinerary)
+            .selectinload(Itinerary.activities)
+        )
     ).first()
 
     if not search_session:
