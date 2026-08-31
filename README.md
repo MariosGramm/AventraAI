@@ -207,6 +207,38 @@ The frontend requires:
 
 ---
 
+## Testing
+
+The backend has a pytest-based test suite that runs automatically on every push and pull request via GitHub Actions. The CI pipeline spins up a PostgreSQL service container, installs dependencies, and runs all tests before a deployment can proceed. No code reaches production without passing the full suite.
+
+The tests are unit-level and focused on the components that carry the most risk: the agent pipeline, external service integrations, security utilities, and business rules.
+
+### What is tested
+
+- **Agent pipeline** (`test_agent_pipeline.py`): Validates LLM JSON parsing (including malformed and fenced responses), chat history formatting, model tier selection based on subscription level, and destination translation passthrough. The pipeline is constructed without its production initialization using a patched `__init__`, so tests exercise the helper methods in isolation without calling OpenAI.
+
+- **Airport codes** (`test_airport_codes.py`): Verifies IATA resolution for major cities, case insensitivity, data-backed lookups from the bundled OpenFlights dataset, and graceful handling of unknown cities, empty input, and `None`.
+
+- **Business rules** (`test_business_rules.py`): Guards the freemium/paid usage constants (search and message quotas), maximum pinned chats, trip duration arithmetic, and payment return-path allowlisting. These tests exist to catch accidental changes to values that affect billing and rate limiting.
+
+- **Enums** (`test_enums.py`): Asserts the exact set of values for all domain enums (subscription tiers, chat roles, package tiers, activity types, currencies, trip types, search statuses). This prevents silent breakage when someone adds or renames an enum member without updating the rest of the codebase.
+
+- **Places service** (`test_places.py`): Tests the TTL caching layer for search, detail, and photo requests, including cache key normalization. Also tests the expired place-ID fallback mechanism, where a failed detail lookup triggers a fresh search and retries with the new ID.
+
+- **Prompt injection isolation** (`test_prompts.py`): Validates `wrap_untrusted()` -- the XML tag wrapper that separates data from instructions. Tests cover standard wrapping, stripping of embedded opening/closing tags that could allow breakout, empty content, and preservation of unrelated tags.
+
+- **RAG retrieval** (`test_rag.py`): Verifies that repeated queries for the same destination hit the cache instead of calling Pinecone again, and that different queries produce distinct cache entries.
+
+- **Security** (`test_security.py`): Tests Argon2 password hashing and verification (correct password, wrong password, non-plaintext hash), and JWT token creation by decoding tokens and asserting subject and expiry claims against the configured secret.
+
+- **Weather service** (`test_weather.py`): Tests normal weather retrieval with mocked geocoding and forecast responses, empty geocoding fallback, and date range validation with dynamically computed dates.
+
+### Testing patterns
+
+External HTTP calls (OpenAI, Google Places, Open-Meteo, Pinecone) are mocked using `unittest.mock.patch` with `side_effect` sequences to simulate multi-step API interactions. Module-level caches are cleared in `setup_method` before each test to guarantee isolation. Security and enum tests run against the real implementations without mocking, since they are fast and deterministic.
+
+---
+
 ## Project Structure
 
 ```
