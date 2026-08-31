@@ -349,7 +349,7 @@ function LandingPage() {
                                         </li>
                                     ))}
                                 </ul>
-                                <Button variant="outline-secondary" style={{ width: '100%' }}>
+                                <Button variant="outline-secondary" style={{ width: '100%' }} onClick={() => navigate('/register')}>
                                     Get started
                                 </Button>
                             </div>
