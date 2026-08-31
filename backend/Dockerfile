@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libpq-dev \
-        fonts-dejavu-core \
+        fonts-dejavu \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv

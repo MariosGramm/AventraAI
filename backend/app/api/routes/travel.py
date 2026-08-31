@@ -214,17 +214,20 @@ def download_search_pdf(
 
 def _build_pdf(search_session: SearchSession) -> bytes:
     from fpdf import FPDF
+    from pathlib import Path
 
     pdf = FPDF()
-    import platform
-    if platform.system() == 'Windows':
-        pdf.add_font('Arial', fname='C:/Windows/Fonts/arial.ttf')
-        pdf.add_font('ArialB', fname='C:/Windows/Fonts/arialbd.ttf')
-        pdf.add_font('ArialI', fname='C:/Windows/Fonts/ariali.ttf')
-    else:
-        pdf.add_font('Arial', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf')
-        pdf.add_font('ArialB', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf')
-        pdf.add_font('ArialI', fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf')
+
+    font_candidates = [
+        ('C:/Windows/Fonts/arial.ttf', 'C:/Windows/Fonts/arialbd.ttf', 'C:/Windows/Fonts/ariali.ttf'),
+        ('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSans-Oblique.ttf'),
+    ]
+    for regular, bold, italic in font_candidates:
+        if Path(regular).exists():
+            pdf.add_font('Arial', fname=regular)
+            pdf.add_font('ArialB', fname=bold)
+            pdf.add_font('ArialI', fname=italic)
+            break
     pdf.set_auto_page_break(auto=True, margin=20)
     pdf.add_page()
 
