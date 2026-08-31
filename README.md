@@ -69,7 +69,7 @@ The knowledge base is built around city travel guides stored as markdown files. 
 
 Guides are split by markdown headers into semantically meaningful chunks (by city and section), embedded using OpenAI's `text-embedding-3-small` model, and upserted into a Pinecone index called `city-guides`. At retrieval time, the system pulls the top 5 most relevant chunks for a given query using similarity search, with results cached for 24 hours to reduce redundant calls.
 
-### On-demand city guide fetching
+### On-demand city guide fetching and indexing
 
 This is where it gets interesting. The system does not require every city to be pre-indexed. When a user searches for a destination that has no local guide file, the pipeline automatically fetches the corresponding Wikivoyage article, filters it down to travel-relevant sections, truncates it to a reasonable length, writes it as a markdown file, and indexes it into Pinecone in real time. The user's search then proceeds with the freshly indexed knowledge, as if the city had always been part of the database.
 
