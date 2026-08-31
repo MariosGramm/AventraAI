@@ -66,7 +66,7 @@ For chat, the agent operates in a ReAct loop. It classifies incoming messages wi
 | Vector Store | ChromaDB (city-guides index) | Pinecone (city-guides index) |
 | Embeddings | OpenAI text-embedding-3-small | OpenAI text-embedding-3-small |
 | LLM | OpenAI GPT-4o-mini / GPT-4o | OpenAI GPT-4o-mini / GPT-4o |
-| Observability | LangSmith (optional) | Sentry + LangSmith |
+| Observability | LangSmith | Sentry + LangSmith |
 
 ### Full Stack
 
