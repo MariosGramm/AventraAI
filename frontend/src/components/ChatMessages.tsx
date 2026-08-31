@@ -131,7 +131,7 @@ function ChatMessages({ messages, loading, streamingText, onEdit, userInitials =
                             fontSize: '14px', lineHeight: 1.6, color: '#26215C',
                             whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'break-word'
                         }}>
-                            {cleanStreamingText(streamingText)}
+                            {formatMarkdown(cleanStreamingText(streamingText))}
                         </div>
                     </div>
                 )}
