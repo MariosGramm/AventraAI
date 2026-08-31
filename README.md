@@ -2,79 +2,79 @@
 
 AventraAI is a full-stack travel planning application powered by a conversational AI agent. Users describe where they want to go, and the system produces structured multi-day itineraries with daily activities, weather context, points of interest, flight and hotel links, and downloadable PDF plans. Beyond one-shot search, users can have open-ended travel conversations where the agent can look up live weather, search for places, and pull details from Google Maps on demand.
 
-The project runs as a React single-page application served through Vercel, backed by a FastAPI service deployed on Render. All travel knowledge is grounded in a Retrieval-Augmented Generation (RAG) pipeline built on Pinecone and OpenAI embeddings, fed by city guides sourced from Wikivoyage.
+The project runs as a React single-page application served through Vercel, backed by a FastAPI service deployed on Render. The PostgreSQL database is hosted on Supabase. All travel knowledge is grounded in a Retrieval-Augmented Generation (RAG) pipeline built on Pinecone and OpenAI embeddings, fed by city guides sourced from Wikivoyage.
 
 ---
 
 ## Architecture
 
-The system is organized into three layers: a React frontend, a FastAPI backend, and a set of external services that provide domain knowledge and infrastructure.
+The system is organized into three layers: a React frontend, a FastAPI backend, and a set of external services that provide domain knowledge and infrastructure. The agent operates in two distinct modes, each with its own execution flow.
+
+### Search Mode
+
+When a user fills out the travel search form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary.
 
 ```mermaid
-flowchart TB
-    subgraph Frontend ["Frontend (Vercel)"]
-        UI["React SPA"]
-    end
+flowchart LR
+    A[User Search Request] --> B[Translate Destination]
+    B --> C{City guide exists?}
+    C -- No --> D[Fetch from Wikivoyage]
+    D --> E[Index into Pinecone]
+    E --> F[Retrieve RAG Context]
+    C -- Yes --> F
+    F --> G[Fetch Weather]
+    G --> H[Resolve Airport Codes]
+    H --> I[Fetch Google Places]
+    I --> J[Assemble Prompt + Context]
+    J --> K[LLM generates JSON itinerary]
+    K --> L[Persist Package in DB]
+    L --> M[Return to Frontend]
+```
 
-    subgraph Backend ["Backend (Render)"]
-        API["FastAPI"]
-        AP["Agent Pipeline"]
-        RAG["RAG Service"]
-        ING["Document Ingestor"]
-        RET["Vector Retriever"]
-    end
+### Chat Mode
 
-    subgraph External ["External Services"]
-        OAI["OpenAI (GPT-4o / GPT-4o-mini)"]
-        EMB["OpenAI Embeddings (text-embedding-3-small)"]
-        PC["Pinecone (city-guides index)"]
-        WV["Wikivoyage"]
-        OM["Open-Meteo"]
-        GP["Google Places API"]
-        SK["Skyscanner (URL)"]
-        BK["Booking.com (URL)"]
-        ST["Stripe"]
-        RS["Resend"]
-        SE["Sentry"]
-    end
+In chat, the agent operates as a ReAct loop. It has access to tools and RAG context, and can make multiple reasoning steps before responding. This is what differentiates it from a generic LLM chatbot: every response is grounded in live data from the same APIs and knowledge base used by the search pipeline.
 
-    subgraph Data ["Persistence"]
-        PG["PostgreSQL"]
-        MD["City Guide Markdown Files"]
-    end
-
-    UI -- "HTTP / JSON" --> API
-    API --> AP
-    AP -- "search & chat" --> OAI
-    AP -- "retrieve top-k context" --> RAG
-    RAG --> RET --> PC
-    AP -- "on-demand fetch" --> WV
-    WV -- "plaintext guide" --> ING
-    ING -- "embed & upsert" --> EMB --> PC
-    ING -- "write .md" --> MD
-    AP -- "weather forecast" --> OM
-    AP -- "attractions & restaurants" --> GP
-    AP -- "flight links" --> SK
-    AP -- "hotel links" --> BK
-    API -- "auth, sessions, packages" --> PG
-    API -- "payments" --> ST
-    API -- "transactional email" --> RS
-    API -- "error tracking" --> SE
+```mermaid
+flowchart LR
+    A[User Message] --> B[Topic Guard]
+    B -- Off-topic/Harmful --> C[Refusal or Redirect]
+    B -- Travel OK --> D[Reformulate with History]
+    D --> E[Retrieve RAG Context]
+    E --> F[ReAct Agent Loop]
+    F --> G{Needs tool call?}
+    G -- Yes --> H[Weather / Places / Details API]
+    H --> F
+    G -- No --> I[Final Response to User]
 ```
 
 When a user submits a search, the request flows through the agent pipeline: the destination is translated to English if needed, the RAG system is queried for relevant city knowledge, weather is fetched, places are resolved, and all of this context is assembled into a single prompt sent to the LLM. The model returns a structured JSON itinerary that gets persisted in PostgreSQL and rendered on the frontend.
 
-For chat, the agent operates in a ReAct loop. It classifies incoming messages with a lightweight topic guard, reformulates follow-ups into standalone queries using conversation history, retrieves RAG context, and then reasons through tool calls (weather lookup, place search, place details) before producing a final text response.
+For chat, the agent operates in a ReAct loop. It classifies incoming messages with a lightweight topic guard, reformulates follow-ups into standalone queries using conversation history, retrieves RAG context, and then reasons through tool calls (weather lookup, place search, place details) before producing a final text response. This is a deliberate design choice: the chat mode is not a thin wrapper around a generic LLM. Every conversational turn is grounded in the same RAG knowledge base and live API integrations used by the search pipeline. When a user asks "what's the weather like in Lisbon in March" or "find me a good restaurant near the Acropolis," the agent does not rely on the model's parametric memory alone -- it calls the actual weather and places APIs in real time and cross-references the city guide context from Pinecone. This makes the chat responses factually anchored to current data rather than dependent on whatever the base model happens to recall from its training set, which is what separates it from a general-purpose chatbot that simply generates plausible-sounding travel advice.
 
 ---
 
 ## Tech Stack
 
+### Local vs Production
+
+| Component | Local Development | Production |
+|-----------|------------------|------------|
+| Frontend | Vite dev server (localhost:5173) | Vercel (static SPA) |
+| Backend | Uvicorn with --reload (localhost:8000) | Render (Docker, Uvicorn) |
+| Database | PostgreSQL (local instance) | Supabase (managed PostgreSQL) |
+| Vector Store | Pinecone (city-guides index) | Pinecone (city-guides index) |
+| Embeddings | OpenAI text-embedding-3-small | OpenAI text-embedding-3-small |
+| LLM | OpenAI GPT-4o-mini / GPT-4o | OpenAI GPT-4o-mini / GPT-4o |
+| Observability | LangSmith (optional) | Sentry + LangSmith |
+
+### Full Stack
+
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, TypeScript, Vite, React Bootstrap, React Router, Axios |
 | Backend | Python 3.12, FastAPI, SQLModel, Alembic, Pydantic Settings |
-| Database | PostgreSQL (psycopg) |
+| Database | PostgreSQL (psycopg), hosted on Supabase in production |
 | AI / LLM | LangChain, LangGraph, OpenAI GPT-4o and GPT-4o-mini |
 | Embeddings | OpenAI text-embedding-3-small |
 | Vector Store | Pinecone (city-guides index) |
@@ -82,7 +82,7 @@ For chat, the agent operates in a ReAct loop. It classifies incoming messages wi
 | Payments | Stripe Checkout and Webhooks |
 | Email | Resend |
 | Observability | Sentry (FastAPI + SQLAlchemy tracing), LangSmith (optional) |
-| Deployment | Vercel (frontend), Render with Docker (backend) |
+| Deployment | Vercel (frontend), Render with Docker (backend), Supabase (database) |
 | PDF Generation | fpdf2 |
 
 ---
@@ -101,11 +101,27 @@ This is where it gets interesting. The system does not require every city to be 
 
 This means the knowledge base grows organically based on actual user demand. Every new city a user asks about becomes permanently available for all future queries.
 
+Whenever a new city is indexed on demand, the system sends an email notification with the city name so that new additions to the knowledge base are tracked without needing to check logs.
+
+<insert screenshot here>
+
 There is also a bulk indexing pipeline (under `backend/scripts/`) used for initial setup. It downloads guides for a curated list of major global destinations, cleans them, and indexes the full set into Pinecone in one pass.
 
 ### Current coverage
 
 The knowledge base ships with approximately 105 pre-indexed city guides covering major destinations worldwide. Any city with a Wikivoyage article can be added on the fly through the on-demand mechanism described above.
+
+### Caching strategy
+
+RAG retrieval and external API calls are the two most expensive operations in the pipeline, both in terms of latency and cost. To keep these under control, the system uses TTL-based caching at multiple levels:
+
+- **RAG results** are cached for 24 hours. If the same destination or a similar query comes up within that window, the system serves the cached chunks instead of making a new embedding call and Pinecone query. This avoids redundant OpenAI embedding costs and Pinecone read units for popular destinations that get searched repeatedly.
+
+- **Google Places search results and place details** are cached for 24 hours. Place photos are cached for one hour (since photo URLs expire). This is significant because the Google Places API bills per request, and the same attractions and restaurants tend to come up across different users searching the same city.
+
+- **Weather geocoding and forecast data** are cached similarly, which prevents repeated calls to Open-Meteo for the same location within a short timeframe.
+
+The net effect is that the first search for a given city pays the full cost of all API calls, but subsequent searches within the cache window are served almost entirely from memory. For a destination like Paris or Tokyo that might get searched dozens of times a day, this translates to a substantial reduction in external API usage.
 
 ---
 
@@ -169,7 +185,7 @@ The frontend is a React 19 single-page application built with TypeScript and Vit
 
 ## Deployment
 
-The frontend deploys to **Vercel** as a static SPA with a catch-all rewrite for client-side routing. The backend deploys to **Render** using a Docker image based on Python 3.12 slim, with `uv` as the package manager. The container runs Alembic migrations at startup and serves the application through Uvicorn on port 8000.
+The frontend deploys to **Vercel** as a static SPA with a catch-all rewrite for client-side routing. The backend deploys to **Render** using a Docker image based on Python 3.12 slim, with `uv` as the package manager. The container runs Alembic migrations at startup and serves the application through Uvicorn on port 8000. The PostgreSQL database is hosted on **Supabase**, which provides a managed Postgres instance with connection pooling.
 
 ### Environment Variables
 
