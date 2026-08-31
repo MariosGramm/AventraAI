@@ -135,6 +135,10 @@ Free-tier users get `gpt-4o-mini` (fast, cost-effective). Paid users get `gpt-4o
 
 The database schema covers users (with Google identity linking and subscription state), chat sessions and messages, search sessions, and a full travel package hierarchy (package, itinerary, activity, accommodation). Migrations are managed through Alembic.
 
+### Entity Diagram
+
+<img src="assets/er-diagram.gif" alt="Database entity relationship diagram" width="750">
+
 ---
 
 ## Frontend
