@@ -103,7 +103,7 @@ This means the knowledge base grows organically based on actual user demand. Eve
 
 Whenever a new city is indexed on demand, the system sends an email notification with the city name so that new additions to the knowledge base are tracked without needing to check logs.
 
-<insert screenshot here>
+<img src="assets/tbilisi-indexed.png" alt="Email notification when a new city is indexed on demand" width="500">
 
 There is also a bulk indexing pipeline (under `backend/scripts/`) used for initial setup. It downloads guides for a curated list of major global destinations, cleans them, and indexes the full set into Pinecone in one pass.
 
