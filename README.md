@@ -10,9 +10,9 @@ The project runs as a React single-page application served through Vercel, backe
 
 The system is organized into three layers: a React frontend, a FastAPI backend, and a set of external services that provide domain knowledge and infrastructure. The agent operates in two distinct modes, each with its own execution flow.
 
-### Search Mode
+### Search Mode (Itinerary Generation)
 
-When a user fills out the travel search form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary. Non-English destination names are first translated using GPT-4o-mini to ensure compatibility with all downstream APIs.
+When a user fills out the itinerary form, the agent runs a deterministic pipeline that gathers all necessary context before making a single LLM call to generate the itinerary. Non-English destination names are first translated using GPT-4o-mini to ensure compatibility with all downstream APIs.
 
 <img src="assets/search-mode.gif" alt="Search mode pipeline diagram" width="700">
 
@@ -110,7 +110,7 @@ The core intelligence of the application. The `TravelAgentPipeline` class expose
 
 - **Search mode**: A deterministic pipeline that translates the destination, ensures RAG coverage, fetches weather from Open-Meteo, resolves IATA airport codes for Skyscanner links, queries Google Places for attractions and restaurants, and sends all collected context to the LLM with strict JSON output requirements. The model must return exactly one package with one itinerary entry per trip day and four activities per day.
 
-- **Chat mode**: A ReAct-style agent built with LangGraph that can call weather, place search, and place detail tools. Messages go through a topic guard that rejects harmful content and redirects off-topic queries, and follow-up questions are reformulated into standalone queries using a lightweight contextualization step.
+- **Chat mode**: A ReAct-style agent built with LangChain that can call weather, place search, and place detail tools. Messages go through a topic guard that rejects harmful content and redirects off-topic queries, and follow-up questions are reformulated into standalone queries using a lightweight contextualization step.
 
 Free-tier users get `gpt-4o-mini` (fast, cost-effective). Paid users get `gpt-4o` (higher quality, better reasoning). Search uses a low temperature (0.2) for consistency; chat uses a higher temperature (0.7) for more natural conversation.
 
