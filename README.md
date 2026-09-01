@@ -190,6 +190,8 @@ The frontend deploys to **Vercel** as a static SPA with a catch-all rewrite for 
 
 Both Render and Vercel are connected to the GitHub repository and trigger a new build automatically on every push to `main`. On the CI side, a GitHub Actions workflow runs the backend test suite on every push and pull request that touches `backend/` -- it spins up a PostgreSQL service container, installs dependencies with `uv`, and executes pytest. This means every commit is validated before the deployment goes live.
 
+> **Note:** The backend runs on Render's free tier, which spins down the server after 15 minutes of inactivity. The first request after a cold start takes approximately 50 seconds while the container boots up and runs migrations. Subsequent requests are fast. This only affects the very first interaction after an idle period.
+
 ### Environment Variables
 
 The backend requires configuration for:
