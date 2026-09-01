@@ -178,6 +178,10 @@ The frontend is a React 19 single-page application built with TypeScript and Vit
 - **Guest route handling**: Authenticated users are redirected away from login/register pages.
 - **Simulated streaming**: The frontend progressively reveals complete API responses character by character to create a typing effect.
 
+### Mobile Responsiveness
+
+The interface adapts to mobile screens (below 768px) using a custom `useIsMobile()` hook that wraps `matchMedia`. On mobile, the sidebar collapses into a slide-out drawer accessible via a hamburger menu, the search form switches from a two-column grid to a single-column stack, the landing page hero scales down its typography and hides floating destination cards, and the profile page stacks name fields vertically. The onboarding tour also adapts by skipping the sidebar step (which is not visible on mobile) and constraining tooltip positioning to stay within the viewport. All changes are conditional on the hook's return value, so the desktop layout is completely unaffected.
+
 ---
 
 ## Deployment
