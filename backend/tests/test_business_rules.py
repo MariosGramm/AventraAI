@@ -2,7 +2,7 @@
 
 from datetime import UTC, datetime
 from dateutil.relativedelta import relativedelta
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from app.enums import SubscriptionTier
 from app.models import User
@@ -54,3 +54,26 @@ class TestStripeAllowedPaths:
         assert "/profile" in ALLOWED_RETURN_PATHS
         assert "/admin" not in ALLOWED_RETURN_PATHS
         assert "https://evil.com" not in ALLOWED_RETURN_PATHS
+
+
+class TestSubscriptionUpgrade:
+
+    def test_upgrade_resets_free_tier_usage(self):
+        from app.api.routes.payments import _apply_paid_subscription
+
+        user = User(
+            first_name="Test",
+            last_name="User",
+            email="test@example.com",
+            hashed_password="hash",
+            subscription_tier=SubscriptionTier.FREE,
+            monthly_searches_used=3,
+            monthly_messages_used=50,
+        )
+
+        became_paid = _apply_paid_subscription(MagicMock(), user, None, None)
+
+        assert became_paid is True
+        assert user.subscription_tier == SubscriptionTier.PAID
+        assert user.monthly_searches_used == 0
+        assert user.monthly_messages_used == 0

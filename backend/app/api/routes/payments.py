@@ -58,6 +58,10 @@ def _apply_paid_subscription(db: Session, user: User, customer_id: str | None, s
     """
     was_already_paid = user.subscription_tier == SubscriptionTier.PAID
 
+    if not was_already_paid:
+        user.monthly_searches_used = 0
+        user.monthly_messages_used = 0
+
     user.subscription_tier = SubscriptionTier.PAID
     user.stripe_customer_id = customer_id
     user.stripe_subscription_id = subscription_id
