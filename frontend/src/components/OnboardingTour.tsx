@@ -1,23 +1,28 @@
 import { useState, useEffect } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
-const STEPS = [
+const ALL_STEPS = [
     {
         target: 'chat-input-area',
         title: 'Chat with your travel assistant',
         description: 'Ask anything about destinations, restaurants, attractions, or travel tips. Your AI assistant knows about hundreds of cities worldwide.',
         position: 'top' as const,
+        mobileOnly: false,
     },
     {
         target: 'search-toggle-btn',
         title: 'Generate travel itineraries',
         description: 'Tap the plane icon to create a detailed day-by-day travel package with flights, hotels, activities, and cost estimates.',
         position: 'top' as const,
+        mobileOnly: false,
     },
     {
         target: 'sidebar-area',
         title: 'Your conversations',
         description: 'All your chats are saved here. Pin your favorites and pick up where you left off anytime.',
         position: 'right' as const,
+        mobileOnly: false,
+        desktopOnly: true,
     },
 ]
 
@@ -26,9 +31,11 @@ interface OnboardingTourProps {
 }
 
 function OnboardingTour({ onComplete }: OnboardingTourProps) {
+    const isMobile = useIsMobile()
+    const steps = ALL_STEPS.filter(s => !(isMobile && (s as any).desktopOnly))
     const [step, setStep] = useState(0)
     const [ready, setReady] = useState(false)
-    const current = STEPS[step]
+    const current = steps[step]
 
     useEffect(() => {
         const timer = setTimeout(() => setReady(true), 300)
@@ -42,7 +49,7 @@ function OnboardingTour({ onComplete }: OnboardingTourProps) {
     }, [step])
 
     const handleNext = () => {
-        if (step < STEPS.length - 1) {
+        if (step < steps.length - 1) {
             setStep(step + 1)
         } else {
             onComplete()
@@ -54,15 +61,15 @@ function OnboardingTour({ onComplete }: OnboardingTourProps) {
         if (!el) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }
 
         const rect = el.getBoundingClientRect()
-        const style: React.CSSProperties = { position: 'fixed', zIndex: 10001 }
+        const style: React.CSSProperties = { position: 'fixed', zIndex: 10001, maxWidth: 'calc(100vw - 32px)' }
 
         if (current.position === 'top') {
             style.bottom = window.innerHeight - rect.top + 16
-            style.left = rect.left + rect.width / 2
+            style.left = Math.max(16, Math.min(rect.left + rect.width / 2, window.innerWidth - 16))
             style.transform = 'translateX(-50%)'
         } else if (current.position === 'right') {
             style.top = rect.top + rect.height / 2
-            style.left = rect.right + 16
+            style.left = Math.min(rect.right + 16, window.innerWidth - 340)
             style.transform = 'translateY(-50%)'
         }
 
@@ -107,7 +114,7 @@ function OnboardingTour({ onComplete }: OnboardingTourProps) {
                         fontSize: '10px', color: '#7F77DD', fontWeight: 600,
                         marginBottom: '6px', letterSpacing: '0.5px'
                     }}>
-                        STEP {step + 1} OF {STEPS.length}
+                        STEP {step + 1} OF {steps.length}
                     </div>
                     <div style={{
                         fontSize: '15px', fontWeight: 700, color: '#26215C',
@@ -139,7 +146,7 @@ function OnboardingTour({ onComplete }: OnboardingTourProps) {
                                 fontWeight: 600, cursor: 'pointer',
                             }}
                         >
-                            {step < STEPS.length - 1 ? 'Next' : 'Got it!'}
+                            {step < steps.length - 1 ? 'Next' : 'Got it!'}
                         </button>
                     </div>
                 </div>

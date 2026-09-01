@@ -10,6 +10,7 @@ import WelcomeScreen from '../components/WelcomeScreen'
 import OnboardingTour from '../components/OnboardingTour'
 import client from '../services/client'
 import { useAuthContext } from '../context/AuthContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 interface Message {
     role: 'user' | 'assistant'
@@ -20,6 +21,8 @@ interface Message {
 function ChatPage() {
     const navigate = useNavigate()
     const { user, setUser } = useAuthContext()
+    const isMobile = useIsMobile()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const userInitials = user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : 'U'
 
@@ -244,17 +247,46 @@ function ChatPage() {
 
     return (
         <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-            <Sidebar
-                onNewChat={handleNewChat}
-                currentSessionId={sessionId}
-                onSelectChat={(id) => setSessionId(id)}
-                refreshTrigger={refreshTrigger}
-            />
+            {/* Mobile sidebar overlay */}
+            {isMobile && sidebarOpen && (
+                <div
+                    onClick={() => setSidebarOpen(false)}
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 998 }}
+                />
+            )}
+
+            <div style={{
+                ...(isMobile ? {
+                    position: 'fixed', left: sidebarOpen ? 0 : -260, top: 0, bottom: 0,
+                    zIndex: 999, transition: 'left 0.25s ease',
+                } : {}),
+            }}>
+                <Sidebar
+                    onNewChat={() => { handleNewChat(); if (isMobile) setSidebarOpen(false) }}
+                    currentSessionId={sessionId}
+                    onSelectChat={(id) => { setSessionId(id); if (isMobile) setSidebarOpen(false) }}
+                    refreshTrigger={refreshTrigger}
+                />
+            </div>
 
             <div style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                background: 'white', overflow: 'hidden'
+                background: 'white', overflow: 'hidden', minWidth: 0,
             }}>
+                {/* Mobile hamburger */}
+                {isMobile && (
+                    <div style={{ padding: '8px 12px', borderBottom: '0.5px solid #e8e6f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                            onClick={() => setSidebarOpen(true)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex' }}
+                        >
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" strokeWidth="2" strokeLinecap="round">
+                                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                            </svg>
+                        </button>
+                        <span style={{ fontSize: '14px', fontWeight: 500, color: '#7F77DD' }}>AventraAI</span>
+                    </div>
+                )}
                 {showSearchForm ? (
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', overflow: 'auto' }}>
                         <SearchForm onSubmit={handleSearch} onClose={() => setShowSearchForm(false)} loading={searchLoading} />

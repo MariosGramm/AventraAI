@@ -3,6 +3,7 @@ import {Button, Col, Container, Row} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom'
 import Navbar from "../components/Navbar.tsx";
 import UpgradeButton from "../components/UpgradeButton.tsx";
+import { useIsMobile } from "../hooks/useIsMobile.ts";
 
 const CITY_SETS = [
     [
@@ -46,6 +47,7 @@ const CITY_SETS = [
 
 function LandingPage() {
     const navigate = useNavigate()
+    const isMobile = useIsMobile()
     const [cityIndex, setCityIndex] = useState(0)
     const [fading, setFading] = useState(false)
 
@@ -73,9 +75,9 @@ function LandingPage() {
                     position: 'relative',
                     overflow: 'hidden',
                     background: 'linear-gradient(135deg, #EEEDFE 0%, #d4d0f8 40%, #c4bef5 100%)',
-                    padding: '6rem 0 5rem',
+                    padding: isMobile ? '3rem 0 2.5rem' : '6rem 0 5rem',
                     textAlign: 'center',
-                    minHeight: '600px'
+                    minHeight: isMobile ? 'auto' : '600px'
                 }}
             >
                 {/* Animated gradient orbs */}
@@ -99,7 +101,7 @@ function LandingPage() {
                 }} />
 
                 {/* Floating destination cards — rotate every 10s */}
-                {cities.map((card, i) => (
+                {!isMobile && cities.map((card, i) => (
                     <div key={`${cityIndex}-${i}`}
                         onClick={() => navigate('/chat?guest=true')}
                         style={{
@@ -167,7 +169,7 @@ function LandingPage() {
                     </div>
 
                     <h1 style={{
-                        fontSize: '52px', fontWeight: 600, color: '#26215C',
+                        fontSize: isMobile ? '32px' : '52px', fontWeight: 600, color: '#26215C',
                         marginBottom: '1.25rem', lineHeight: 1.15,
                         animation: 'fadeSlideUp 0.8s ease-out 0.15s both'
                     }}>

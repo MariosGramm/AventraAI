@@ -4,10 +4,12 @@ import { Button, Form, Modal } from 'react-bootstrap'
 import { useAuthContext } from '../context/AuthContext'
 import UpgradeButton from '../components/UpgradeButton'
 import client from '../services/client'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 function ProfilePage() {
     const navigate = useNavigate()
     const { user, setUser } = useAuthContext()
+    const isMobile = useIsMobile()
 
     useEffect(() => {
         if (!localStorage.getItem('token')) navigate('/login', { replace: true })
@@ -131,7 +133,7 @@ function ProfilePage() {
                         </div>
                     )}
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                         <Form.Group>
                             <Form.Label style={{ fontSize: '13px', color: '#6c757d' }}>First name</Form.Label>
                             <Form.Control

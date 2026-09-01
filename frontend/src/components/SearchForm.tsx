@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 interface SearchFormProps {
     onSubmit: (data: SearchFormData) => void
@@ -19,6 +20,7 @@ export interface SearchFormData {
 }
 
 function SearchForm({ onSubmit, onClose, loading }: SearchFormProps) {
+    const isMobile = useIsMobile()
     const [destination, setDestination] = useState('')
     const [origin, setOrigin] = useState('')
     const [dateFrom, setDateFrom] = useState('')
@@ -69,7 +71,7 @@ function SearchForm({ onSubmit, onClose, loading }: SearchFormProps) {
                 }}>×</button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px' }}>
                 <div style={{ gridColumn: '1 / -1' }}>
                     <label style={labelStyle}>Destination *</label>
                     <input value={destination} onChange={e => setDestination(e.target.value)} placeholder="e.g. Prague, Tokyo, Paris" style={inputStyle} />
