@@ -44,8 +44,9 @@ function ChatImage({ src, alt }: { src: string, alt: string }) {
 
 function cleanStreamingText(text: string): string {
     return text
+        .replace(/!\[[^\]]*\]?\(?[^)]*\)?/g, '')
         .replace(/!\[[^\]]*$/g, '')
-    .replace(/!\[[^\]]*\]\([^)]+$/g, '')
+        .replace(/https?:\/\/lh3\.googleusercontent\.com\/\S*/g, '')
         .replace(/\n{3,}/g, '\n\n')
         .trim()
 }
